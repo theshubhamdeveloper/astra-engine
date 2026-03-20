@@ -1,6 +1,10 @@
 #include "platform/window.hpp"
+#include "renderer/framebuffer.hpp"
 #include "SDL3/SDL_init.h"
 #include "SDL3/SDL_log.h"
+
+constexpr int SCREEN_HEIGHT = 500;
+constexpr int SCREEN_WIDTH = 700;
 
 int main() {
     if (SDL_Init(SDL_INIT_VIDEO) == false) {
@@ -8,11 +12,12 @@ int main() {
         return 3;
     }
 
-    auto window = astra::platform::Window("Astra Engine", 700, 500);
+    auto window = astra::platform::Window("Astra Engine", SCREEN_WIDTH, SCREEN_HEIGHT);
+    auto framebuffer = astra::renderer::Framebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
+
     window.initialize();
 
     bool running = true;
-
     while (running) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
@@ -20,6 +25,11 @@ int main() {
                 running = false;
             }
         }
+
+        // TEST
+        framebuffer.putPixel(100,100, astra::Color::red());
+
+        window.render(framebuffer.getBuffer());
     }
     window.destroy();
 

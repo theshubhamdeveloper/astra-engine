@@ -33,7 +33,7 @@ namespace astra::platform {
         SDL_Quit();
     }
 
-    void Window::render(const std::vector<uint32_t> &buffer) const {
+    void Window::render(const renderer::Buffer &buffer) const {
         const auto pitch = static_cast<int32_t>(width * sizeof(uint32_t));
 
         SDL_UpdateTexture(texture, nullptr, buffer.data(), pitch);
