@@ -10,7 +10,8 @@ add_subdirectory(third_party/SDL EXCLUDE_FROM_ALL)
 
 add_executable(astra_engine MACOSX_BUNDLE main.cpp
         src/platform/window.cpp
-        src/renderer/color.cpp)
+        src/renderer/color.cpp
+        src/renderer/framebuffer.cpp)
 
 target_include_directories(astra_engine PRIVATE include)
 
