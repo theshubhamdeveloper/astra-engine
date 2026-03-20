@@ -8,6 +8,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 
 add_subdirectory(third_party/SDL EXCLUDE_FROM_ALL)
 
-add_executable(astra_engine MACOSX_BUNDLE main.cpp)
+add_executable(astra_engine MACOSX_BUNDLE main.cpp
+        src/platform/window.cpp)
+
+target_include_directories(astra_engine PRIVATE include)
 
 target_link_libraries(astra_engine PRIVATE SDL3::SDL3)
