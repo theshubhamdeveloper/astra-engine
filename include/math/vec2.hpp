@@ -1,6 +1,6 @@
 #pragma once
 
-namespace astra {
+namespace astra::math {
     struct Vec2 {
         double x, y;
 

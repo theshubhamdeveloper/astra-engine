@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
-#include "color.hpp"
+#include "math/color.hpp"
 
-namespace astra::renderer{
+namespace astra::render{
     using Buffer = std::vector<uint32_t>;
 
     class Framebuffer {
@@ -12,9 +12,9 @@ namespace astra::renderer{
     public:
         Framebuffer(uint32_t width, uint32_t height);
 
-        void putPixel(uint32_t x, uint32_t y, Color color);
+        void putPixel(uint32_t x, uint32_t y, math::Color color);
 
-        void clear(Color color);
+        void clear(math::Color color);
 
         [[nodiscard]] const Buffer &getBuffer() const;
     };

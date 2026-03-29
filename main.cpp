@@ -1,5 +1,5 @@
 #include "platform/window.hpp"
-#include "renderer/framebuffer.hpp"
+#include "render/framebuffer.hpp"
 #include "SDL3/SDL_init.h"
 #include "SDL3/SDL_log.h"
 
@@ -13,7 +13,7 @@ int main() {
     }
 
     auto window = astra::platform::Window("Astra Engine", SCREEN_WIDTH, SCREEN_HEIGHT);
-    auto framebuffer = astra::renderer::Framebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
+    auto framebuffer = astra::render::Framebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     window.initialize();
 
@@ -27,7 +27,7 @@ int main() {
         }
 
         // TEST
-        framebuffer.putPixel(100,100, astra::Color::red());
+        framebuffer.putPixel(100, 100, astra::math::Color::red());
 
         window.render(framebuffer.getBuffer());
     }

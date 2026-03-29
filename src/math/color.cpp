@@ -1,6 +1,6 @@
-#include "renderer/color.hpp"
+#include "math/color.hpp"
 
-namespace astra {
+namespace astra::math{
     Color::Color(const uint8_t r, const uint8_t g, const uint8_t b) : r(r), g(g), b(b), a(255) {
     }
 

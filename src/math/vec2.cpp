@@ -1,6 +1,6 @@
 #include "math/vec2.hpp"
 
-namespace astra {
+namespace astra::math{
     Vec2::Vec2(const double x, const double y) : x(x), y(y) {
     }
 

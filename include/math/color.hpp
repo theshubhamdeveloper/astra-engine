@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-namespace astra {
+namespace astra::math {
     struct Color {
         uint8_t r, g, b, a;
 

@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "renderer/framebuffer.hpp"
+#include "render/framebuffer.hpp"
 #include "SDL3/SDL_render.h"
 #include "SDL3/SDL_video.h"
 
@@ -20,6 +20,6 @@ namespace astra::platform {
 
         void destroy() const;
 
-        void render(const renderer::Buffer &buffer) const;
+        void render(const render::Buffer &buffer) const;
     };
 }
