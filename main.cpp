@@ -1,4 +1,5 @@
 #include "platform/window.hpp"
+#include "render/draw.hpp"
 #include "render/framebuffer.hpp"
 #include "SDL3/SDL_init.h"
 #include "SDL3/SDL_log.h"
@@ -27,7 +28,9 @@ int main() {
         }
 
         // TEST
-        framebuffer.putPixel(100, 100, astra::math::Color::red());
+        framebuffer.clear(astra::math::Color::red());
+
+        drawCircle(framebuffer, {200, 200}, 100, astra::math::Color::green(), 57);
 
         window.render(framebuffer.getBuffer());
     }
