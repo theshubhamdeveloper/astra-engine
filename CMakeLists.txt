@@ -14,7 +14,11 @@ add_executable(astra_engine MACOSX_BUNDLE main.cpp
         src/render/framebuffer.cpp
         src/math/vec2.cpp
         src/render/draw.cpp
-        src/math/geometry.cpp)
+        src/math/geometry.cpp
+        src/input/input.cpp
+        src/input/keyboard.cpp
+        src/input/mouse.cpp
+)
 
 target_include_directories(astra_engine PRIVATE include)
 
