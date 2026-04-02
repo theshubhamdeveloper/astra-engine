@@ -1,4 +1,6 @@
 #include <iostream>
+
+#include "core/time.hpp"
 #include "input/input.hpp"
 #include "platform/window.hpp"
 #include "render/draw.hpp"
@@ -17,6 +19,7 @@ int main() {
 
     auto window = astra::platform::Window("Astra Engine", SCREEN_WIDTH, SCREEN_HEIGHT);
     auto framebuffer = astra::render::Framebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
+    auto time = astra::core::Time();
     auto input = astra::input::Input();
 
     window.initialize();
@@ -26,7 +29,12 @@ int main() {
 
     bool running = true;
     while (running) {
+        time.update();
+
         input.updateState();
+
+        std::cout << "Frame: " << time.deltaTime() * 1000 << " ms" << "\n";
+        std::cout << "FPS: " << time.fps() << "\n";
 
         if (input.quitRequested()) {
             running = false;
