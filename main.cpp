@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include "core/time.hpp"
 #include "input/input.hpp"
 #include "platform/window.hpp"
@@ -50,7 +49,7 @@ int main() {
         circleRadius += input.mouse.wheelDelta;
 
         if (toDrawCircle)
-            drawCircle(framebuffer, input.mouse.position, circleRadius, astra::math::Color::green(), 54);
+            drawCircle(framebuffer, input.mouse.position, circleRadius, astra::math::Color::green());
         // TEST END
 
         window.render(framebuffer.getBuffer());

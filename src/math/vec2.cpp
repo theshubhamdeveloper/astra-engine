@@ -1,17 +1,21 @@
 #include "math/vec2.hpp"
+#include <utility>
 
-namespace astra::math{
+namespace astra::math {
     Vec2::Vec2(const double x, const double y) : x(x), y(y) {
     }
 
     void Vec2::perpendicular() {
-        const double tempX = x;
-        x = -y;
-        y = tempX;
+        std::swap(x, y);
+        x *= -1;
     }
 
-    double Vec2::dot(const Vec2 a, const Vec2 b) {
+    double Vec2::dot(const Vec2 &a, const Vec2 &b) {
         return a.x * b.x + a.y * b.y;
+    }
+
+    double Vec2::cross(const Vec2 &a, const Vec2 &b) {
+        return a.x * b.y - a.y * b.x;
     }
 
     Vec2 Vec2::zero() {

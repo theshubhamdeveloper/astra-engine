@@ -3,9 +3,9 @@
 using astra::math::Vec2;
 
 namespace astra::render {
-    void drawTriangle(Framebuffer &fb, Vec2 a, Vec2 b, Vec2 c, math::Color color) {
-        const Vec2 min = {std::min({a.x, b.x, c.x}), std::min({a.y, b.y, c.y})};
-        const Vec2 max = {std::max({a.x, b.x, c.x}), std::max({a.y, b.y, c.y})};
+    void drawTriangle(Framebuffer &fb, const Vec2 &a, const Vec2 &b, const Vec2 &c, const math::Color &color) {
+        const Vec2 min = {std::floor(std::min({a.x, b.x, c.x})), std::floor(std::min({a.y, b.y, c.y}))};
+        const Vec2 max = {std::ceil(std::max({a.x, b.x, c.x})), std::ceil(std::max({a.y, b.y, c.y}))};
 
         for (auto y = static_cast<uint32_t>(min.y); y <= max.y; y++) {
             for (auto x = static_cast<uint32_t>(min.x); x <= max.x; x++) {
@@ -29,7 +29,7 @@ namespace astra::render {
         }
     }
 
-    void drawRect(Framebuffer &fb, Vec2 pos, const Vec2 size, const math::Color color) {
+    void drawRect(Framebuffer &fb, const Vec2 &pos, const Vec2 &size, const math::Color &color) {
         drawTriangleFan(fb,
                         {
                             pos,
@@ -39,13 +39,13 @@ namespace astra::render {
                         }, color);
     }
 
-    void drawCircle(Framebuffer &fb, const Vec2 pos, const uint32_t r, const math::Color color,
+    void drawCircle(Framebuffer &fb, const Vec2 &pos, const uint32_t r, const math::Color &color,
                     const uint32_t segment) {
         const std::vector<Vec2> points = math::generateCircleVertices(pos, r, segment);
         drawTriangleFan(fb, points, color);
     }
 
-    void drawLine(Framebuffer &fb, const Vec2 a, const Vec2 b, const math::Color color) {
+    void drawLine(Framebuffer &fb, const Vec2 &a, const Vec2 &b, const math::Color &color) {
         int x0 = std::floor(a.x);
         int y0 = std::floor(a.y);
         const int x1 = std::floor(b.x);

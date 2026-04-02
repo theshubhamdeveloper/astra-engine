@@ -12,7 +12,9 @@ namespace astra::math {
 
         static Vec2 one();
 
-        static double dot(Vec2 a, Vec2 b);
+        static double dot(const Vec2 &a, const Vec2 &b);
+
+        static double cross(const Vec2 &a, const Vec2 &b);
 
         Vec2 operator+(Vec2 b) const;
 
