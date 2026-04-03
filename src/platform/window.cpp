@@ -1,6 +1,7 @@
 #include <utility>
 #include "platform/window.hpp"
 #include "SDL3/SDL_init.h"
+#include "SDL3/SDL_oldnames.h"
 
 namespace astra::platform {
     Window::Window(std::string title, const int32_t width, const int32_t height) : window(nullptr), renderer(nullptr),
@@ -16,6 +17,10 @@ namespace astra::platform {
         );
 
         renderer = SDL_CreateRenderer(window, nullptr);
+
+        if (renderer) {
+            SDL_SetRenderVSync(renderer, 1);
+        }
 
         texture = SDL_CreateTexture(
             renderer,
