@@ -30,7 +30,7 @@ namespace astra::input {
                     break;
 
                 case SDL_EVENT_MOUSE_BUTTON_DOWN:
-                    buttonIndex = static_cast<int>(Mouse::ConvertSdlToMouseButton(event.button.button));
+                    buttonIndex = static_cast<int>(Mouse::convertSdlToMouseButton(event.button.button));
                     if (buttonIndex == -1) {
                         std::cout << "Invalid mouse button index" << std::endl;
                         break;
@@ -40,7 +40,7 @@ namespace astra::input {
                     break;
 
                 case SDL_EVENT_MOUSE_BUTTON_UP:
-                    buttonIndex = static_cast<int>(Mouse::ConvertSdlToMouseButton(event.button.button));
+                    buttonIndex = static_cast<int>(Mouse::convertSdlToMouseButton(event.button.button));
                     if (buttonIndex == -1) {
                         std::cout << "Invalid mouse button index" << std::endl;
                         break;

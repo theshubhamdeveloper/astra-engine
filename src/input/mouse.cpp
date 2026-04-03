@@ -16,25 +16,25 @@ namespace astra::input {
         position.y = positionY;
     }
 
-    bool Mouse::IsMouseDown(MouseButton button) const {
+    bool Mouse::isMouseDown(MouseButton button) const {
         return buttonsCurrent[static_cast<int>(button)];
     }
 
-    bool Mouse::IsMousePressed(MouseButton button) const {
+    bool Mouse::isMousePressed(MouseButton button) const {
         const bool previous = buttonsPrevious[static_cast<int>(button)];
         const bool current = buttonsCurrent[static_cast<int>(button)];
 
         return !previous && current;
     }
 
-    bool Mouse::IsMouseReleased(MouseButton button) const {
+    bool Mouse::isMouseReleased(MouseButton button) const {
         const bool previous = buttonsPrevious[static_cast<int>(button)];
         const bool current = buttonsCurrent[static_cast<int>(button)];
 
         return previous && !current;
     }
 
-    MouseButton Mouse::ConvertSdlToMouseButton(const uint8_t sdlButton) {
+    MouseButton Mouse::convertSdlToMouseButton(const uint8_t sdlButton) {
         switch (sdlButton) {
             case SDL_BUTTON_LEFT:
                 return MouseButton::Left;
@@ -56,15 +56,15 @@ namespace astra::input {
         }
     }
 
-    math::Vec2 Mouse::GetMousePosition() const {
+    math::Vec2 Mouse::getMousePosition() const {
         return position;
     }
 
-    math::Vec2 Mouse::GetMouseDelta() const {
+    math::Vec2 Mouse::getMouseDelta() const {
         return previousPosition - position;
     }
 
-    double Mouse::GetScrollDelta() const {
+    double Mouse::getScrollDelta() const {
         return wheelDelta;
     }
 }

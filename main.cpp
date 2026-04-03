@@ -24,7 +24,7 @@ int main() {
     window.initialize();
 
     bool toDrawCircle = false;
-    unsigned circleRadius = 100;
+    uint32_t circleRadius = 100;
 
     bool running = true;
     while (running) {
@@ -32,7 +32,7 @@ int main() {
 
         input.updateState();
 
-        std::cout << "Frame: " << time.deltaTime() * 1000 << " ms" << "\n";
+        // std::cout << "Frame: " << time.deltaTime() * 1000 << " ms" << "\n";
         std::cout << "FPS: " << time.fps() << "\n";
 
         if (input.quitRequested()) {
@@ -42,11 +42,11 @@ int main() {
         framebuffer.clear(astra::math::Color::red());
 
         // TEST START
-        if (input.mouse.IsMousePressed(astra::input::MouseButton::Right)) {
+        if (input.mouse.isMousePressed(astra::input::MouseButton::Right)) {
             toDrawCircle = true;
         }
 
-        circleRadius += input.mouse.wheelDelta;
+        circleRadius += input.mouse.wheelDelta * 60;
 
         if (toDrawCircle)
             drawCircle(framebuffer, input.mouse.position, circleRadius, astra::math::Color::green());

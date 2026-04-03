@@ -26,18 +26,18 @@ namespace astra::input {
 
         Mouse();
 
-        bool IsMouseDown(MouseButton button) const;
+        bool isMouseDown(MouseButton button) const;
 
-        bool IsMousePressed(MouseButton button) const;
+        bool isMousePressed(MouseButton button) const;
 
-        bool IsMouseReleased(MouseButton button) const;
+        bool isMouseReleased(MouseButton button) const;
 
-        static MouseButton ConvertSdlToMouseButton(uint8_t sdlButton);
+        static MouseButton convertSdlToMouseButton(uint8_t sdlButton);
 
-        math::Vec2 GetMousePosition() const;
+        math::Vec2 getMousePosition() const;
 
-        math::Vec2 GetMouseDelta() const;
+        math::Vec2 getMouseDelta() const;
 
-        double GetScrollDelta() const;
+        double getScrollDelta() const;
     };
 }

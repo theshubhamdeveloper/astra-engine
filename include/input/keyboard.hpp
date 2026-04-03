@@ -8,10 +8,10 @@ namespace astra::input {
 
         Keyboard();
 
-        bool IsKeyDown(SDL_Scancode key) const;
+        bool isKeyDown(SDL_Scancode key) const;
 
-        bool IsKeyPressed(SDL_Scancode key) const;
+        bool isKeyPressed(SDL_Scancode key) const;
 
-        bool IsKeyReleased(SDL_Scancode key) const;
+        bool isKeyReleased(SDL_Scancode key) const;
     };
 }
