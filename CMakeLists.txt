@@ -19,6 +19,7 @@ add_executable(astra_engine MACOSX_BUNDLE main.cpp
         src/input/keyboard.cpp
         src/input/mouse.cpp
         src/core/time.cpp
+        src/ecs/entity/entity_manager.cpp
 )
 
 target_include_directories(astra_engine PRIVATE include)
