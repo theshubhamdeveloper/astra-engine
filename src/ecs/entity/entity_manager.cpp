@@ -1,8 +1,5 @@
 #include "ecs/entity/entity_manager.hpp"
 
-#include <iostream>
-#include <ostream>
-
 namespace astra::ecs::entity {
     EntityManager::EntityManager() : nextEntityId(0) {
     }
@@ -22,12 +19,8 @@ namespace astra::ecs::entity {
     }
 
     void EntityManager::destroyEntity(const Entity &entity) {
-        if (!isAlive(entity)) {
-            std::cout << "Entity already destroyed" << std::endl;
+        if (!isAlive(entity))
             return;
-        }
-
-        // TODO: remove component
 
         freeIds.push(entity.id);
         ++generations[entity.id];

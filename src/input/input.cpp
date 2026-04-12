@@ -1,4 +1,3 @@
-#include <iostream>
 #include <ranges>
 #include "input/input.hpp"
 #include "SDL3/SDL_events.h"
@@ -31,20 +30,16 @@ namespace astra::input {
 
                 case SDL_EVENT_MOUSE_BUTTON_DOWN:
                     buttonIndex = static_cast<int>(Mouse::convertSdlToMouseButton(event.button.button));
-                    if (buttonIndex == -1) {
-                        std::cout << "Invalid mouse button index" << std::endl;
+                    if (buttonIndex == -1)
                         break;
-                    }
 
                     mouse.buttonsCurrent[buttonIndex] = true;
                     break;
 
                 case SDL_EVENT_MOUSE_BUTTON_UP:
                     buttonIndex = static_cast<int>(Mouse::convertSdlToMouseButton(event.button.button));
-                    if (buttonIndex == -1) {
-                        std::cout << "Invalid mouse button index" << std::endl;
+                    if (buttonIndex == -1)
                         break;
-                    }
 
                     mouse.buttonsCurrent[buttonIndex] = false;
                     break;
@@ -54,7 +49,6 @@ namespace astra::input {
                     break;
 
                 default:
-                    std::cout << "Unhandled event type: " << event.type << "\n";
                     break;
             }
         }
