@@ -21,6 +21,7 @@ add_executable(astra_engine MACOSX_BUNDLE main.cpp
         src/core/time.cpp
         src/ecs/entity/entity_manager.cpp
         src/ecs/component/component_manager.cpp
+        src/ecs/system/system_manager.cpp
 )
 
 target_compile_definitions(astra_engine PRIVATE
