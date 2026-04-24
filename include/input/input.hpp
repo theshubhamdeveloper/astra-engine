@@ -3,19 +3,19 @@
 #include "mouse.hpp"
 
 namespace astra::input {
-    struct Input {
-        Keyboard keyboard;
-        Mouse mouse;
+struct Input {
+    Keyboard keyboard;
+    Mouse mouse;
 
-        Input();
+    Input();
 
-        void updateState();
+    void updateState();
 
-        void updateCurrentToPrevious();
+    void updateCurrentToPrevious();
 
-        bool quitRequested() const;
+    bool quitRequested() const;
 
-    private:
-        bool quitRequested_;
-    };
+  private:
+    bool quitRequested_;
+};
 }

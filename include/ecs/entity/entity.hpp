@@ -2,11 +2,11 @@
 #include <cstdint>
 
 namespace astra::ecs::entity {
-    using EntityId = uint32_t;
-    using EntityGeneration = uint32_t;
+using EntityId = uint32_t;
+using EntityGeneration = uint32_t;
 
-    struct Entity {
-        EntityId id;
-        EntityGeneration generation;
-    };
+struct Entity {
+    EntityId id;
+    EntityGeneration generation;
+};
 }
