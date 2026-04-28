@@ -12,9 +12,9 @@ struct Vec2 {
 
     static Vec2 one();
 
-    static double dot(const Vec2 &a, const Vec2 &b);
+    static double dot(const Vec2& a, const Vec2& b);
 
-    static double cross(const Vec2 &a, const Vec2 &b);
+    static double cross(const Vec2& a, const Vec2& b);
 
     Vec2 operator+(Vec2 b) const;
 

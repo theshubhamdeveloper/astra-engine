@@ -8,6 +8,6 @@ class IComponentStorage {
 
   private:
     friend class ComponentManager;
-    virtual void remove(const entity::Entity &entity) = 0;
+    virtual void remove(const entity::Entity& entity) = 0;
 };
 }

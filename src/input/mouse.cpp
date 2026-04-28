@@ -3,8 +3,8 @@
 
 namespace astra::input {
 Mouse::Mouse()
-    : position(math::Vec2::zero()), previousPosition(math::Vec2::zero()),
-      buttonsCurrent{false}, buttonsPrevious{false}, wheelDelta(0) {
+    : position(math::Vec2::zero()), previousPosition(math::Vec2::zero()), buttonsCurrent{false}, buttonsPrevious{false},
+      wheelDelta(0) {
     float positionX;
     float positionY;
     SDL_GetMouseState(&positionX, &positionY);
@@ -53,9 +53,15 @@ MouseButton Mouse::convertSdlToMouseButton(const uint8_t sdlButton) {
     }
 }
 
-math::Vec2 Mouse::getMousePosition() const { return position; }
+math::Vec2 Mouse::getMousePosition() const {
+    return position;
+}
 
-math::Vec2 Mouse::getMouseDelta() const { return previousPosition - position; }
+math::Vec2 Mouse::getMouseDelta() const {
+    return previousPosition - position;
+}
 
-double Mouse::getScrollDelta() const { return wheelDelta; }
+double Mouse::getScrollDelta() const {
+    return wheelDelta;
+}
 }

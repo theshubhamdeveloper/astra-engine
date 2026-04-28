@@ -17,7 +17,7 @@ Entity EntityManager::createEntity() {
     return {id, 1};
 }
 
-void EntityManager::destroyEntity(const Entity &entity) {
+void EntityManager::destroyEntity(const Entity& entity) {
     if (!isAlive(entity))
         return;
 
@@ -25,7 +25,7 @@ void EntityManager::destroyEntity(const Entity &entity) {
     ++generations[entity.id];
 }
 
-bool EntityManager::isAlive(const Entity &entity) const {
+bool EntityManager::isAlive(const Entity& entity) const {
     if (entity.id >= nextEntityId)
         return false;
 

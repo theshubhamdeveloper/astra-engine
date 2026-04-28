@@ -8,5 +8,7 @@ void SystemManager::update(const double deltaTime) const {
     }
 }
 
-void SystemManager::addSystem(System *system) { systems.push_back(system); }
+void SystemManager::addSystem(System* system) {
+    systems.push_back(system);
+}
 }

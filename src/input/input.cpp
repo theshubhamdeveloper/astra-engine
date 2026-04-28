@@ -28,8 +28,7 @@ void Input::updateState() {
             break;
 
         case SDL_EVENT_MOUSE_BUTTON_DOWN:
-            buttonIndex = static_cast<int>(
-                Mouse::convertSdlToMouseButton(event.button.button));
+            buttonIndex = static_cast<int>(Mouse::convertSdlToMouseButton(event.button.button));
             if (buttonIndex == -1)
                 break;
 
@@ -37,8 +36,7 @@ void Input::updateState() {
             break;
 
         case SDL_EVENT_MOUSE_BUTTON_UP:
-            buttonIndex = static_cast<int>(
-                Mouse::convertSdlToMouseButton(event.button.button));
+            buttonIndex = static_cast<int>(Mouse::convertSdlToMouseButton(event.button.button));
             if (buttonIndex == -1)
                 break;
 
@@ -61,5 +59,7 @@ void Input::updateCurrentToPrevious() {
     mouse.wheelDelta = 0;
 }
 
-bool Input::quitRequested() const { return quitRequested_; }
+bool Input::quitRequested() const {
+    return quitRequested_;
+}
 }

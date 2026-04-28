@@ -3,9 +3,8 @@
 
 namespace astra::core {
 Time::Time()
-    : deltaTime_(0), previousCounter(SDL_GetPerformanceCounter()),
-      performanceFrequency(SDL_GetPerformanceFrequency()), frameCount(0),
-      elapsedTime(0), fps_(0) {}
+    : deltaTime_(0), previousCounter(SDL_GetPerformanceCounter()), performanceFrequency(SDL_GetPerformanceFrequency()),
+      frameCount(0), elapsedTime(0), fps_(0) {}
 
 void Time::update() {
     evaluateDeltaTime();
@@ -15,8 +14,7 @@ void Time::update() {
 void Time::evaluateDeltaTime() {
     const uint64_t currentCounter = SDL_GetPerformanceCounter();
 
-    deltaTime_ = static_cast<double>(currentCounter - previousCounter) /
-                 static_cast<double>(performanceFrequency);
+    deltaTime_ = static_cast<double>(currentCounter - previousCounter) / static_cast<double>(performanceFrequency);
 
     previousCounter = currentCounter;
 }
@@ -37,7 +35,11 @@ void Time::evaluateFPS() {
     elapsedTime -= FPS_INTERVAL;
 }
 
-double Time::deltaTime() const { return deltaTime_; }
+double Time::deltaTime() const {
+    return deltaTime_;
+}
 
-uint16_t Time::fps() const { return fps_; }
+uint16_t Time::fps() const {
+    return fps_;
+}
 }

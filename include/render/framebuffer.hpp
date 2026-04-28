@@ -16,6 +16,6 @@ class Framebuffer {
 
     void clear(math::Color color);
 
-    [[nodiscard]] const Buffer &getBuffer() const;
+    [[nodiscard]] const Buffer& getBuffer() const;
 };
 }

@@ -14,8 +14,8 @@ class EntityManager {
 
     Entity createEntity();
 
-    void destroyEntity(const Entity &entity);
+    void destroyEntity(const Entity& entity);
 
-    bool isAlive(const Entity &entity) const;
+    bool isAlive(const Entity& entity) const;
 };
 }

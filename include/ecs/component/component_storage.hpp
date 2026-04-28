@@ -14,20 +14,19 @@ template <typename T> class ComponentStorage : public IComponentStorage {
   public:
     ComponentStorage() = default;
 
-    [[nodiscard]] bool hasComponent(const entity::Entity &entity) const {
-        if (entity.id >= entityToIndex.size() ||
-            entityToIndex[entity.id] == core::INVALID_INDEX)
+    [[nodiscard]] bool hasComponent(const entity::Entity& entity) const {
+        if (entity.id >= entityToIndex.size() || entityToIndex[entity.id] == core::INVALID_INDEX)
             return false;
 
         return true;
     }
 
-    T &getComponent(const entity::Entity &entity) {
+    T& getComponent(const entity::Entity& entity) {
         ASSERT(hasComponent(entity));
         return components[entityToIndex[entity.id]];
     }
 
-    T &getComponentAt(const size_t index) {
+    T& getComponentAt(const size_t index) {
         ASSERT(index < entities.size());
         return components[index];
     }
@@ -37,16 +36,18 @@ template <typename T> class ComponentStorage : public IComponentStorage {
         return entities[index];
     }
 
-    [[nodiscard]] size_t size() const { return components.size(); }
+    [[nodiscard]] size_t size() const {
+        return components.size();
+    }
 
   private:
     friend class ComponentManager;
 
-    void remove(const entity::Entity &entity) override {
+    void remove(const entity::Entity& entity) override {
         removeComponent(entity);
     }
 
-    void addComponent(const entity::Entity &entity, const T &component) {
+    void addComponent(const entity::Entity& entity, const T& component) {
         components.push_back(component);
         entities.push_back(entity.id);
 
@@ -57,7 +58,7 @@ template <typename T> class ComponentStorage : public IComponentStorage {
         entityToIndex[entity.id] = entities.size() - 1;
     }
 
-    void removeComponent(const entity::Entity &entity) {
+    void removeComponent(const entity::Entity& entity) {
         if (!hasComponent(entity))
             return;
 

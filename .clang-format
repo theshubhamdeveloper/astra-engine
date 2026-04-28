@@ -5,3 +5,25 @@ TabWidth: 4
 UseTab: Never
 
 FixNamespaceComments: false
+
+BreakBeforeBraces: Attach
+
+ColumnLimit: 120
+
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Empty
+
+BinPackParameters: true
+BinPackArguments: true
+
+BreakBeforeBinaryOperators: None
+
+PenaltyBreakBeforeFirstCallParameter: 1000
+PenaltyBreakAssignment: 1000
+PenaltyExcessCharacter: 1000
+
+PointerAlignment: Left
+
+SortIncludes: true
+SpaceBeforeParens: ControlStatements
