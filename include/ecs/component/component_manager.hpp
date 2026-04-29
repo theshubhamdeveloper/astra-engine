@@ -32,34 +32,34 @@ class ComponentManager {
         return nullptr;
     }
 
-    template <typename T> T& getComponent(const entity::Entity& entity) {
+    template <typename T> T& getComponent(const entity::EntityId& entityId) {
         const auto storage = getStorage<T>();
         ASSERT(storage != nullptr);
-        return storage->getComponent(entity);
+        return storage->getComponent(entityId);
     }
 
-    template <typename T> void addComponent(const entity::Entity& entity, const T& component) {
+    template <typename T> void addComponent(const entity::EntityId& entityId, const T& component) {
         auto storage = getStorage<T>();
         if (storage == nullptr)
             storage = createStorage<T>();
 
-        storage->addComponent(entity, component);
+        storage->addComponent(entityId, component);
     }
 
-    template <typename T> void removeComponent(const entity::Entity& entity) {
+    template <typename T> void removeComponent(const entity::EntityId& entityId) {
         const auto storage = getStorage<T>();
         ASSERT(storage != nullptr);
-        storage->removeComponent(entity);
+        storage->removeComponent(entityId);
     }
 
-    template <typename T> [[nodiscard]] bool hasComponent(const entity::Entity& entity) const {
+    template <typename T> [[nodiscard]] bool hasComponent(const entity::EntityId& entityId) const {
         const auto storage = getStorage<T>();
         if (storage == nullptr)
             return false;
 
-        return storage->hasComponent(entity);
+        return storage->hasComponent(entityId);
     }
 
-    void removeAll(const entity::Entity& entity) const;
+    void removeAll(const entity::EntityId& entityId) const;
 };
 }

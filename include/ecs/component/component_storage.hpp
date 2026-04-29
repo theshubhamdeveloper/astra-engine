@@ -14,16 +14,16 @@ template <typename T> class ComponentStorage : public IComponentStorage {
   public:
     ComponentStorage() = default;
 
-    [[nodiscard]] bool hasComponent(const entity::Entity& entity) const {
-        if (entity.id >= entityToIndex.size() || entityToIndex[entity.id] == core::INVALID_INDEX)
+    [[nodiscard]] bool hasComponent(const entity::EntityId& entityId) const {
+        if (entityId >= entityToIndex.size() || entityToIndex[entityId] == core::INVALID_INDEX)
             return false;
 
         return true;
     }
 
-    T& getComponent(const entity::Entity& entity) {
-        ASSERT(hasComponent(entity));
-        return components[entityToIndex[entity.id]];
+    T& getComponent(const entity::EntityId& entityId) {
+        ASSERT(hasComponent(entityId));
+        return components[entityToIndex[entityId]];
     }
 
     T& getComponentAt(const size_t index) {
@@ -43,33 +43,33 @@ template <typename T> class ComponentStorage : public IComponentStorage {
   private:
     friend class ComponentManager;
 
-    void remove(const entity::Entity& entity) override {
-        removeComponent(entity);
+    void remove(const entity::EntityId& entityId) override {
+        removeComponent(entityId);
     }
 
-    void addComponent(const entity::Entity& entity, const T& component) {
+    void addComponent(const entity::EntityId& entityId, const T& component) {
         components.push_back(component);
-        entities.push_back(entity.id);
+        entities.push_back(entityId);
 
-        if (entity.id >= entityToIndex.size()) {
-            entityToIndex.resize(entity.id + 1, core::INVALID_INDEX);
+        if (entityId >= entityToIndex.size()) {
+            entityToIndex.resize(entityId + 1, core::INVALID_INDEX);
         }
 
-        entityToIndex[entity.id] = entities.size() - 1;
+        entityToIndex[entityId] = entities.size() - 1;
     }
 
-    void removeComponent(const entity::Entity& entity) {
-        if (!hasComponent(entity))
+    void removeComponent(const entity::EntityId& entityId) {
+        if (!hasComponent(entityId))
             return;
 
         if (components.size() == 1) {
             components.pop_back();
             entities.pop_back();
-            entityToIndex[entity.id] = core::INVALID_INDEX;
+            entityToIndex[entityId] = core::INVALID_INDEX;
             return;
         }
 
-        const size_t indexToRemove = entityToIndex[entity.id];
+        const size_t indexToRemove = entityToIndex[entityId];
 
         std::swap(components[indexToRemove], components[components.size() - 1]);
         std::swap(entities[indexToRemove], entities[entities.size() - 1]);
@@ -78,7 +78,7 @@ template <typename T> class ComponentStorage : public IComponentStorage {
 
         const size_t entityIdSwaped = entities[indexToRemove];
 
-        entityToIndex[entity.id] = core::INVALID_INDEX;
+        entityToIndex[entityId] = core::INVALID_INDEX;
         entityToIndex[entityIdSwaped] = indexToRemove;
     }
 };
