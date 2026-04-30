@@ -24,7 +24,7 @@ add_executable(astra_engine MACOSX_BUNDLE main.cpp
         src/ecs/component/component_manager.cpp
         src/ecs/system/system_manager.cpp
         src/render/renderer.cpp
-        src/render/render_dispatch.hpp
+        src/render/render_dispatch.cpp
         src/ecs/system/shape_system.cpp
         src/ecs/world/world.cpp
 )
