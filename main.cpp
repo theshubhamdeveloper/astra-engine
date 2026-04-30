@@ -1,11 +1,11 @@
-#include <iostream>
+#include "SDL3/SDL_init.h"
+#include "SDL3/SDL_log.h"
 #include "core/time.hpp"
 #include "input/input.hpp"
 #include "platform/window.hpp"
-#include "render/draw.hpp"
-#include "render/framebuffer.hpp"
-#include "SDL3/SDL_init.h"
-#include "SDL3/SDL_log.h"
+#include "render/renderer.hpp"
+#include <iostream>
+using namespace astra;
 
 constexpr int SCREEN_HEIGHT = 500;
 constexpr int SCREEN_WIDTH = 700;
@@ -16,47 +16,31 @@ int main() {
         return 3;
     }
 
-    auto window = astra::platform::Window("Astra Engine", SCREEN_WIDTH, SCREEN_HEIGHT);
-    auto framebuffer = astra::render::Framebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
-    auto time = astra::core::Time();
-    auto input = astra::input::Input();
-
-    window.initialize();
-
-    bool toDrawCircle = false;
-    uint32_t circleRadius = 100;
+    auto window = platform::Window("Astra Engine", SCREEN_WIDTH, SCREEN_HEIGHT);
+    auto renderer = render::Renderer(SCREEN_WIDTH, SCREEN_HEIGHT);
+    auto time = core::Time();
+    auto input = input::Input();
 
     bool running = true;
+
     while (running) {
         time.update();
 
         input.updateState();
 
-        // std::cout << "Frame: " << time.deltaTime() * 1000 << " ms" << "\n";
-        std::cout << "FPS: " << time.fps() << "\n";
+        std::cout << "Frame: " << time.deltaTime() * 1000 << " ms" << "\n"
+                  << "FPS: " << time.fps() << "\n";
 
-        if (input.quitRequested()) {
+        if (input.quitRequested())
             running = false;
-        }
 
-        framebuffer.clear(astra::math::Color::red());
+        renderer.clear(math::Color::red());
 
-        // TEST START
-        if (input.mouse.isMousePressed(astra::input::MouseButton::Right)) {
-            toDrawCircle = true;
-        }
-
-        circleRadius += input.mouse.wheelDelta * 60;
-
-        if (toDrawCircle)
-            drawCircle(framebuffer, input.mouse.position, circleRadius, astra::math::Color::green());
-        // TEST END
-
-        window.render(framebuffer.getBuffer());
+        window.render(renderer.getBuffer());
 
         input.updateCurrentToPrevious();
     }
-    window.destroy();
 
+    window.destroy();
     return 0;
 }

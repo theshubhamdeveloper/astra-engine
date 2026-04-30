@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(third_party/SDL EXCLUDE_FROM_ALL)
 
@@ -22,6 +23,7 @@ add_executable(astra_engine MACOSX_BUNDLE main.cpp
         src/ecs/entity/entity_manager.cpp
         src/ecs/component/component_manager.cpp
         src/ecs/system/system_manager.cpp
+        src/render/renderer.cpp
 )
 
 target_compile_definitions(astra_engine PRIVATE
