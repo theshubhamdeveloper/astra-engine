@@ -12,7 +12,7 @@ class System {
     explicit System(component::ComponentManager& componentManager)
         : componentManager(componentManager), isEnabled(true) {}
 
-    virtual void update(double deltaTime) const = 0;
+    virtual void update(double deltaTime) = 0;
 
     virtual ~System() = default;
 };
