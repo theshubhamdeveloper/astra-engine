@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 namespace astra::ecs::component {
 using ComponentTypeId = uint32_t;
