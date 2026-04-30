@@ -1,6 +1,7 @@
 #include "SDL3/SDL_init.h"
 #include "SDL3/SDL_log.h"
 #include "core/time.hpp"
+#include "ecs/world/world.hpp"
 #include "input/input.hpp"
 #include "platform/window.hpp"
 #include "render/renderer.hpp"
@@ -20,6 +21,10 @@ int main() {
     auto renderer = render::Renderer(SCREEN_WIDTH, SCREEN_HEIGHT);
     auto time = core::Time();
     auto input = input::Input();
+    auto world = ecs::world::World();
+
+    window.initialize();
+    world.initialize(renderer);
 
     bool running = true;
 
@@ -35,6 +40,8 @@ int main() {
             running = false;
 
         renderer.clear(math::Color::red());
+
+        world.update(time.deltaTime());
 
         window.render(renderer.getBuffer());
 

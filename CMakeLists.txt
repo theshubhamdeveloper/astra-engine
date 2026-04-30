@@ -26,6 +26,7 @@ add_executable(astra_engine MACOSX_BUNDLE main.cpp
         src/render/renderer.cpp
         src/render/render_dispatch.hpp
         src/ecs/system/shape_system.cpp
+        src/ecs/world/world.cpp
 )
 
 target_compile_definitions(astra_engine PRIVATE
