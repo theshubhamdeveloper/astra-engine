@@ -1,5 +1,6 @@
 #include "ecs/system/shape_system.hpp"
 #include "ecs/component/component_storage.hpp"
+#include "ecs/components/shape.hpp"
 #include "ecs/entity/entity.hpp"
 #include "render/render_dispatch.hpp"
 #include <vector>
@@ -24,7 +25,12 @@ void ShapeSystem::update(double deltaTime) {
         if (!transformStorage->hasComponent(entityId))
             continue;
 
-        drawItems.emplace_back(transformStorage->getComponent(entityId), shapeStorage->getComponentAt(shapeIndex));
+        component::Shape shape = shapeStorage->getComponentAt(shapeIndex);
+
+        if (!shape.style.display)
+            continue;
+
+        drawItems.emplace_back(transformStorage->getComponent(entityId), shape);
     };
 
     std::sort(drawItems.begin(), drawItems.end(),
