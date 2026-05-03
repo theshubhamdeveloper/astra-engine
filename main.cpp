@@ -24,7 +24,7 @@ int main() {
     auto world = ecs::world::World();
 
     window.initialize();
-    world.initialize(renderer);
+    world.initialize(renderer, input);
 
     bool running = true;
 

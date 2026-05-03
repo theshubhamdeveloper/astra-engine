@@ -2,6 +2,7 @@
 #include "ecs/component/component_manager.hpp"
 #include "ecs/entity/entity_manager.hpp"
 #include "ecs/system/system_manager.hpp"
+#include "input/input.hpp"
 #include "render/renderer.hpp"
 
 namespace astra::ecs::world {
@@ -11,7 +12,7 @@ class World {
     system::SystemManager systemManager;
 
   public:
-    void initialize(render::Renderer& renderer);
+    void initialize(render::Renderer& renderer, input::Input& input);
 
     void update(double deltaTime);
 };
