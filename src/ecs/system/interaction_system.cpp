@@ -1,5 +1,5 @@
 #include "ecs/system/interaction_system.hpp"
-#include <cmath>
+#include "input/mouse.hpp"
 #include <vector>
 
 namespace astra::ecs::system {
@@ -7,33 +7,53 @@ InteractionSystem::InteractionSystem(component::ComponentManager& componentManag
     : System(componentManager), input(input) {}
 
 void InteractionSystem::update(double deltaTime) {
-    component::Interaction* interactedComponent = getInteractedComponent();
-
-    if (interactedComponent != nullptr) {
-        interactedComponent->entered = false;
-        if (!interactedComponent->hovered) {
-            interactedComponent->hovered = true;
-            interactedComponent->entered = true;
-        }
-    }
+    component::Interaction* currentInteraction = hitTestInteraction();
 
     const auto interactionStorage = componentManager.getStorage<component::Interaction>();
-
-    if (interactionStorage == nullptr)
+    if (!interactionStorage)
         return;
 
     for (size_t interactionIndex = 0; interactionIndex < interactionStorage->size(); interactionIndex++) {
-        component::Interaction* interaction = &interactionStorage->getComponentAt(interactionIndex);
+        component::Interaction& interaction = interactionStorage->getComponentAt(interactionIndex);
+        interaction.leftPressed = false;
+        interaction.leftReleased = false;
+        interaction.rightPressed = false;
+        interaction.rightReleased = false;
+        interaction.exited = false;
+        interaction.entered = false;
+    }
 
-        interaction->exited = false;
-
-        if (interactedComponent != interaction && interaction->hovered) {
-            interaction->hovered = false;
-            interaction->exited = true;
+    if (lastInteraction) {
+        if (lastInteraction != currentInteraction) {
+            lastInteraction->hovered = false;
+            lastInteraction->exited = true;
         }
     }
+
+    if (currentInteraction) {
+        if (currentInteraction != lastInteraction)
+            currentInteraction->entered = true;
+        else
+            currentInteraction->entered = false;
+
+        currentInteraction->hovered = true;
+
+        if (input.mouse.isMousePressed(input::MouseButton::Left))
+            currentInteraction->leftPressed = true;
+
+        else if (input.mouse.isMouseReleased(input::MouseButton::Left))
+            currentInteraction->leftReleased = true;
+
+        else if (input.mouse.isMousePressed(input::MouseButton::Right))
+            currentInteraction->rightPressed = true;
+
+        else if (input.mouse.isMouseReleased(input::MouseButton::Right))
+            currentInteraction->rightReleased = true;
+    }
+
+    lastInteraction = currentInteraction;
 }
-component::Interaction* InteractionSystem::getInteractedComponent() {
+component::Interaction* InteractionSystem::hitTestInteraction() {
     const auto transformStorage = componentManager.getStorage<component::Transform>();
     const auto shapeStorage = componentManager.getStorage<component::Shape>();
     const auto interactionStorage = componentManager.getStorage<component::Interaction>();
@@ -85,9 +105,10 @@ bool InteractionSystem::hitTest(const component::Transform& transform,
 
 bool InteractionSystem::hitTest(const component::Transform& transform, const component::CircleGeometry& circleGeometry,
                                 const component::Interaction& interaction, const math::Vec2& position) {
-    const double distaceFromCenter = std::hypot(transform.position.x - position.x, transform.position.y - position.y);
+    double dx = transform.position.x - position.x;
+    double dy = transform.position.y - position.y;
 
-    if (distaceFromCenter <= circleGeometry.radius)
+    if (dx + dy <= circleGeometry.radius * circleGeometry.radius)
         return true;
 
     return false;

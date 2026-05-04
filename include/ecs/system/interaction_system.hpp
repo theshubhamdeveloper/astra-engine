@@ -16,13 +16,14 @@ struct HitItem {
 
 class InteractionSystem : public System {
     input::Input& input;
+    component::Interaction* lastInteraction;
 
   public:
     InteractionSystem(component::ComponentManager& componentManager, input::Input& input);
     void update(double deltaTime) override;
 
   private:
-    component::Interaction* getInteractedComponent();
+    component::Interaction* hitTestInteraction();
 
     static bool hitTest(const component::Transform& transform, const component::RectangleGeometry& rectangleGeometry,
                         const component::Interaction& interaction, const math::Vec2& position);
