@@ -27,6 +27,7 @@ add_executable(astra_engine MACOSX_BUNDLE main.cpp
         src/ecs/system/shape_system.cpp
         src/ecs/world/world.cpp
         src/ecs/system/interaction_system.cpp
+        src/ecs/system/camera_system.cpp
 )
 
 target_compile_definitions(astra_engine PRIVATE
