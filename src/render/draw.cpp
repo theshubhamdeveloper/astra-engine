@@ -9,7 +9,7 @@ void drawTriangle(Framebuffer& fb, const Vec2& a, const Vec2& b, const Vec2& c, 
 
     for (auto y = static_cast<uint32_t>(min.y); y <= max.y; y++) {
         for (auto x = static_cast<uint32_t>(min.x); x <= max.x; x++) {
-            if (math::isPointInsideTriangle(a, b, c, {static_cast<double>(x), static_cast<double>(y)}))
+            if (math::isPointInsideTriangle(a, b, c, {static_cast<float>(x), static_cast<float>(y)}))
                 fb.putPixel(x, y, color);
         }
     }

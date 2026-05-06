@@ -1,5 +1,6 @@
 #include "ecs/system/interaction_system.hpp"
 #include "input/mouse.hpp"
+#include "math/vec2.hpp"
 
 namespace astra::ecs::system {
 InteractionSystem::InteractionSystem(component::ComponentManager& componentManager, input::Input& input)
@@ -102,10 +103,7 @@ bool InteractionSystem::hitTest(const component::Transform& transform,
 
 bool InteractionSystem::hitTest(const component::Transform& transform, const component::CircleGeometry& circleGeometry,
                                 const component::Interaction& interaction, const math::Vec2& position) {
-    double dx = transform.position.x - position.x;
-    double dy = transform.position.y - position.y;
-
-    if (dx * dx + dy * dx <= circleGeometry.radius * circleGeometry.radius)
+    if (position.distanceSquared(transform.position) <= circleGeometry.radius * circleGeometry.radius)
         return true;
 
     return false;
