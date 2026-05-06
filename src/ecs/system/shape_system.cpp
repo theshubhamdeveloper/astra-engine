@@ -3,6 +3,7 @@
 #include "ecs/components/shape.hpp"
 #include "ecs/entity/entity.hpp"
 #include "render/render_dispatch.hpp"
+#include <algorithm>
 #include <vector>
 
 namespace astra::ecs::system {
@@ -33,8 +34,8 @@ void ShapeSystem::update(double deltaTime) {
         drawItems.emplace_back(transformStorage->getComponent(entityId), shape);
     };
 
-    std::sort(drawItems.begin(), drawItems.end(),
-              [](const DrawItem& a, const DrawItem& b) { return a.transform.zindex < b.transform.zindex; });
+    std::stable_sort(drawItems.begin(), drawItems.end(),
+                     [](const DrawItem& a, const DrawItem& b) { return a.transform.zindex < b.transform.zindex; });
 
     for (auto& drawItem : drawItems) {
         std::visit(

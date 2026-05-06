@@ -1,6 +1,5 @@
 #include "ecs/system/interaction_system.hpp"
 #include "input/mouse.hpp"
-#include <vector>
 
 namespace astra::ecs::system {
 InteractionSystem::InteractionSystem(component::ComponentManager& componentManager, input::Input& input)
@@ -58,7 +57,7 @@ component::Interaction* InteractionSystem::hitTestInteraction() {
     const auto shapeStorage = componentManager.getStorage<component::Shape>();
     const auto interactionStorage = componentManager.getStorage<component::Interaction>();
 
-    std::vector<HitItem> hitItems;
+    HitItem topHitItem{0, nullptr};
 
     if (transformStorage == nullptr || shapeStorage == nullptr || interactionStorage == nullptr)
         return nullptr;
@@ -77,19 +76,17 @@ component::Interaction* InteractionSystem::hitTestInteraction() {
             continue;
 
         std::visit(
-            [this, &hitItems, &shape, &interaction, &transform](auto&& shapeGeometry) {
-                if (hitTest(transform, shapeGeometry, interaction, input.mouse.position))
-                    hitItems.emplace_back(transform.zindex, &interaction);
+            [this, &topHitItem, &shape, &interaction, &transform](auto&& shapeGeometry) {
+                if (hitTest(transform, shapeGeometry, interaction, input.mouse.position) &&
+                    topHitItem.zindex <= transform.zindex) {
+                    topHitItem.interaction = &interaction;
+                    topHitItem.zindex = transform.zindex;
+                }
             },
             shape.geometry);
     };
 
-    if (hitItems.empty())
-        return nullptr;
-
-    std::sort(hitItems.begin(), hitItems.end(), [](const HitItem& a, const HitItem& b) { return a.zindex < b.zindex; });
-
-    return hitItems.back().interaction;
+    return topHitItem.interaction;
 }
 
 // TODO: Add rotation
@@ -108,7 +105,7 @@ bool InteractionSystem::hitTest(const component::Transform& transform, const com
     double dx = transform.position.x - position.x;
     double dy = transform.position.y - position.y;
 
-    if (dx + dy <= circleGeometry.radius * circleGeometry.radius)
+    if (dx * dx + dy * dx <= circleGeometry.radius * circleGeometry.radius)
         return true;
 
     return false;
