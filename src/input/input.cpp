@@ -57,6 +57,7 @@ void Input::updateCurrentToPrevious() {
     std::ranges::copy(keyboard.current, keyboard.previous);
     std::ranges::copy(mouse.buttonsCurrent, mouse.buttonsPrevious);
     mouse.wheelDelta = 0;
+    mouse.previousPosition = mouse.position;
 }
 
 bool Input::quitRequested() const {

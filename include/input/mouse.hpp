@@ -15,7 +15,7 @@ struct Mouse {
     bool buttonsCurrent[MOUSE_BUTTON_COUNT];
     bool buttonsPrevious[MOUSE_BUTTON_COUNT];
 
-    double wheelDelta;
+    float wheelDelta;
 
     Mouse();
 
