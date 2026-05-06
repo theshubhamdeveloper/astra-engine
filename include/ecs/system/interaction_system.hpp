@@ -1,5 +1,6 @@
 #pragma once
 #include "ecs/component/component_manager.hpp"
+#include "ecs/components/camera.hpp"
 #include "ecs/components/interaction.hpp"
 #include "ecs/components/shape.hpp"
 #include "ecs/components/transform.hpp"
@@ -15,11 +16,13 @@ struct HitItem {
 };
 
 class InteractionSystem : public System {
-    input::Input& input;
+    const input::Input& input;
+    const component::Camera& camera;
     component::Interaction* lastInteraction;
 
   public:
-    InteractionSystem(component::ComponentManager& componentManager, input::Input& input);
+    InteractionSystem(component::ComponentManager& componentManager, const component::Camera& camera,
+                      const input::Input& input);
     void update(double deltaTime) override;
 
   private:

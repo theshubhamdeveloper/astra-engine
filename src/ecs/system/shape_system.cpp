@@ -1,20 +1,24 @@
 #include "ecs/system/shape_system.hpp"
 #include "ecs/component/component_storage.hpp"
+#include "ecs/components/camera.hpp"
 #include "ecs/components/shape.hpp"
+#include "ecs/components/transform.hpp"
 #include "ecs/entity/entity.hpp"
+#include "ecs/system/camera_system.hpp"
 #include "render/render_dispatch.hpp"
 #include <algorithm>
 #include <vector>
 
 namespace astra::ecs::system {
-ShapeSystem::ShapeSystem(component::ComponentManager& componentManager, render::Renderer& renderer)
-    : System(componentManager), renderer(renderer) {}
+ShapeSystem::ShapeSystem(component::ComponentManager& componentManager, const component::Camera& camera,
+                         render::Renderer& renderer)
+    : System(componentManager), renderer(renderer), camera(camera) {}
 
 void ShapeSystem::update(double deltaTime) {
     const auto transformStorage = componentManager.getStorage<component::Transform>();
     const auto shapeStorage = componentManager.getStorage<component::Shape>();
 
-    if (transformStorage == nullptr || shapeStorage == nullptr)
+    if (!transformStorage || !shapeStorage)
         return;
 
     std::vector<DrawItem> drawItems;
@@ -26,23 +30,26 @@ void ShapeSystem::update(double deltaTime) {
         if (!transformStorage->hasComponent(entityId))
             continue;
 
-        component::Shape shape = shapeStorage->getComponentAt(shapeIndex);
+        component::Shape* shape = &shapeStorage->getComponentAt(shapeIndex);
 
-        if (!shape.style.display)
+        if (!shape->style.display)
             continue;
 
-        drawItems.emplace_back(transformStorage->getComponent(entityId), shape);
+        drawItems.emplace_back(&transformStorage->getComponent(entityId), shape);
     };
 
     std::stable_sort(drawItems.begin(), drawItems.end(),
-                     [](const DrawItem& a, const DrawItem& b) { return a.transform.zindex < b.transform.zindex; });
+                     [](const DrawItem& a, const DrawItem& b) { return a.transform->zindex < b.transform->zindex; });
 
     for (auto& drawItem : drawItems) {
         std::visit(
             [this, &drawItem](auto&& shapeGeometry) {
-                render::dispatch::shape(renderer, drawItem.transform, shapeGeometry, drawItem.shape.style);
+                component::Transform screenPosTransform = *drawItem.transform;
+                screenPosTransform.position = CameraSystem::worldToScreen(camera, drawItem.transform->position);
+
+                render::dispatch::shape(renderer, screenPosTransform, shapeGeometry, drawItem.shape->style);
             },
-            drawItem.shape.geometry);
+            drawItem.shape->geometry);
     }
 }
 }

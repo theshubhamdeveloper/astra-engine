@@ -1,10 +1,12 @@
 #include "ecs/system/interaction_system.hpp"
+#include "ecs/system/camera_system.hpp"
 #include "input/mouse.hpp"
 #include "math/vec2.hpp"
 
 namespace astra::ecs::system {
-InteractionSystem::InteractionSystem(component::ComponentManager& componentManager, input::Input& input)
-    : System(componentManager), input(input) {}
+InteractionSystem::InteractionSystem(component::ComponentManager& componentManager, const component::Camera& camera,
+                                     const input::Input& input)
+    : System(componentManager), input(input), camera(camera) {}
 
 void InteractionSystem::update(double deltaTime) {
     component::Interaction* currentInteraction = hitTestInteraction();
@@ -78,7 +80,10 @@ component::Interaction* InteractionSystem::hitTestInteraction() {
 
         std::visit(
             [this, &topHitItem, &shape, &interaction, &transform](auto&& shapeGeometry) {
-                if (hitTest(transform, shapeGeometry, interaction, input.mouse.position) &&
+                component::Transform screenPosTransform = transform;
+                screenPosTransform.position = CameraSystem::worldToScreen(camera, transform.position);
+
+                if (hitTest(screenPosTransform, shapeGeometry, interaction, input.mouse.position) &&
                     topHitItem.zindex <= transform.zindex) {
                     topHitItem.interaction = &interaction;
                     topHitItem.zindex = transform.zindex;
