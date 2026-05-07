@@ -8,8 +8,8 @@
 #include <iostream>
 using namespace astra;
 
-constexpr int SCREEN_HEIGHT = 500;
-constexpr int SCREEN_WIDTH = 700;
+constexpr int SCREEN_WIDTH = 800;
+constexpr int SCREEN_HEIGHT = 600;
 
 int main() {
     if (SDL_Init(SDL_INIT_VIDEO) == false) {
@@ -26,7 +26,7 @@ int main() {
 
     auto renderer = render::Renderer(window.getWindowSizeInPixels(), window.getDpiScale());
 
-    world.initialize(renderer, input, {SCREEN_WIDTH, SCREEN_HEIGHT});
+    world.initialize(renderer, input, window.getWindowSize());
 
     bool running = true;
 
@@ -41,6 +41,11 @@ int main() {
         if (input.quitRequested())
             running = false;
 
+        if (input.windowResizeRequested()) {
+            window.updateOnResize();
+            renderer.onWindowResize(window.getWindowSizeInPixels(), window.getDpiScale());
+            world.setViewportSize(window.getWindowSize());
+        }
         renderer.clear(math::Color::red());
 
         world.update(time.deltaTime());

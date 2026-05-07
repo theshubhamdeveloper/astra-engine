@@ -4,6 +4,7 @@
 #include "ecs/entity/entity_manager.hpp"
 #include "ecs/system/system_manager.hpp"
 #include "input/input.hpp"
+#include "math/point.hpp"
 #include "render/renderer.hpp"
 
 namespace astra::ecs::world {
@@ -17,5 +18,7 @@ class World {
     void initialize(render::Renderer& renderer, input::Input& input, const math::Point& viewportSize);
 
     void update(double deltaTime);
+
+    void setViewportSize(const math::Point& size);
 };
 }

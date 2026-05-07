@@ -25,7 +25,14 @@ class Window {
 
     void render(const render::Buffer& buffer) const;
 
+    void createTexture();
+
+    void updateOnResize();
+
     const math::Point& getWindowSizeInPixels() const;
+
+    const math::Point& getWindowSize() const;
+
     const math::Vec2& getDpiScale() const;
 };
 }

@@ -15,7 +15,10 @@ struct Input {
 
     bool quitRequested() const;
 
+    bool windowResizeRequested() const;
+
   private:
     bool quitRequested_;
+    bool windowResizeRequested_;
 };
 }

@@ -17,6 +17,8 @@ class Framebuffer {
 
     void clear(const math::Color& color);
 
+    void resizeBuffer(const math::Point& newSize);
+
     [[nodiscard]] const Buffer& getBuffer() const;
 };
 }

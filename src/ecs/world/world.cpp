@@ -15,4 +15,8 @@ void World::initialize(render::Renderer& renderer, input::Input& input, const ma
 void World::update(const double deltaTime) {
     systemManager.update(deltaTime);
 }
+
+void World::setViewportSize(const math::Point& size) {
+    camera.viewport.size = size.toVec2();
+}
 }

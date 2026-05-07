@@ -3,15 +3,22 @@
 #include <ranges>
 
 namespace astra::input {
-Input::Input() : quitRequested_(false) {}
+Input::Input() : quitRequested_(false), windowResizeRequested_(false) {}
 
 void Input::updateState() {
+    windowResizeRequested_ = false;
+
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         int buttonIndex;
         switch (event.type) {
         case SDL_EVENT_QUIT:
             quitRequested_ = true;
+            break;
+
+        case SDL_EVENT_WINDOW_RESIZED:
+        case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+            windowResizeRequested_ = true;
             break;
 
         case SDL_EVENT_KEY_DOWN:
@@ -62,5 +69,9 @@ void Input::updateCurrentToPrevious() {
 
 bool Input::quitRequested() const {
     return quitRequested_;
+}
+
+bool Input::windowResizeRequested() const {
+    return windowResizeRequested_;
 }
 }

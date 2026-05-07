@@ -20,6 +20,11 @@ void Framebuffer::clear(const math::Color& color) {
     std::ranges::fill(framebuffer, color.packRGBA());
 }
 
+void Framebuffer::resizeBuffer(const math::Point& newSize) {
+    size = newSize;
+    framebuffer.resize(size.x * size.y, math::Color::black().packRGBA());
+}
+
 const Buffer& Framebuffer::getBuffer() const {
     return framebuffer;
 }

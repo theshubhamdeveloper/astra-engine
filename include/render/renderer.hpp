@@ -6,10 +6,10 @@
 namespace astra::render {
 class Renderer {
     Framebuffer framebuffer;
-    const math::Vec2& dpiScale;
+    math::Vec2 dpiScale;
 
   public:
-    Renderer(const math::Point& size, const math::Vec2& dpiScale);
+    Renderer(const math::Point& windowSizeInPixels, const math::Vec2& dpiScale);
 
     void drawTriangle(const math::Vec2& a, const math::Vec2& b, const math::Vec2& c, const math::Color& color);
 
@@ -20,6 +20,8 @@ class Renderer {
     void drawLine(const math::Vec2& a, const math::Vec2& b, const math::Color& color);
 
     void clear(math::Color color);
+
+    void onWindowResize(const math::Point& newWindowSizeInPixels, const math::Vec2& newDpiScale);
 
     [[nodiscard]] const Buffer& getBuffer() const;
 };

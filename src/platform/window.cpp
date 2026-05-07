@@ -1,5 +1,6 @@
 #include "platform/window.hpp"
 #include "SDL3/SDL_init.h"
+#include "SDL3/SDL_video.h"
 #include "math/point.hpp"
 #include <utility>
 
@@ -8,7 +9,8 @@ Window::Window(std::string title, const math::Point& size)
     : window(nullptr), renderer(nullptr), texture(nullptr), title(std::move(title)), windowSize(size) {}
 
 void Window::initialize() {
-    window = SDL_CreateWindow(title.c_str(), windowSize.x, windowSize.y, SDL_WINDOW_HIGH_PIXEL_DENSITY);
+    window = SDL_CreateWindow(title.c_str(), windowSize.x, windowSize.y,
+                              SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_RESIZABLE);
 
     SDL_GetWindowSizeInPixels(window, &windowSizeInPixels.x, &windowSizeInPixels.y);
 
@@ -21,8 +23,7 @@ void Window::initialize() {
         SDL_SetRenderVSync(renderer, 1);
     }
 
-    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, windowSizeInPixels.x,
-                                windowSizeInPixels.y);
+    createTexture();
 }
 
 void Window::destroy() const {
@@ -39,6 +40,28 @@ void Window::render(const render::Buffer& buffer) const {
     SDL_RenderTexture(renderer, texture, nullptr, nullptr);
     SDL_RenderPresent(renderer);
 }
+
+void Window::createTexture() {
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, windowSizeInPixels.x,
+                                windowSizeInPixels.y);
+}
+
+void Window::updateOnResize() {
+    SDL_GetWindowSize(window, &windowSize.x, &windowSize.y);
+    SDL_GetWindowSizeInPixels(window, &windowSizeInPixels.x, &windowSizeInPixels.y);
+
+    if (texture) {
+        SDL_DestroyTexture(texture);
+        texture = nullptr;
+    }
+
+    createTexture();
+}
+
+const math::Point& Window::getWindowSize() const {
+    return windowSize;
+}
+
 const math::Point& Window::getWindowSizeInPixels() const {
     return windowSizeInPixels;
 }
