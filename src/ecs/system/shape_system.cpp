@@ -46,6 +46,7 @@ void ShapeSystem::update(double deltaTime) {
             [this, &drawItem](auto&& shapeGeometry) {
                 component::Transform screenPosTransform = *drawItem.transform;
                 screenPosTransform.position = CameraSystem::worldToScreen(camera, drawItem.transform->position);
+                screenPosTransform.scale *= camera.zoom;
 
                 render::dispatch::shape(renderer, screenPosTransform, shapeGeometry, drawItem.shape->style);
             },

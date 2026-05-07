@@ -82,6 +82,7 @@ component::Interaction* InteractionSystem::hitTestInteraction() {
             [this, &topHitItem, &shape, &interaction, &transform](auto&& shapeGeometry) {
                 component::Transform screenPosTransform = transform;
                 screenPosTransform.position = CameraSystem::worldToScreen(camera, transform.position);
+                screenPosTransform.scale *= camera.zoom;
 
                 if (hitTest(screenPosTransform, shapeGeometry, interaction, input.mouse.position) &&
                     topHitItem.zindex <= transform.zindex) {
@@ -99,8 +100,10 @@ component::Interaction* InteractionSystem::hitTestInteraction() {
 bool InteractionSystem::hitTest(const component::Transform& transform,
                                 const component::RectangleGeometry& rectangleGeometry,
                                 const component::Interaction& interaction, const math::Vec2& position) {
-    if (position.x > transform.position.x && position.x < transform.position.x + rectangleGeometry.size.x &&
-        position.y > transform.position.y && position.y < transform.position.y + rectangleGeometry.size.y)
+    if (position.x > transform.position.x &&
+        position.x < transform.position.x + (rectangleGeometry.size.x * transform.scale.x) &&
+        position.y > transform.position.y &&
+        position.y < transform.position.y + (rectangleGeometry.size.y * transform.scale.y))
         return true;
 
     return false;
@@ -108,7 +111,8 @@ bool InteractionSystem::hitTest(const component::Transform& transform,
 
 bool InteractionSystem::hitTest(const component::Transform& transform, const component::CircleGeometry& circleGeometry,
                                 const component::Interaction& interaction, const math::Vec2& position) {
-    if (position.distanceSquared(transform.position) <= circleGeometry.radius * circleGeometry.radius)
+    float radius = circleGeometry.radius * std::max(transform.scale.x, transform.scale.y);
+    if (position.distanceSquared(transform.position) <= radius * radius)
         return true;
 
     return false;
