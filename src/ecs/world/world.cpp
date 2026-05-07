@@ -4,8 +4,8 @@
 #include "ecs/system/shape_system.hpp"
 
 namespace astra::ecs::world {
-void World::initialize(render::Renderer& renderer, input::Input& input) {
-    camera = {{0, 0}, 1, {{0, 0}, {700, 500}}};
+void World::initialize(render::Renderer& renderer, input::Input& input, const int32_t pixelW, const int32_t pixelH) {
+    camera = {{}, 2, {{}, {static_cast<float>(pixelW), static_cast<float>(pixelH)}}};
 
     systemManager.addSystem(new system::ShapeSystem(componentManager, camera, renderer));
     systemManager.addSystem(new system::InteractionSystem(componentManager, camera, input));

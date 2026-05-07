@@ -14,7 +14,7 @@ class World {
     component::Camera camera;
 
   public:
-    void initialize(render::Renderer& renderer, input::Input& input);
+    void initialize(render::Renderer& renderer, input::Input& input, const int32_t pixelW, const int32_t pixelH);
 
     void update(double deltaTime);
 };

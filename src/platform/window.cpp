@@ -4,10 +4,13 @@
 
 namespace astra::platform {
 Window::Window(std::string title, const int32_t width, const int32_t height)
-    : window(nullptr), renderer(nullptr), texture(nullptr), title(std::move(title)), width(width), height(height) {}
+    : window(nullptr), renderer(nullptr), texture(nullptr), title(std::move(title)), width(width), height(height),
+      pixelW(0), pixelH(0) {}
 
 void Window::initialize() {
-    window = SDL_CreateWindow(title.c_str(), width, height, 0);
+    window = SDL_CreateWindow(title.c_str(), width, height, SDL_WINDOW_HIGH_PIXEL_DENSITY);
+
+    SDL_GetWindowSizeInPixels(window, &pixelW, &pixelH);
 
     renderer = SDL_CreateRenderer(window, nullptr);
 
@@ -15,7 +18,7 @@ void Window::initialize() {
         SDL_SetRenderVSync(renderer, 1);
     }
 
-    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, width, height);
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, pixelW, pixelH);
 }
 
 void Window::destroy() const {
@@ -26,10 +29,18 @@ void Window::destroy() const {
 }
 
 void Window::render(const render::Buffer& buffer) const {
-    const auto pitch = static_cast<int32_t>(width * sizeof(uint32_t));
+    const auto pitch = static_cast<int32_t>(pixelW * sizeof(uint32_t));
 
     SDL_UpdateTexture(texture, nullptr, buffer.data(), pitch);
     SDL_RenderTexture(renderer, texture, nullptr, nullptr);
     SDL_RenderPresent(renderer);
 }
+
+int32_t Window::getPixelW() const {
+    return pixelW;
+};
+
+int32_t Window::getPixelH() const {
+    return pixelH;
+};
 }
