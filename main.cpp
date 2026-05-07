@@ -17,16 +17,16 @@ int main() {
         return 3;
     }
 
-    auto window = platform::Window("Astra Engine", SCREEN_WIDTH, SCREEN_HEIGHT);
+    auto window = platform::Window("Astra Engine", {SCREEN_WIDTH, SCREEN_HEIGHT});
     auto time = core::Time();
     auto input = input::Input();
     auto world = ecs::world::World();
 
     window.initialize();
 
-    auto renderer = render::Renderer(window.getPixelW(), window.getPixelH());
+    auto renderer = render::Renderer(window.getWindowSizeInPixels());
 
-    world.initialize(renderer, input, window.getPixelW(), window.getPixelH());
+    world.initialize(renderer, input, window.getWindowSizeInPixels());
 
     bool running = true;
 

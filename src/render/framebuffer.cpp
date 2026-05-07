@@ -1,17 +1,19 @@
 #include "render/framebuffer.hpp"
+#include "math/point.hpp"
 
 namespace astra::render {
-Framebuffer::Framebuffer(const uint32_t width, const uint32_t height) : width(width), height(height) {
-    framebuffer.resize(width * height, math::Color::black().wrap());
+Framebuffer::Framebuffer(const math::Point& size) : size(size) {
+    framebuffer.resize(size.x * size.y, math::Color::black().wrap());
 }
 
-void Framebuffer::putPixel(const uint32_t x, const uint32_t y, const math::Color color) {
-    if (x >= width || y >= height)
+void Framebuffer::putPixel(const math::Point& position, const math::Color& color) {
+    if (position.x < 0 || position.y < 0 || position.x >= size.x || position.y >= size.y)
         return;
-    framebuffer[y * width + x] = color.wrap();
+
+    framebuffer[position.y * size.x + position.x] = color.wrap();
 }
 
-void Framebuffer::clear(const math::Color color) {
+void Framebuffer::clear(const math::Color& color) {
     std::ranges::fill(framebuffer, color.wrap());
 }
 

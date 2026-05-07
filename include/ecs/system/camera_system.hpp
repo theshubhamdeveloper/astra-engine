@@ -17,10 +17,8 @@ class CameraSystem : public System {
         return ((worldPosition - camera.position) * camera.zoom) + (camera.viewport.size * 0.5f);
     }
 
-    static inline math::Vec2 screenToWorld(const component::Camera& camera,
-
-                                           const math::Vec2& screenPosition) {
-        return ((screenPosition - (camera.viewport.size * 0.5f)) / camera.zoom) + camera.position;
+    static inline math::Vec2 screenToWorld(const component::Camera& camera, const math::Vec2& screenPosition) {
+        return (((screenPosition) - (camera.viewport.size * 0.5f)) / camera.zoom) + camera.position;
     }
 };
 }

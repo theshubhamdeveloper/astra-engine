@@ -1,8 +1,9 @@
 #include "render/renderer.hpp"
+#include "math/point.hpp"
 #include "render/draw.hpp"
 
 namespace astra::render {
-Renderer::Renderer(uint32_t width, uint32_t height) : framebuffer({width, height}) {}
+Renderer::Renderer(const math::Point& size) : framebuffer({size}) {}
 
 void Renderer::drawTriangle(const math::Vec2& a, const math::Vec2& b, const math::Vec2& c, const math::Color& color) {
     render::drawTriangle(framebuffer, a, b, c, color);

@@ -1,5 +1,6 @@
 #pragma once
 #include "framebuffer.hpp"
+#include "math/point.hpp"
 #include "math/vec2.hpp"
 
 namespace astra::render {
@@ -7,7 +8,7 @@ class Renderer {
     Framebuffer framebuffer;
 
   public:
-    Renderer(uint32_t width, uint32_t height);
+    Renderer(const math::Point& size);
 
     void drawTriangle(const math::Vec2& a, const math::Vec2& b, const math::Vec2& c, const math::Color& color);
 

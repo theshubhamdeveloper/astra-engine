@@ -10,7 +10,7 @@ void drawTriangle(Framebuffer& fb, const Vec2& a, const Vec2& b, const Vec2& c, 
     for (auto y = static_cast<uint32_t>(min.y); y <= max.y; y++) {
         for (auto x = static_cast<uint32_t>(min.x); x <= max.x; x++) {
             if (math::isPointInsideTriangle(a, b, c, {static_cast<float>(x), static_cast<float>(y)}))
-                fb.putPixel(x, y, color);
+                fb.putPixel({static_cast<int32_t>(x), static_cast<int32_t>(y)}, color);
         }
     }
 }
@@ -73,7 +73,7 @@ void drawLine(Framebuffer& fb, const Vec2& a, const Vec2& b, const math::Color& 
     dy <<= 1; /* dy is now 2*dy */
     dx <<= 1; /* dx is now 2*dx */
 
-    fb.putPixel(x0, y0, color);
+    fb.putPixel({x0, y0}, color);
 
     if (dx > dy) {
         int fraction = dy - (dx >> 1);
@@ -85,7 +85,7 @@ void drawLine(Framebuffer& fb, const Vec2& a, const Vec2& b, const math::Color& 
             }
             fraction += dy;
 
-            fb.putPixel(x0, y0, color);
+            fb.putPixel({x0, y0}, color);
         }
     } else {
         int fraction = dx - (dy >> 1);
@@ -97,7 +97,7 @@ void drawLine(Framebuffer& fb, const Vec2& a, const Vec2& b, const math::Color& 
             y0 += stepY;
             fraction += dx;
 
-            fb.putPixel(x0, y0, color);
+            fb.putPixel({x0, y0}, color);
         }
     }
 }

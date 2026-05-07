@@ -1,5 +1,6 @@
 #pragma once
 #include "math/color.hpp"
+#include "math/point.hpp"
 #include <vector>
 
 namespace astra::render {
@@ -7,14 +8,14 @@ using Buffer = std::vector<uint32_t>;
 
 class Framebuffer {
     Buffer framebuffer;
-    uint32_t width, height;
+    math::Point size;
 
   public:
-    Framebuffer(uint32_t width, uint32_t height);
+    Framebuffer(const math::Point& size);
 
-    void putPixel(uint32_t x, uint32_t y, math::Color color);
+    void putPixel(const math::Point& position, const math::Color& color);
 
-    void clear(math::Color color);
+    void clear(const math::Color& color);
 
     [[nodiscard]] const Buffer& getBuffer() const;
 };
