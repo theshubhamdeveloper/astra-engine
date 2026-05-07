@@ -1,31 +1,17 @@
 #include "math/color.hpp"
 
 namespace astra::math {
-Color::Color(const uint8_t r, const uint8_t g, const uint8_t b) : r(r), g(g), b(b), a(255) {}
+Color Color::alphaBlend(const Color& dst, const Color& src) {
+    if (src.a == 1)
+        return src;
+    else if (src.a == 0)
+        return dst;
 
-Color::Color(const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a) : r(r), g(g), b(b), a(a) {}
+    Color final;
+    final.r = (src.r * src.a + dst.r * (255 - src.a)) / 255;
+    final.g = (src.g * src.a + dst.g * (255 - src.a)) / 255;
+    final.b = (src.b * src.a + dst.b * (255 - src.a)) / 255;
 
-uint32_t Color::wrap() const {
-    return r << 24 | g << 16 | b << 8 | a;
-}
-
-Color Color::black() {
-    return {0, 0, 0, 255};
-}
-
-Color Color::white() {
-    return {255, 255, 255, 255};
-}
-
-Color Color::red() {
-    return {255, 0, 0, 255};
-}
-
-Color Color::green() {
-    return {0, 255, 0, 255};
-}
-
-Color Color::blue() {
-    return {0, 0, 255, 255};
+    return final;
 }
 }
