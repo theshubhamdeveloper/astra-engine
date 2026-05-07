@@ -24,9 +24,9 @@ int main() {
 
     window.initialize();
 
-    auto renderer = render::Renderer(window.getWindowSizeInPixels());
+    auto renderer = render::Renderer(window.getWindowSizeInPixels(), window.getDpiScale());
 
-    world.initialize(renderer, input, window.getWindowSizeInPixels());
+    world.initialize(renderer, input, {SCREEN_WIDTH, SCREEN_HEIGHT});
 
     bool running = true;
 

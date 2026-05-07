@@ -2,6 +2,7 @@
 #include "SDL3/SDL_render.h"
 #include "SDL3/SDL_video.h"
 #include "math/point.hpp"
+#include "math/vec2.hpp"
 #include "render/framebuffer.hpp"
 #include <string>
 
@@ -13,6 +14,7 @@ class Window {
 
     std::string title;
     math::Point windowSize, windowSizeInPixels;
+    math::Vec2 dpiScale;
 
   public:
     Window(std::string title, const math::Point& size);
@@ -24,5 +26,6 @@ class Window {
     void render(const render::Buffer& buffer) const;
 
     const math::Point& getWindowSizeInPixels() const;
+    const math::Vec2& getDpiScale() const;
 };
 }

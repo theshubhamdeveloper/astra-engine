@@ -12,6 +12,9 @@ void Window::initialize() {
 
     SDL_GetWindowSizeInPixels(window, &windowSizeInPixels.x, &windowSizeInPixels.y);
 
+    dpiScale.x = static_cast<float>(windowSizeInPixels.x) / windowSize.x;
+    dpiScale.y = static_cast<float>(windowSizeInPixels.y) / windowSize.y;
+
     renderer = SDL_CreateRenderer(window, nullptr);
 
     if (renderer) {
@@ -39,4 +42,8 @@ void Window::render(const render::Buffer& buffer) const {
 const math::Point& Window::getWindowSizeInPixels() const {
     return windowSizeInPixels;
 }
+
+const math::Vec2& Window::getDpiScale() const {
+    return dpiScale;
+};
 }
