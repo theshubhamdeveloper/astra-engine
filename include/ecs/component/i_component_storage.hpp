@@ -2,12 +2,13 @@
 #include "ecs/entity/entity.hpp"
 
 namespace astra::ecs::component {
-class IComponentStorage {
-  public:
-    virtual ~IComponentStorage() = default;
+    class IComponentStorage {
+    public:
+        virtual ~IComponentStorage() = default;
 
-  private:
-    friend class ComponentManager;
-    virtual void remove(const entity::EntityId& entityId) = 0;
-};
+    private:
+        friend class ComponentManager;
+
+        virtual void remove(const entity::EntityId &entityId) = 0;
+    };
 }

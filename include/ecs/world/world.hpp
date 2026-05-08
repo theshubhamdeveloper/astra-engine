@@ -8,17 +8,17 @@
 #include "render/renderer.hpp"
 
 namespace astra::ecs::world {
-class World {
-    entity::EntityManager entityManager;
-    component::ComponentManager componentManager;
-    system::SystemManager systemManager;
-    component::Camera camera;
+    class World {
+        entity::EntityManager entityManager;
+        component::ComponentManager componentManager;
+        system::SystemManager systemManager;
+        component::Camera camera;
 
-  public:
-    void initialize(render::Renderer& renderer, input::Input& input, const math::Point& viewportSize);
+    public:
+        void initialize(render::Renderer &renderer, input::Input &input, const math::Point &viewportSize);
 
-    void update(double deltaTime);
+        void update(double deltaTime);
 
-    void setViewportSize(const math::Point& size);
-};
+        void setViewportSize(const math::Point &size);
+    };
 }

@@ -3,22 +3,22 @@
 #include "mouse.hpp"
 
 namespace astra::input {
-struct Input {
-    Keyboard keyboard;
-    Mouse mouse;
+    struct Input {
+        Keyboard keyboard;
+        Mouse mouse;
 
-    Input();
+        Input();
 
-    void updateState();
+        void updateState();
 
-    void updateCurrentToPrevious();
+        void updateCurrentToPrevious();
 
-    bool quitRequested() const;
+        bool quitRequested() const;
 
-    bool windowResizeRequested() const;
+        bool windowResizeRequested() const;
 
-  private:
-    bool quitRequested_;
-    bool windowResizeRequested_;
-};
+    private:
+        bool quitRequested_;
+        bool windowResizeRequested_;
+    };
 }

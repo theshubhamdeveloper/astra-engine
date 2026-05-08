@@ -36,7 +36,7 @@ int main() {
         input.updateState();
 
         std::cout << "Frame: " << time.deltaTime() * 1000 << " ms" << "\n"
-                  << "FPS: " << time.fps() << "\n";
+                << "FPS: " << time.fps() << "\n";
 
         if (input.quitRequested())
             running = false;

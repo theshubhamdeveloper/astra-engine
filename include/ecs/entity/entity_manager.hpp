@@ -4,18 +4,18 @@
 #include <vector>
 
 namespace astra::ecs::entity {
-class EntityManager {
-    EntityId nextEntityId;
-    std::queue<EntityId> freeIds;
-    std::vector<EntityGeneration> generations;
+    class EntityManager {
+        EntityId nextEntityId;
+        std::queue<EntityId> freeIds;
+        std::vector<EntityGeneration> generations;
 
-  public:
-    EntityManager();
+    public:
+        EntityManager();
 
-    Entity createEntity();
+        Entity createEntity();
 
-    void destroyEntity(const Entity& entity);
+        void destroyEntity(const Entity &entity);
 
-    bool isAlive(const Entity& entity) const;
-};
+        bool isAlive(const Entity &entity) const;
+    };
 }

@@ -7,32 +7,32 @@
 #include <string>
 
 namespace astra::platform {
-class Window {
-    SDL_Window* window;
-    SDL_Renderer* renderer;
-    SDL_Texture* texture;
+    class Window {
+        SDL_Window *window;
+        SDL_Renderer *renderer;
+        SDL_Texture *texture;
 
-    std::string title;
-    math::Point windowSize, windowSizeInPixels;
-    math::Vec2 dpiScale;
+        std::string title;
+        math::Point windowSize, windowSizeInPixels;
+        math::Vec2 dpiScale;
 
-  public:
-    Window(std::string title, const math::Point& size);
+    public:
+        Window(std::string title, const math::Point &size);
 
-    void initialize();
+        void initialize();
 
-    void destroy() const;
+        void destroy() const;
 
-    void render(const render::Buffer& buffer) const;
+        void render(const render::Buffer &buffer) const;
 
-    void createTexture();
+        void createTexture();
 
-    void updateOnResize();
+        void updateOnResize();
 
-    const math::Point& getWindowSizeInPixels() const;
+        const math::Point &getWindowSizeInPixels() const;
 
-    const math::Point& getWindowSize() const;
+        const math::Point &getWindowSize() const;
 
-    const math::Vec2& getDpiScale() const;
-};
+        const math::Vec2 &getDpiScale() const;
+    };
 }
