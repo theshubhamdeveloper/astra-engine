@@ -19,7 +19,7 @@ namespace astra::platform {
     public:
         Window(std::string title, const math::Point &size);
 
-        void initialize( bool resizable);
+        void initialize(bool resizable);
 
         void destroy() const;
 
