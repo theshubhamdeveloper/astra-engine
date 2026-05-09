@@ -22,7 +22,7 @@ int main() {
     auto input = input::Input();
     auto world = ecs::world::World();
 
-    window.initialize();
+    window.initialize(false);
 
     auto renderer = render::Renderer(window.getWindowSizeInPixels(), window.getDpiScale());
 

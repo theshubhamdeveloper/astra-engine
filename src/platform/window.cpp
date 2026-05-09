@@ -9,9 +9,14 @@ namespace astra::platform {
         : window(nullptr), renderer(nullptr), texture(nullptr), title(std::move(title)), windowSize(size) {
     }
 
-    void Window::initialize() {
+    void Window::initialize(const bool resizable) {
+        Uint32 flags = SDL_WINDOW_HIGH_PIXEL_DENSITY;
+        if (resizable) {
+            flags |= SDL_WINDOW_RESIZABLE;
+        }
+
         window = SDL_CreateWindow(title.c_str(), windowSize.x, windowSize.y,
-                                  SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_RESIZABLE);
+                                  flags);
 
         SDL_GetWindowSizeInPixels(window, &windowSizeInPixels.x, &windowSizeInPixels.y);
 
