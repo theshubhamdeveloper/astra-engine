@@ -18,7 +18,13 @@ namespace astra::ecs::component {
         math::Vec2 end;
     };
 
-    using ShapeGeometry = std::variant<RectangleGeometry, CircleGeometry, LineGeometry>;
+    struct TriangleGeometry {
+        math::Vec2 a;
+        math::Vec2 b;
+        math::Vec2 c;
+    };
+
+    using ShapeGeometry = std::variant<RectangleGeometry, CircleGeometry, LineGeometry, TriangleGeometry>;
 
     struct ShapeStyle {
         math::Color fill;

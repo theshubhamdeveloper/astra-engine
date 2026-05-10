@@ -11,8 +11,17 @@ namespace astra::render::dispatch {
 
     void shape(Renderer &renderer, const ecs::component::Transform &transform,
                const ecs::component::CircleGeometry &circleGeometry, const ecs::component::ShapeStyle &style) {
-        renderer.drawCircle(transform.position, circleGeometry.radius * std::max(transform.scale.x, transform.scale.y),
+        renderer.drawCircle(transform.position,
+                            static_cast<u_int32_t>(circleGeometry.radius * std::max(
+                                                           transform.scale.x, transform.scale.y)),
                             style.fill);
+    }
+
+    void shape(Renderer &renderer, const ecs::component::Transform &transform,
+               const ecs::component::TriangleGeometry &triangleGeometry, const ecs::component::ShapeStyle &style) {
+        renderer.drawTriangle(triangleGeometry.a + transform.position,
+                              triangleGeometry.b + transform.position,
+                              triangleGeometry.c + transform.position, style.fill);
     }
 
     void shape(Renderer &renderer, const ecs::component::Transform &transform,

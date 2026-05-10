@@ -1,12 +1,13 @@
 #include "ecs/system/interaction_system.hpp"
 #include "ecs/system/camera_system.hpp"
 #include "input/mouse.hpp"
+#include "math/geometry.hpp"
 #include "math/vec2.hpp"
 
 namespace astra::ecs::system {
     InteractionSystem::InteractionSystem(component::ComponentManager &componentManager, const component::Camera &camera,
-                                         const input::Input &input)
-        : System(componentManager), input(input), camera(camera) {
+                                         const input::Input &input) : System(componentManager), input(input),
+                                                                      camera(camera), lastInteraction(nullptr) {
     }
 
     void InteractionSystem::update(double deltaTime) {
@@ -81,7 +82,7 @@ namespace astra::ecs::system {
                 continue;
 
             std::visit(
-                [this, &topHitItem, &shape, &interaction, &transform](auto &&shapeGeometry) {
+                [this, &topHitItem, &interaction, &transform](auto &&shapeGeometry) {
                     component::Transform screenPosTransform = transform;
                     screenPosTransform.position = CameraSystem::worldToScreen(camera, transform.position);
                     screenPosTransform.scale *= camera.zoom;
@@ -114,8 +115,20 @@ namespace astra::ecs::system {
     bool InteractionSystem::hitTest(const component::Transform &transform,
                                     const component::CircleGeometry &circleGeometry,
                                     const component::Interaction &interaction, const math::Vec2 &position) {
-        float radius = circleGeometry.radius * std::max(transform.scale.x, transform.scale.y);
+        const float radius = circleGeometry.radius * std::max(transform.scale.x, transform.scale.y);
         if (position.distanceSquared(transform.position) <= radius * radius)
+            return true;
+
+        return false;
+    }
+
+    bool InteractionSystem::hitTest(const component::Transform &transform,
+                                    const component::TriangleGeometry &triangleGeometry,
+                                    const component::Interaction &interaction,
+                                    const math::Vec2 &position) {
+        if (math::isPointInsideTriangle(triangleGeometry.a + transform.position,
+                                        triangleGeometry.b + transform.position,
+                                        triangleGeometry.c + transform.position, position))
             return true;
 
         return false;
