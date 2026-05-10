@@ -7,10 +7,30 @@ namespace astra::render {
         const Vec2 min = {std::floor(std::min({a.x, b.x, c.x})), std::floor(std::min({a.y, b.y, c.y}))};
         const Vec2 max = {std::ceil(std::max({a.x, b.x, c.x})), std::ceil(std::max({a.y, b.y, c.y}))};
 
-        for (auto y = static_cast<uint32_t>(min.y); y <= max.y; y++) {
-            for (auto x = static_cast<uint32_t>(min.x); x <= max.x; x++) {
-                if (math::isPointInsideTriangle(a, b, c, {static_cast<float>(x), static_cast<float>(y)}))
-                    fb.putPixel({static_cast<int32_t>(x), static_cast<int32_t>(y)}, color);
+        for (auto y = static_cast<uint32_t>(min.y); y <= static_cast<uint32_t>(max.y); y++) {
+            for (auto x = static_cast<uint32_t>(min.x); x <= static_cast<uint32_t>(max.x); x++) {
+                int samplingsCovered = 0;
+
+                // Sub-pixel sampling loop
+                for (uint32_t sy = 1; sy <= superSamplingLevel; ++sy) {
+                    for (uint32_t sx = 1; sx <= superSamplingLevel; ++sx) {
+                        float px = static_cast<float>(x) + (static_cast<float>(sx) * subPixelStep);
+                        float py = static_cast<float>(y) + (static_cast<float>(sy) * subPixelStep);
+
+                        if (math::isPointInsideTriangle(a, b, c, {px, py})) {
+                            samplingsCovered++;
+                        }
+                    }
+                }
+
+                if (samplingsCovered == 0) continue;
+
+                math::Color samplingColor = color;
+                samplingColor.a = static_cast<uint8_t>(
+                    std::round((static_cast<float>(samplingsCovered) / totalSamples) * 255.0f)
+                );
+
+                fb.putPixel({static_cast<int32_t>(x), static_cast<int32_t>(y)}, samplingColor);
             }
         }
     }
@@ -34,10 +54,10 @@ namespace astra::render {
     void drawRect(Framebuffer &fb, const Vec2 &pos, const Vec2 &size, const math::Color &color) {
         drawTriangleFan(fb,
                         {
-                            pos,
-                            {pos.x + size.x, pos.y},
-                            {pos.x + size.x, pos.y + size.y},
-                            {pos.x, pos.y + size.y},
+                                pos,
+                                {pos.x + size.x, pos.y},
+                                {pos.x + size.x, pos.y + size.y},
+                                {pos.x, pos.y + size.y},
                         },
                         color);
     }
@@ -49,10 +69,10 @@ namespace astra::render {
     }
 
     void drawLine(Framebuffer &fb, const Vec2 &a, const Vec2 &b, const math::Color &color) {
-        int x0 = std::floor(a.x);
-        int y0 = std::floor(a.y);
-        const int x1 = std::floor(b.x);
-        const int y1 = std::floor(b.y);
+        auto x0 = static_cast<int>(std::floor(a.x));
+        auto y0 = static_cast<int>(std::floor(a.y));
+        const auto x1 = static_cast<int>(std::floor(b.x));
+        const auto y1 = static_cast<int>(std::floor(b.y));
 
         int stepX, stepY;
 

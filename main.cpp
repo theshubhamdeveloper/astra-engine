@@ -46,7 +46,8 @@ int main() {
             renderer.onWindowResize(window.getWindowSizeInPixels(), window.getDpiScale());
             world.setViewportSize(window.getWindowSize());
         }
-        renderer.clear(math::Color::red());
+
+        renderer.clear(math::Color::white());
 
         world.update(time.deltaTime());
 
