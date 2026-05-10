@@ -6,8 +6,8 @@
 
 namespace astra::ecs::system {
     CameraSystem::CameraSystem(component::ComponentManager &componentManager, component::Camera &camera,
-                               const input::Input &input)
-        : System(componentManager), camera(camera), input(input) {
+                               const input::Input &input) :
+        System(componentManager), input(input), camera(camera) {
     }
 
     void CameraSystem::update(double deltaTime) {
@@ -18,13 +18,15 @@ namespace astra::ecs::system {
         if (canPan)
             camera.position += input.mouse.getMouseDelta() / camera.zoom;
 
-        // Zooming with Mouse Piovt
-        math::Vec2 mousePosBefore = CameraSystem::screenToWorld(camera, input.mouse.position);
+        // Zooming with Mouse Pivot if Cmd or Ctrl or Meta key held
+        if (input.keyboard.isKeyDown(SDL_SCANCODE_LGUI)) {
+            const math::Vec2 mousePosBefore = CameraSystem::screenToWorld(camera, input.mouse.position);
 
-        camera.zoom = std::clamp(camera.zoom + input.mouse.wheelDelta, 0.1f, 10.0f);
+            camera.zoom = std::clamp(camera.zoom + input.mouse.wheelDelta, 0.1f, 10.0f);
 
-        math::Vec2 mousePosAfter = CameraSystem::screenToWorld(camera, input.mouse.position);
+            const math::Vec2 mousePosAfter = CameraSystem::screenToWorld(camera, input.mouse.position);
 
-        camera.position += mousePosBefore - mousePosAfter;
+            camera.position += mousePosBefore - mousePosAfter;
+        }
     }
 }
