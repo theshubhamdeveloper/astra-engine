@@ -8,9 +8,8 @@ namespace astra::render {
         : framebuffer({windowSizeInPixels}), dpiScale(dpiScale) {
     }
 
-    void Renderer::drawTriangle(const math::Vec2 &a, const math::Vec2 &b, const math::Vec2 &c,
-                                const math::Color &color) {
-        render::drawTriangle(framebuffer, a, b, c, color);
+    void Renderer::drawTriangle(const math::Vertex &a, const math::Vertex &b, const math::Vertex &c) {
+        render::drawTriangle(framebuffer, a, b, c);
     }
 
     void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size, const math::Color &color) {

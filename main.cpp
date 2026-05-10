@@ -47,9 +47,13 @@ int main() {
             world.setViewportSize(window.getWindowSize());
         }
 
-        renderer.clear(math::Color::white());
+        renderer.clear(math::Color::black());
 
-        world.update(time.deltaTime());
+        // world.update(time.deltaTime());
+
+        renderer.drawTriangle({{800, 196}, {0, 0}, {255, 0, 0}},
+                              {{450, 802}, {0, 0}, {0, 255, 0}},
+                              {{1150, 802}, {0, 0}, {0, 0, 255}});
 
         window.render(renderer.getBuffer());
 

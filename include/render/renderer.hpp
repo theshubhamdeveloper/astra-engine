@@ -2,6 +2,7 @@
 #include "framebuffer.hpp"
 #include "math/point.hpp"
 #include "math/vec2.hpp"
+#include "math/vertex.hpp"
 
 namespace astra::render {
     class Renderer {
@@ -11,7 +12,7 @@ namespace astra::render {
     public:
         Renderer(const math::Point &windowSizeInPixels, const math::Vec2 &dpiScale);
 
-        void drawTriangle(const math::Vec2 &a, const math::Vec2 &b, const math::Vec2 &c, const math::Color &color);
+        void drawTriangle(const math::Vertex &a, const math::Vertex &b, const math::Vertex &c);
 
         void drawRect(const math::Vec2 &pos, const math::Vec2 &size, const math::Color &color);
 

@@ -1,36 +1,46 @@
 #include "render/draw.hpp"
 #include "math/geometry.hpp"
+#include "math/vertex.hpp"
 using astra::math::Vec2;
 
 namespace astra::render {
-    void drawTriangle(Framebuffer &fb, const Vec2 &a, const Vec2 &b, const Vec2 &c, const math::Color &color) {
-        const Vec2 min = {std::floor(std::min({a.x, b.x, c.x})), std::floor(std::min({a.y, b.y, c.y}))};
-        const Vec2 max = {std::ceil(std::max({a.x, b.x, c.x})), std::ceil(std::max({a.y, b.y, c.y}))};
+    void drawTriangle(Framebuffer &fb, const math::Vertex &a, const math::Vertex &b, const math::Vertex &c) {
+        const Vec2 min = {std::floor(std::min({a.position.x, b.position.x, c.position.x})),
+                          std::floor(std::min({a.position.y, b.position.y, c.position.y}))};
+        const Vec2 max = {std::ceil(std::max({a.position.x, b.position.x, c.position.x})),
+                          std::ceil(std::max({a.position.y, b.position.y, c.position.y}))};
 
         for (auto y = static_cast<uint32_t>(min.y); y <= static_cast<uint32_t>(max.y); y++) {
             for (auto x = static_cast<uint32_t>(min.x); x <= static_cast<uint32_t>(max.x); x++) {
-                int samplingsCovered = 0;
 
-                // Sub-pixel sampling loop
-                for (uint32_t sy = 1; sy <= superSamplingLevel; ++sy) {
-                    for (uint32_t sx = 1; sx <= superSamplingLevel; ++sx) {
-                        float px = static_cast<float>(x) + (static_cast<float>(sx) * subPixelStep);
-                        float py = static_cast<float>(y) + (static_cast<float>(sy) * subPixelStep);
+                // int samplingsCovered = 0;
+                //
+                // // Sub-pixel sampling loop
+                // for (uint32_t sy = 1; sy <= superSamplingLevel; ++sy) {
+                //     for (uint32_t sx = 1; sx <= superSamplingLevel; ++sx) {
+                //         float px = static_cast<float>(x) + (static_cast<float>(sx) * subPixelStep);
+                //         float py = static_cast<float>(y) + (static_cast<float>(sy) * subPixelStep);
+                //
+                //         if (math::isPointInsideTriangle(a.position, b.position, c.position, {px, py})) {
+                //             samplingsCovered++;
+                //         }
+                //     }
+                // }
+                // if (samplingsCovered == 0) continue;
 
-                        if (math::isPointInsideTriangle(a, b, c, {px, py})) {
-                            samplingsCovered++;
-                        }
-                    }
+                const Vec2 position = {static_cast<float>(x), static_cast<float>(y)};
+
+                if (!math::isPointInsideTriangle(a.position, b.position, c.position, position)) {
+                    continue;
                 }
 
-                if (samplingsCovered == 0) continue;
+                const float area = math::triangleEdge(a.position, b.position, c.position);
+                const float u = math::triangleEdge(b.position, c.position, position) / area;
+                const float v = math::triangleEdge(c.position, a.position, position) / area;
+                const float w = math::triangleEdge(a.position, b.position, position) / area;
 
-                math::Color samplingColor = color;
-                samplingColor.a = static_cast<uint8_t>(
-                    std::round((static_cast<float>(samplingsCovered) / totalSamples) * 255.0f)
-                );
-
-                fb.putPixel({static_cast<int32_t>(x), static_cast<int32_t>(y)}, samplingColor);
+                fb.putPixel({static_cast<int32_t>(x), static_cast<int32_t>(y)},
+                            a.color * u + b.color * v + c.color * w);
             }
         }
     }
@@ -39,7 +49,7 @@ namespace astra::render {
         if (vertices.size() < 3)
             return;
         for (size_t i = 1; i < vertices.size() - 1; i++) {
-            drawTriangle(fb, vertices[0], vertices[i], vertices[i + 1], color);
+            // drawTriangle(fb, vertices[0], vertices[i], vertices[i + 1], color);
         }
     }
 
@@ -47,7 +57,7 @@ namespace astra::render {
         if (vertices.size() < 3)
             return;
         for (size_t i = 0; i < vertices.size() - 2; i++) {
-            drawTriangle(fb, vertices[i], vertices[i + 1], vertices[i + 2], color);
+            // drawTriangle(fb, vertices[i], vertices[i + 1], vertices[i + 2], color);
         }
     }
 

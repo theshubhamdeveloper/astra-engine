@@ -6,8 +6,12 @@
 namespace astra::math {
     constexpr double TWO_PI = 2.0 * std::numbers::pi;
 
-    inline constexpr bool isPointRightSideOfLine(const Vec2 &a, const Vec2 &b, const Vec2 &p) {
-        return (b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x) < 0;
+    constexpr float triangleEdge(const Vec2 &a, const Vec2 &b, const Vec2 &c) {
+        return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+    }
+
+    constexpr bool isPointRightSideOfLine(const Vec2 &a, const Vec2 &b, const Vec2 &p) {
+        return triangleEdge(a, b, p) < 0;
     }
 
     inline bool isPointInsideTriangle(const Vec2 &a, const Vec2 &b, const Vec2 &c, const Vec2 &p) {
