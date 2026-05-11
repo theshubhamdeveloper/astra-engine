@@ -54,12 +54,7 @@ int main() {
 
         world.update(time.deltaTime());
 
-        renderer.drawTriangle({{432, 296}, {0, 0}, {255, 255, 255}},
-                              {{1168, 296}, {1, 0}, {255, 255, 255}},
-                              {{1168, 905}, {1, 1}, {255, 255, 255}}, texture);
-        renderer.drawTriangle({{432, 296}, {0, 0}, {255, 255, 255}},
-                              {{1168, 905}, {1, 1}, {255, 255, 255}},
-                              {{432, 905}, {0, 1}, {255, 255, 255}}, texture);
+        renderer.drawRect({0, 0}, {736 / 1.5, 609 / 1.5}, texture);
 
         window.render(renderer.getBuffer());
 

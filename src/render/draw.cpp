@@ -5,8 +5,9 @@
 using astra::math::Vec2;
 
 namespace astra::render {
-    void drawTriangle(Framebuffer &fb, const math::Vertex &a, const math::Vertex &b, const math::Vertex &c,
-                      const assets::Texture &texture) {
+    void rasterizeTriangle(Framebuffer &fb,
+                           const math::Vertex &a, const math::Vertex &b, const math::Vertex &c,
+                           const FragmentShader &fragmentShader) {
         const Vec2 min = {std::floor(std::min({a.position.x, b.position.x, c.position.x})),
                           std::floor(std::min({a.position.y, b.position.y, c.position.y}))};
         const Vec2 max = {std::ceil(std::max({a.position.x, b.position.x, c.position.x})),
@@ -14,7 +15,6 @@ namespace astra::render {
 
         for (auto y = static_cast<uint32_t>(min.y); y <= static_cast<uint32_t>(max.y); y++) {
             for (auto x = static_cast<uint32_t>(min.x); x <= static_cast<uint32_t>(max.x); x++) {
-
                 // int samplingsCovered = 0;
                 //
                 // // Sub-pixel sampling loop
@@ -41,59 +41,76 @@ namespace astra::render {
                 const float v = math::triangleEdge(c.position, a.position, position) / area;
                 const float w = math::triangleEdge(a.position, b.position, position) / area;
 
-                const Vec2 uv = a.uv * u + b.uv * v + c.uv * w;
-                const auto texColor = texture.getPixel({
-                        static_cast<int32_t>(uv.x * static_cast<float>(texture.width - 1)),
-                        static_cast<int32_t>(uv.y * static_cast<float>(texture.height - 1))});
+                Fragment fragment;
+                fragment.uv = a.uv * u + b.uv * v + c.uv * w;
 
-                float interpR = ((a.color.r * u + b.color.r * v + c.color.r * w) / 255.0f) * (texColor.r / 255.0f);
+                fragment.color.r = static_cast<uint8_t>(a.color.r * u + b.color.r * v + c.color.r * w);
+                fragment.color.g = static_cast<uint8_t>(a.color.g * u + b.color.g * v + c.color.g * w);
+                fragment.color.b = static_cast<uint8_t>(a.color.b * u + b.color.b * v + c.color.b * w);
 
-                float interpG = ((a.color.g * u + b.color.g * v + c.color.g * w) / 255.0f) * (texColor.g / 255.0f);
-
-                float interpB = ((a.color.b * u + b.color.b * v + c.color.b * w) / 255.0f) * (texColor.b / 255.0f);
-
-                math::Color color = {
-                        static_cast<uint8_t>(std::clamp(interpR, 0.0f, 1.0f) * 255),
-                        static_cast<uint8_t>(std::clamp(interpG, 0.0f, 1.0f) * 255),
-                        static_cast<uint8_t>(std::clamp(interpB, 0.0f, 1.0f) * 255)
-                };
-
-                fb.putPixel({static_cast<int32_t>(x), static_cast<int32_t>(y)}, color);
+                fb.putPixel({static_cast<int32_t>(x), static_cast<int32_t>(y)}, fragmentShader(fragment));
             }
         }
     }
 
-    void drawTriangleFan(Framebuffer &fb, const std::vector<Vec2> &vertices, const math::Color color) {
-        if (vertices.size() < 3)
-            return;
-        for (size_t i = 1; i < vertices.size() - 1; i++) {
-            // drawTriangle(fb, vertices[0], vertices[i], vertices[i + 1], color);
-        }
+    void drawTriangle(Framebuffer &fb, const math::Vec2 &a, const math::Vec2 &b, const math::Vec2 &c,
+                      const math::Color &color) {
+        rasterizeTriangle(fb,
+                          {a, {0, 0}, color},
+                          {b, {0, 0}, color},
+                          {c, {0, 0}, color},
+                          [&color](const Fragment &fragment) {
+                              return fragment.color;
+                          });
     }
 
-    void drawTriangleStrip(Framebuffer &fb, const std::vector<Vec2> &vertices, const math::Color color) {
+    void drawTriangleFan(Framebuffer &fb, const std::vector<math::Vertex> &vertices,
+                         const FragmentShader &fragmentShader) {
         if (vertices.size() < 3)
             return;
-        for (size_t i = 0; i < vertices.size() - 2; i++) {
-            // drawTriangle(fb, vertices[i], vertices[i + 1], vertices[i + 2], color);
-        }
+        for (std::size_t i = 1; i < vertices.size() - 1; i++)
+            rasterizeTriangle(fb, vertices[0], vertices[i], vertices[i + 1], fragmentShader);
+    }
+
+    void drawTriangleStrip(Framebuffer &fb, const std::vector<math::Vertex> &vertices,
+                           const FragmentShader &fragmentShader) {
+        if (vertices.size() < 3)
+            return;
+
+        for (std::size_t i = 0; i < vertices.size() - 2; i++)
+            rasterizeTriangle(fb, vertices[i], vertices[i + 1], vertices[i + 2], fragmentShader);
     }
 
     void drawRect(Framebuffer &fb, const Vec2 &pos, const Vec2 &size, const math::Color &color) {
         drawTriangleFan(fb,
                         {
-                                pos,
-                                {pos.x + size.x, pos.y},
-                                {pos.x + size.x, pos.y + size.y},
-                                {pos.x, pos.y + size.y},
-                        },
-                        color);
+                                {{pos}, {0, 0}, color},
+                                {{pos.x, pos.y + size.y}, {0, 1}, color},
+                                {{pos.x + size.x, pos.y + size.y}, {1, 1}, color},
+                                {{pos.x + size.x, pos.y}, {1, 0}, color}
+                        }, [&color](const Fragment &fragment) {
+                            return fragment.color;
+                        });
+    }
+
+    void drawRect(Framebuffer &fb, const math::Vec2 &pos, const math::Vec2 &size, const assets::Texture &texture) {
+        drawTriangleFan(fb,
+                        {
+                                {{pos}, {0, 0}, math::Color::white()},
+                                {{pos.x, pos.y + size.y}, {0, 1}, math::Color::white()},
+                                {{pos.x + size.x, pos.y + size.y}, {1, 1}, math::Color::white()},
+                                {{pos.x + size.x, pos.y}, {1, 0}, math::Color::white()}
+                        }, [&texture](const Fragment &fragment) {
+                            return texture.interpolate(fragment.uv, fragment.color);
+                        });
     }
 
     void drawCircle(Framebuffer &fb, const Vec2 &pos, const uint32_t r, const math::Color &color,
                     const uint32_t segment) {
         const std::vector<Vec2> points = math::generateCircleVertices(pos, r, segment);
-        drawTriangleFan(fb, points, color);
+        // drawTriangleFan(fb, points, [&color](const Fragment &fragment) {
+        //     return fragment.color;
+        // });
     }
 
     void drawLine(Framebuffer &fb, const Vec2 &a, const Vec2 &b, const math::Color &color) {

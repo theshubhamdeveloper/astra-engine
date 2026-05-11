@@ -5,17 +5,22 @@
 #include "render/draw.hpp"
 
 namespace astra::render {
-    Renderer::Renderer(const math::Point &windowSizeInPixels, const math::Vec2 &dpiScale) :
-        framebuffer({windowSizeInPixels}), dpiScale(dpiScale) {
+    Renderer::Renderer(const math::Point &windowSizeInPixels, const math::Vec2 &dpiScale) : framebuffer({
+        windowSizeInPixels
+    }), dpiScale(dpiScale) {
     }
 
-    void Renderer::drawTriangle(const math::Vertex &a, const math::Vertex &b, const math::Vertex &c,
-                                const assets::Texture &texture) {
-        render::drawTriangle(framebuffer, a, b, c, texture);
+    void Renderer::drawTriangle(const math::Vec2 &a, const math::Vec2 &b, const math::Vec2 &c,
+                                const math::Color &color) {
+        render::drawTriangle(framebuffer, a * dpiScale, b * dpiScale, c * dpiScale, color);
     }
 
     void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size, const math::Color &color) {
         render::drawRect(framebuffer, pos * dpiScale, size * dpiScale, color);
+    }
+
+    void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size, const assets::Texture &texture) {
+        render::drawRect(framebuffer, pos * dpiScale, size * dpiScale, texture);
     }
 
     void Renderer::drawCircle(const math::Vec2 &pos, const uint32_t r, const math::Color &color) {

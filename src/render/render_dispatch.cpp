@@ -19,9 +19,9 @@ namespace astra::render::dispatch {
 
     void shape(Renderer &renderer, const ecs::component::Transform &transform,
                const ecs::component::TriangleGeometry &triangleGeometry, const ecs::component::ShapeStyle &style) {
-        // renderer.drawTriangle(triangleGeometry.a + transform.position,
-        //                       triangleGeometry.b + transform.position,
-        //                       triangleGeometry.c + transform.position, style.fill);
+        renderer.drawTriangle(triangleGeometry.a + transform.position,
+                              triangleGeometry.b + transform.position,
+                              triangleGeometry.c + transform.position, style.fill);
     }
 
     void shape(Renderer &renderer, const ecs::component::Transform &transform,

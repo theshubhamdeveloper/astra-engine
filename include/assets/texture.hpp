@@ -4,12 +4,18 @@
 
 namespace astra::assets {
     struct Texture {
-        int height;
-        int width;
+        int height = 0;
+        int width = 0;
         render::Buffer pixels;
 
-        [[nodiscard]] math::Color getPixel(const math::Point &position) const {
-            return math::Color::unpackUint32(pixels[(position.y * width) + position.x]);
+        [[nodiscard]] math::Color interpolate(const math::Vec2 &uv, const math::Color &color) const {
+            const math::Point position = {static_cast<int32_t>(uv.x * static_cast<float>(width - 1)),
+                                          static_cast<int32_t>(uv.y * static_cast<float>(height - 1))};
+            const math::Color texel = math::Color::unpackUint32(pixels[(position.y * width) + position.x]);
+
+            return {static_cast<uint8_t>(color.r * texel.r / 255.0f),
+                    static_cast<uint8_t>(color.g * texel.g / 255.0f),
+                    static_cast<uint8_t>(color.b * texel.b / 255.0f)};
         }
 
         static Texture fromImage(const Image &image) {
@@ -28,4 +34,5 @@ namespace astra::assets {
             return texture;
         }
     };
+
 }

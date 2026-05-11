@@ -13,10 +13,11 @@ namespace astra::render {
     public:
         Renderer(const math::Point &windowSizeInPixels, const math::Vec2 &dpiScale);
 
-        void drawTriangle(const math::Vertex &a, const math::Vertex &b, const math::Vertex &c,
-                          const assets::Texture &texture);
+        void drawTriangle(const math::Vec2 &a, const math::Vec2 &b, const math::Vec2 &c, const math::Color &color);
 
         void drawRect(const math::Vec2 &pos, const math::Vec2 &size, const math::Color &color);
+
+        void drawRect(const math::Vec2 &pos, const math::Vec2 &size, const assets::Texture &texture);
 
         void drawCircle(const math::Vec2 &pos, uint32_t r, const math::Color &color);
 
