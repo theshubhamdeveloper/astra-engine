@@ -8,13 +8,21 @@ namespace astra::render {
     void rasterizeTriangle(Framebuffer &fb,
                            const math::Vertex &a, const math::Vertex &b, const math::Vertex &c,
                            const FragmentShader &fragmentShader) {
-        const Vec2 min = {std::floor(std::min({a.position.x, b.position.x, c.position.x})),
-                          std::floor(std::min({a.position.y, b.position.y, c.position.y}))};
-        const Vec2 max = {std::ceil(std::max({a.position.x, b.position.x, c.position.x})),
-                          std::ceil(std::max({a.position.y, b.position.y, c.position.y}))};
+        Vec2 min = {std::min({a.position.x, b.position.x, c.position.x}),
+                    std::min({a.position.y, b.position.y, c.position.y})};
+        Vec2 max = {std::max({a.position.x, b.position.x, c.position.x}),
+                    std::max({a.position.y, b.position.y, c.position.y})};
 
-        for (auto y = static_cast<uint32_t>(min.y); y <= static_cast<uint32_t>(max.y); y++) {
-            for (auto x = static_cast<uint32_t>(min.x); x <= static_cast<uint32_t>(max.x); x++) {
+        // Screen Clipping
+        min.x = std::max(min.x, 0.0f);
+        min.y = std::max(min.y, 0.0f);
+
+        max.x = std::min(max.x, static_cast<float>(fb.getSize().x));
+        max.y = std::min(max.y, static_cast<float>(fb.getSize().y));
+
+        const float area = math::triangleEdge(a.position, b.position, c.position);
+        for (auto y = static_cast<int>(min.y); y <= static_cast<int>(max.y); y++) {
+            for (auto x = static_cast<int>(min.x); x <= static_cast<int>(max.x); x++) {
                 // int samplingsCovered = 0;
                 //
                 // // Sub-pixel sampling loop
@@ -32,11 +40,9 @@ namespace astra::render {
 
                 const Vec2 position = {static_cast<float>(x), static_cast<float>(y)};
 
-                if (!math::isPointInsideTriangle(a.position, b.position, c.position, position)) {
+                if (!math::isPointInsideTriangle(a.position, b.position, c.position, position))
                     continue;
-                }
 
-                const float area = math::triangleEdge(a.position, b.position, c.position);
                 const float u = math::triangleEdge(b.position, c.position, position) / area;
                 const float v = math::triangleEdge(c.position, a.position, position) / area;
                 const float w = math::triangleEdge(a.position, b.position, position) / area;
@@ -48,7 +54,7 @@ namespace astra::render {
                 fragment.color.g = static_cast<uint8_t>(a.color.g * u + b.color.g * v + c.color.g * w);
                 fragment.color.b = static_cast<uint8_t>(a.color.b * u + b.color.b * v + c.color.b * w);
 
-                fb.putPixel({static_cast<int32_t>(x), static_cast<int32_t>(y)}, fragmentShader(fragment));
+                fb.putPixel({x, y}, fragmentShader(fragment));
             }
         }
     }
@@ -104,8 +110,7 @@ namespace astra::render {
         });
     }
 
-    void drawCircle(Framebuffer &fb, const Vec2 &pos, const uint32_t r, const math::Color &color,
-                    const uint32_t segment) {
+    void drawCircle(Framebuffer &fb, const Vec2 &pos, const uint32_t r, const math::Color &color) {
         drawRect(fb, pos, {2.0f * r, 2.0f * r}, color, [&color, &r](const Fragment &fragment) {
             const float dis = (fragment.uv.x - 0.5) * (fragment.uv.x - 0.5) +
                               (fragment.uv.y - 0.5) * (fragment.uv.y - 0.5);

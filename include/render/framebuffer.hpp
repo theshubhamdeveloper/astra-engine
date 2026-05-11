@@ -19,6 +19,8 @@ namespace astra::render {
 
         void resizeBuffer(const math::Point &newSize);
 
+        [[nodiscard]] const math::Point &getSize() const;
+
         [[nodiscard]] const Buffer &getBuffer() const;
     };
 }

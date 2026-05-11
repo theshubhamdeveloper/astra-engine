@@ -25,6 +25,10 @@ namespace astra::render {
         framebuffer.resize(size.x * size.y, math::Color::black().packRGBA());
     }
 
+    const math::Point &Framebuffer::getSize() const {
+        return size;
+    }
+
     const Buffer &Framebuffer::getBuffer() const {
         return framebuffer;
     }
