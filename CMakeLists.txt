@@ -34,6 +34,9 @@ target_compile_definitions(astra_engine PRIVATE
         $<$<CONFIG:Debug>:DEBUG>
 )
 
-target_include_directories(astra_engine PRIVATE include)
+target_include_directories(astra_engine PRIVATE
+        include
+        third_party/stb
+)
 
 target_link_libraries(astra_engine PRIVATE SDL3::SDL3)
