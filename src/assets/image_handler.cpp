@@ -11,7 +11,7 @@ namespace astra::assets::image_handler {
         Image image;
 
         unsigned char *data =
-                stbi_load("texture.png",
+                stbi_load(file,
                           &image.width,
                           &image.height,
                           &image.channels,

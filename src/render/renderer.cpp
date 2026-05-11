@@ -1,15 +1,17 @@
 #include "render/renderer.hpp"
+#include "assets/texture.hpp"
 #include "math/point.hpp"
 #include "math/vec2.hpp"
 #include "render/draw.hpp"
 
 namespace astra::render {
-    Renderer::Renderer(const math::Point &windowSizeInPixels, const math::Vec2 &dpiScale)
-        : framebuffer({windowSizeInPixels}), dpiScale(dpiScale) {
+    Renderer::Renderer(const math::Point &windowSizeInPixels, const math::Vec2 &dpiScale) :
+        framebuffer({windowSizeInPixels}), dpiScale(dpiScale) {
     }
 
-    void Renderer::drawTriangle(const math::Vertex &a, const math::Vertex &b, const math::Vertex &c) {
-        render::drawTriangle(framebuffer, a, b, c);
+    void Renderer::drawTriangle(const math::Vertex &a, const math::Vertex &b, const math::Vertex &c,
+                                const assets::Texture &texture) {
+        render::drawTriangle(framebuffer, a, b, c, texture);
     }
 
     void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size, const math::Color &color) {

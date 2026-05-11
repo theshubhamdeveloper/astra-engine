@@ -7,6 +7,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(ASSETS_DIR ${CMAKE_SOURCE_DIR}/assets)
+
 add_subdirectory(third_party/SDL EXCLUDE_FROM_ALL)
 
 add_executable(astra_engine MACOSX_BUNDLE main.cpp
@@ -40,3 +42,9 @@ target_include_directories(astra_engine PRIVATE
 )
 
 target_link_libraries(astra_engine PRIVATE SDL3::SDL3)
+
+add_custom_command(TARGET astra_engine POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${ASSETS_DIR}
+        $<TARGET_BUNDLE_CONTENT_DIR:astra_engine>/Resources/assets
+)

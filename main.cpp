@@ -5,7 +5,8 @@
 #include "input/input.hpp"
 #include "platform/window.hpp"
 #include "render/renderer.hpp"
-#include <iostream>
+#include "assets/image_handler.hpp"
+#include "assets/texture.hpp"
 using namespace astra;
 
 constexpr int SCREEN_WIDTH = 800;
@@ -28,6 +29,8 @@ int main() {
 
     world.initialize(renderer, input, window.getWindowSize());
 
+    const auto texture = assets::Texture::fromImage(assets::image_handler::load("../Resources/assets/texture.png"));
+
     bool running = true;
 
     while (running) {
@@ -49,11 +52,14 @@ int main() {
 
         renderer.clear(math::Color::black());
 
-        // world.update(time.deltaTime());
+        world.update(time.deltaTime());
 
-        renderer.drawTriangle({{800, 196}, {0, 0}, {255, 0, 0}},
-                              {{450, 802}, {0, 0}, {0, 255, 0}},
-                              {{1150, 802}, {0, 0}, {0, 0, 255}});
+        renderer.drawTriangle({{432, 296}, {0, 0}, {255, 255, 255}},
+                              {{1168, 296}, {1, 0}, {255, 255, 255}},
+                              {{1168, 905}, {1, 1}, {255, 255, 255}}, texture);
+        renderer.drawTriangle({{432, 296}, {0, 0}, {255, 255, 255}},
+                              {{1168, 905}, {1, 1}, {255, 255, 255}},
+                              {{432, 905}, {0, 1}, {255, 255, 255}}, texture);
 
         window.render(renderer.getBuffer());
 

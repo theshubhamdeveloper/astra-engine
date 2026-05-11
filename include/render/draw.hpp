@@ -1,5 +1,6 @@
 #pragma once
 #include "framebuffer.hpp"
+#include "assets/texture.hpp"
 #include "math/vec2.hpp"
 #include "math/vertex.hpp"
 
@@ -8,7 +9,8 @@ namespace astra::render {
     constexpr float subPixelStep = 1.0f / (static_cast<float>(superSamplingLevel) + 1.0f);
     constexpr float totalSamples = static_cast<float>(superSamplingLevel * superSamplingLevel);
 
-    void drawTriangle(Framebuffer &fb, const math::Vertex &a, const math::Vertex &b, const math::Vertex &c);
+    void drawTriangle(Framebuffer &fb, const math::Vertex &a, const math::Vertex &b, const math::Vertex &c,
+                      const assets::Texture &texture);
 
     void drawTriangleFan(Framebuffer &fb, const std::vector<math::Vec2> &vertices, math::Color color);
 

@@ -1,10 +1,12 @@
 #include "render/draw.hpp"
+#include "assets/texture.hpp"
 #include "math/geometry.hpp"
 #include "math/vertex.hpp"
 using astra::math::Vec2;
 
 namespace astra::render {
-    void drawTriangle(Framebuffer &fb, const math::Vertex &a, const math::Vertex &b, const math::Vertex &c) {
+    void drawTriangle(Framebuffer &fb, const math::Vertex &a, const math::Vertex &b, const math::Vertex &c,
+                      const assets::Texture &texture) {
         const Vec2 min = {std::floor(std::min({a.position.x, b.position.x, c.position.x})),
                           std::floor(std::min({a.position.y, b.position.y, c.position.y}))};
         const Vec2 max = {std::ceil(std::max({a.position.x, b.position.x, c.position.x})),
@@ -39,8 +41,24 @@ namespace astra::render {
                 const float v = math::triangleEdge(c.position, a.position, position) / area;
                 const float w = math::triangleEdge(a.position, b.position, position) / area;
 
-                fb.putPixel({static_cast<int32_t>(x), static_cast<int32_t>(y)},
-                            a.color * u + b.color * v + c.color * w);
+                const Vec2 uv = a.uv * u + b.uv * v + c.uv * w;
+                const auto texColor = texture.getPixel({
+                        static_cast<int32_t>(uv.x * static_cast<float>(texture.width - 1)),
+                        static_cast<int32_t>(uv.y * static_cast<float>(texture.height - 1))});
+
+                float interpR = ((a.color.r * u + b.color.r * v + c.color.r * w) / 255.0f) * (texColor.r / 255.0f);
+
+                float interpG = ((a.color.g * u + b.color.g * v + c.color.g * w) / 255.0f) * (texColor.g / 255.0f);
+
+                float interpB = ((a.color.b * u + b.color.b * v + c.color.b * w) / 255.0f) * (texColor.b / 255.0f);
+
+                math::Color color = {
+                        static_cast<uint8_t>(std::clamp(interpR, 0.0f, 1.0f) * 255),
+                        static_cast<uint8_t>(std::clamp(interpG, 0.0f, 1.0f) * 255),
+                        static_cast<uint8_t>(std::clamp(interpB, 0.0f, 1.0f) * 255)
+                };
+
+                fb.putPixel({static_cast<int32_t>(x), static_cast<int32_t>(y)}, color);
             }
         }
     }
