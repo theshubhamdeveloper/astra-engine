@@ -11,7 +11,6 @@ add_subdirectory(third_party/SDL EXCLUDE_FROM_ALL)
 
 add_executable(astra_engine MACOSX_BUNDLE main.cpp
         src/platform/window.cpp
-        src/math/color.cpp
         src/render/framebuffer.cpp
         src/render/draw.cpp
         src/math/geometry.cpp

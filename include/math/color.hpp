@@ -5,15 +5,27 @@ namespace astra::math {
     struct Color {
         uint8_t r, g, b, a;
 
-        constexpr Color() :
-            r(0), g(0), b(0), a(255) {
+        constexpr Color() : r(0), g(0), b(0), a(255) {
         }
 
-        constexpr Color(const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a = 255) :
-            r(r), g(g), b(b), a(a) {
+        constexpr Color(const uint8_t r, const uint8_t g, const uint8_t b,
+                        const uint8_t a = 255) : r(r), g(g), b(b), a(a) {
         }
 
-        static Color alphaBlend(const Color &dst, const Color &src);
+        static Color alphaBlend(const Color &dst, const Color &src) {
+            if (src.a == 1)
+                return src;
+
+            if (src.a == 0)
+                return dst;
+
+            Color final;
+            final.r = (src.r * src.a + dst.r * (255 - src.a)) / 255;
+            final.g = (src.g * src.a + dst.g * (255 - src.a)) / 255;
+            final.b = (src.b * src.a + dst.b * (255 - src.a)) / 255;
+
+            return final;
+        }
 
         [[nodiscard]]
         constexpr uint32_t packRGBA() const {
@@ -57,27 +69,43 @@ namespace astra::math {
 
         // Operators
         constexpr Color operator+(const Color &other) const {
-            return {static_cast<uint8_t>(r + other.r),
-                    static_cast<uint8_t>(g + other.g),
-                    static_cast<uint8_t>(b + other.b), a};
+            return {
+                static_cast<uint8_t>(r + other.r),
+                static_cast<uint8_t>(g + other.g),
+                static_cast<uint8_t>(b + other.b), a
+            };
         }
 
         constexpr Color operator-(const Color &other) const {
-            return {static_cast<uint8_t>(r - other.r),
-                    static_cast<uint8_t>(g - other.g),
-                    static_cast<uint8_t>(b - other.b), a};
+            return {
+                static_cast<uint8_t>(r - other.r),
+                static_cast<uint8_t>(g - other.g),
+                static_cast<uint8_t>(b - other.b), a
+            };
+        }
+
+        constexpr Color operator*(const Color &other) const {
+            return {
+                static_cast<uint8_t>(r * other.r),
+                static_cast<uint8_t>(g * other.g),
+                static_cast<uint8_t>(b * other.b), a
+            };
         }
 
         constexpr Color operator*(const float scalar) const {
-            return {static_cast<uint8_t>(r * scalar),
-                    static_cast<uint8_t>(g * scalar),
-                    static_cast<uint8_t>(b * scalar), a};
+            return {
+                static_cast<uint8_t>(r * scalar),
+                static_cast<uint8_t>(g * scalar),
+                static_cast<uint8_t>(b * scalar), a
+            };
         }
 
         constexpr Color operator/(const float scalar) const {
-            return {static_cast<uint8_t>(r / scalar),
-                    static_cast<uint8_t>(g / scalar),
-                    static_cast<uint8_t>(b / scalar), a};
+            return {
+                static_cast<uint8_t>(r / scalar),
+                static_cast<uint8_t>(g / scalar),
+                static_cast<uint8_t>(b / scalar), a
+            };
         }
 
         Color &operator+=(const Color &other) {
@@ -94,17 +122,24 @@ namespace astra::math {
             return *this;
         }
 
+        Color &operator*=(const Color &other) {
+            r *= other.r;
+            g *= other.g;
+            b *= other.b;
+            return *this;
+        }
+
         Color &operator*=(const float scalar) {
-            r *= scalar;
-            g *= scalar;
-            b *= scalar;
+            r *= static_cast<uint8_t>(scalar);
+            g *= static_cast<uint8_t>(scalar);
+            b *= static_cast<uint8_t>(scalar);
             return *this;
         }
 
         Color &operator/=(const float scalar) {
-            r /= scalar;
-            g /= scalar;
-            b /= scalar;
+            r /= static_cast<uint8_t>(scalar);
+            g /= static_cast<uint8_t>(scalar);
+            b /= static_cast<uint8_t>(scalar);
             return *this;
         }
 
