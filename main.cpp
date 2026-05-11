@@ -5,8 +5,6 @@
 #include "input/input.hpp"
 #include "platform/window.hpp"
 #include "render/renderer.hpp"
-#include "assets/image_handler.hpp"
-#include "assets/texture.hpp"
 using namespace astra;
 
 constexpr int SCREEN_WIDTH = 800;
@@ -28,8 +26,6 @@ int main() {
     auto renderer = render::Renderer(window.getWindowSizeInPixels(), window.getDpiScale());
 
     world.initialize(renderer, input, window.getWindowSize());
-
-    const auto texture = assets::Texture::fromImage(assets::image_handler::load("../Resources/assets/texture.png"));
 
     bool running = true;
 
@@ -53,8 +49,6 @@ int main() {
         renderer.clear(math::Color::black());
 
         world.update(time.deltaTime());
-
-        renderer.drawRect({0, 0}, {736 / 1.5, 609 / 1.5}, texture);
 
         window.render(renderer.getBuffer());
 

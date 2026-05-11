@@ -23,6 +23,9 @@ namespace astra::render {
     void drawTriangleStrip(Framebuffer &fb, const std::vector<math::Vertex> &vertices,
                            const FragmentShader &fragmentShader);
 
+    void drawRect(Framebuffer &fb, const math::Vec2 &pos, const math::Vec2 &size, const math::Color &color,
+                  const FragmentShader &fragmentShader);
+
     void drawRect(Framebuffer &fb, const math::Vec2 &pos, const math::Vec2 &size, const math::Color &color);
 
     void drawRect(Framebuffer &fb, const math::Vec2 &pos, const math::Vec2 &size, const assets::Texture &texture);

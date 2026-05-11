@@ -4,8 +4,6 @@
 #include <vector>
 
 namespace astra::math {
-    constexpr double TWO_PI = 2.0 * std::numbers::pi;
-
     constexpr float triangleEdge(const Vec2 &a, const Vec2 &b, const Vec2 &c) {
         return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
     }
@@ -16,6 +14,4 @@ namespace astra::math {
         const bool sideCA = triangleEdge(c, a, p) <= 0;
         return sideAB == sideBC && sideAB == sideCA;
     }
-
-    std::vector<Vec2> generateCircleVertices(const Vec2 &pos, uint32_t r, uint32_t segment);
 }

@@ -81,36 +81,39 @@ namespace astra::render {
             rasterizeTriangle(fb, vertices[i], vertices[i + 1], vertices[i + 2], fragmentShader);
     }
 
-    void drawRect(Framebuffer &fb, const Vec2 &pos, const Vec2 &size, const math::Color &color) {
+    void drawRect(Framebuffer &fb, const Vec2 &pos, const Vec2 &size, const math::Color &color,
+                  const FragmentShader &fragmentShader) {
         drawTriangleFan(fb,
                         {
                                 {{pos}, {0, 0}, color},
                                 {{pos.x, pos.y + size.y}, {0, 1}, color},
                                 {{pos.x + size.x, pos.y + size.y}, {1, 1}, color},
                                 {{pos.x + size.x, pos.y}, {1, 0}, color}
-                        }, [&color](const Fragment &fragment) {
-                            return fragment.color;
-                        });
+                        }, fragmentShader);
+    }
+
+    void drawRect(Framebuffer &fb, const Vec2 &pos, const Vec2 &size, const math::Color &color) {
+        drawRect(fb, pos, size, color, [&color](const Fragment &fragment) {
+            return fragment.color;
+        });
     }
 
     void drawRect(Framebuffer &fb, const math::Vec2 &pos, const math::Vec2 &size, const assets::Texture &texture) {
-        drawTriangleFan(fb,
-                        {
-                                {{pos}, {0, 0}, math::Color::white()},
-                                {{pos.x, pos.y + size.y}, {0, 1}, math::Color::white()},
-                                {{pos.x + size.x, pos.y + size.y}, {1, 1}, math::Color::white()},
-                                {{pos.x + size.x, pos.y}, {1, 0}, math::Color::white()}
-                        }, [&texture](const Fragment &fragment) {
-                            return texture.interpolate(fragment.uv, fragment.color);
-                        });
+        drawRect(fb, pos, size, math::Color::white(), [&texture](const Fragment &fragment) {
+            return texture.interpolate(fragment.uv, fragment.color);
+        });
     }
 
     void drawCircle(Framebuffer &fb, const Vec2 &pos, const uint32_t r, const math::Color &color,
                     const uint32_t segment) {
-        const std::vector<Vec2> points = math::generateCircleVertices(pos, r, segment);
-        // drawTriangleFan(fb, points, [&color](const Fragment &fragment) {
-        //     return fragment.color;
-        // });
+        drawRect(fb, pos, {2.0f * r, 2.0f * r}, color, [&color, &r](const Fragment &fragment) {
+            const float dis = (fragment.uv.x - 0.5) * (fragment.uv.x - 0.5) +
+                              (fragment.uv.y - 0.5) * (fragment.uv.y - 0.5);
+            if (dis <= 0.25)
+                return color;
+
+            return math::Color::transparent();
+        });
     }
 
     void drawLine(Framebuffer &fb, const Vec2 &a, const Vec2 &b, const math::Color &color) {
