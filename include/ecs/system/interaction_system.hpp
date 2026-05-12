@@ -29,7 +29,7 @@ namespace astra::ecs::system {
         component::Interaction *hitTestInteraction();
 
         static bool hitTest(const component::Transform &transform,
-                            const component::RectangleGeometry &rectangleGeometry,
+                            const component::RectGeometry &rectangleGeometry,
                             const component::Interaction &interaction, const math::Vec2 &position);
 
         static bool hitTest(const component::Transform &transform, const component::CircleGeometry &circleGeometry,

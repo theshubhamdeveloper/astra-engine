@@ -2,11 +2,12 @@
 #include "math/color.hpp"
 #include "math/vec2.hpp"
 #include <variant>
+#include "assets/texture.hpp"
 
 namespace astra::ecs::component {
-    struct RectangleGeometry {
+    struct RectGeometry {
         math::Vec2 size;
-        float cornerRadius;
+        float cornerRadius = 0;
     };
 
     struct CircleGeometry {
@@ -24,14 +25,15 @@ namespace astra::ecs::component {
         math::Vec2 c;
     };
 
-    using ShapeGeometry = std::variant<RectangleGeometry, CircleGeometry, LineGeometry, TriangleGeometry>;
+    using ShapeGeometry = std::variant<RectGeometry, CircleGeometry, LineGeometry, TriangleGeometry>;
 
     struct ShapeStyle {
-        math::Color fill;
-        math::Color stroke;
-        float strokeWidth;
-        float opacity;
-        bool display;
+        bool display = true;
+        math::Color backgroundColor = math::Color::transparent();
+        std::optional<assets::Texture> backgroundImage = std::nullopt;
+        math::Color stroke = math::Color::black();
+        float strokeWidth = 0;
+        float opacity = 1;
     };
 
     struct Shape {

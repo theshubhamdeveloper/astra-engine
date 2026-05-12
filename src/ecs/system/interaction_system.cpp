@@ -101,7 +101,7 @@ namespace astra::ecs::system {
 
     // TODO: Add rotation
     bool InteractionSystem::hitTest(const component::Transform &transform,
-                                    const component::RectangleGeometry &rectangleGeometry,
+                                    const component::RectGeometry &rectangleGeometry,
                                     const component::Interaction &interaction, const math::Vec2 &position) {
         if (position.x > transform.position.x &&
             position.x < transform.position.x + (rectangleGeometry.size.x * transform.scale.x) &&
