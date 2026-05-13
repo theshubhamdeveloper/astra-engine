@@ -11,6 +11,16 @@ set(ASSETS_DIR ${CMAKE_SOURCE_DIR}/assets)
 
 add_subdirectory(third_party/SDL EXCLUDE_FROM_ALL)
 
+add_library(glad
+        third_party/glad/src/glad.c
+)
+
+target_include_directories(glad PUBLIC
+        third_party/glad/include
+)
+
+find_package(OpenGL REQUIRED)
+
 add_executable(astra_engine MACOSX_BUNDLE main.cpp
         src/platform/window.cpp
         src/render/framebuffer.cpp
@@ -40,7 +50,11 @@ target_include_directories(astra_engine PRIVATE
         third_party/stb
 )
 
-target_link_libraries(astra_engine PRIVATE SDL3::SDL3)
+target_link_libraries(astra_engine PRIVATE
+        SDL3::SDL3
+        glad
+        OpenGL::GL
+)
 
 add_custom_command(TARGET astra_engine POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
