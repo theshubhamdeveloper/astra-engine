@@ -1,76 +1,63 @@
 #include "platform/window.hpp"
+#include <iostream>
+#include <ostream>
 #include "SDL3/SDL_init.h"
 #include "SDL3/SDL_video.h"
 #include "math/point.hpp"
 #include <utility>
+#include <glad/glad.h>
 
 namespace astra::platform {
     Window::Window(std::string title, const math::Point &size)
-        : window(nullptr), renderer(nullptr), texture(nullptr), title(std::move(title)), windowSize(size) {
+        : window(nullptr), glContext(), title(std::move(title)), windowSize(size) {
     }
 
     void Window::initialize(const bool resizable) {
-        Uint32 flags = SDL_WINDOW_HIGH_PIXEL_DENSITY;
-        if (resizable) {
+        Uint32 flags = SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_OPENGL;
+        if (resizable)
             flags |= SDL_WINDOW_RESIZABLE;
-        }
+
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
         window = SDL_CreateWindow(title.c_str(), windowSize.x, windowSize.y,
                                   flags);
 
-        SDL_GetWindowSizeInPixels(window, &windowSizeInPixels.x, &windowSizeInPixels.y);
+        glContext = SDL_GL_CreateContext(window);
 
-        dpiScale.x = static_cast<float>(windowSizeInPixels.x) / windowSize.x;
-        dpiScale.y = static_cast<float>(windowSizeInPixels.y) / windowSize.y;
-
-        renderer = SDL_CreateRenderer(window, nullptr);
-
-        if (renderer) {
-            SDL_SetRenderVSync(renderer, 1);
+        if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(SDL_GL_GetProcAddress))) {
+            std::cerr << "Failed to initialize GLAD" << std::endl;
+            std::abort();
         }
 
-        createTexture();
+        glViewport(0, 0, windowSize.x, windowSize.y);
+        SDL_GL_SwapWindow(window);
     }
 
+
     void Window::destroy() const {
-        SDL_DestroyTexture(texture);
-        SDL_DestroyRenderer(renderer);
+        SDL_GL_DestroyContext(glContext);
         SDL_DestroyWindow(window);
         SDL_Quit();
     }
 
-    void Window::render(const render::Buffer &buffer) const {
-        const auto pitch = static_cast<int32_t>(windowSizeInPixels.x * sizeof(uint32_t));
-
-        SDL_UpdateTexture(texture, nullptr, buffer.data(), pitch);
-        SDL_RenderTexture(renderer, texture, nullptr, nullptr);
-        SDL_RenderPresent(renderer);
+    void Window::clear(const math::Color &color) const {
+        glClearColor(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
     }
 
-    void Window::createTexture() {
-        texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING,
-                                    windowSizeInPixels.x,
-                                    windowSizeInPixels.y);
+    void Window::render() const {
+        SDL_GL_SwapWindow(window);
     }
 
     void Window::updateOnResize() {
-        SDL_GetWindowSize(window, &windowSize.x, &windowSize.y);
-        SDL_GetWindowSizeInPixels(window, &windowSizeInPixels.x, &windowSizeInPixels.y);
-
-        if (texture) {
-            SDL_DestroyTexture(texture);
-            texture = nullptr;
-        }
-
-        createTexture();
     }
 
     const math::Point &Window::getWindowSize() const {
         return windowSize;
-    }
-
-    const math::Point &Window::getWindowSizeInPixels() const {
-        return windowSizeInPixels;
     }
 
     const math::Vec2 &Window::getDpiScale() const {

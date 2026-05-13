@@ -1,5 +1,4 @@
 #pragma once
-#include "SDL3/SDL_render.h"
 #include "SDL3/SDL_video.h"
 #include "math/point.hpp"
 #include "math/vec2.hpp"
@@ -9,11 +8,10 @@
 namespace astra::platform {
     class Window {
         SDL_Window *window;
-        SDL_Renderer *renderer;
-        SDL_Texture *texture;
+        SDL_GLContext glContext;
 
         std::string title;
-        math::Point windowSize, windowSizeInPixels;
+        math::Point windowSize;
         math::Vec2 dpiScale;
 
     public:
@@ -23,13 +21,11 @@ namespace astra::platform {
 
         void destroy() const;
 
-        void render(const render::Buffer &buffer) const;
+        void clear(const math::Color &color) const;
 
-        void createTexture();
+        void render() const;
 
         void updateOnResize();
-
-        const math::Point &getWindowSizeInPixels() const;
 
         const math::Point &getWindowSize() const;
 

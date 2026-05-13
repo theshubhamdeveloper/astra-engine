@@ -23,9 +23,10 @@ int main() {
 
     window.initialize(false);
 
-    auto renderer = render::Renderer(window.getWindowSizeInPixels(), window.getDpiScale());
-
-    world.initialize(renderer, input, window.getWindowSize());
+    //
+    // auto renderer = render::Renderer();
+    //
+    // world.initialize(renderer, input, window.getWindowSize());
 
     bool running = true;
 
@@ -40,19 +41,13 @@ int main() {
         if (input.quitRequested())
             running = false;
 
-        if (input.windowResizeRequested()) {
-            window.updateOnResize();
-            renderer.onWindowResize(window.getWindowSizeInPixels(), window.getDpiScale());
-            world.setViewportSize(window.getWindowSize());
-        }
+        window.clear({255, 255, 255});
 
-        renderer.clear(math::Color::black());
-
-        world.update(time.deltaTime());
-
-        window.render(renderer.getBuffer());
+        // world.update(time.deltaTime());
 
         input.updateCurrentToPrevious();
+
+        window.render();
     }
 
     window.destroy();
