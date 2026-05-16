@@ -26,6 +26,9 @@ namespace astra::platform {
         window = SDL_CreateWindow(title.c_str(), windowSize.x, windowSize.y,
                                   flags);
 
+        math::Point windowSizeInPixels;
+        SDL_GetWindowSizeInPixels(window, &windowSizeInPixels.x, &windowSizeInPixels.y);
+
         glContext = SDL_GL_CreateContext(window);
 
         if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(SDL_GL_GetProcAddress))) {
@@ -33,7 +36,7 @@ namespace astra::platform {
             std::abort();
         }
 
-        glViewport(0, 0, windowSize.x, windowSize.y);
+        glViewport(0, 0, windowSizeInPixels.x, windowSizeInPixels.y);
         SDL_GL_SwapWindow(window);
     }
 
