@@ -40,6 +40,7 @@ add_executable(astra_engine MACOSX_BUNDLE main.cpp
         src/ecs/system/camera_system.cpp
         src/assets/image_handler.cpp
         src/assets/shader.cpp
+        src/render/mesh.cpp
 )
 
 target_compile_definitions(astra_engine PRIVATE
