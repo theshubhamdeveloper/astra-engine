@@ -23,7 +23,6 @@ find_package(OpenGL REQUIRED)
 
 add_executable(astra_engine MACOSX_BUNDLE main.cpp
         src/platform/window.cpp
-        src/render/framebuffer.cpp
         src/render/draw.cpp
         src/input/input.cpp
         src/input/keyboard.cpp

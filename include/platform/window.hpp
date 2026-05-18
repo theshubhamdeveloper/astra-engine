@@ -2,8 +2,11 @@
 #include "SDL3/SDL_video.h"
 #include "math/point.hpp"
 #include "math/vec2.hpp"
-#include "render/framebuffer.hpp"
 #include <string>
+
+namespace astra::math {
+    struct Color;
+}
 
 namespace astra::platform {
     class Window {
@@ -27,8 +30,8 @@ namespace astra::platform {
 
         void updateOnResize();
 
-        const math::Point &getWindowSize() const;
+        [[nodiscard]] const math::Point &getWindowSize() const;
 
-        const math::Vec2 &getDpiScale() const;
+        [[nodiscard]] const math::Vec2 &getDpiScale() const;
     };
 }
