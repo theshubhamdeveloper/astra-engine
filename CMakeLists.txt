@@ -41,6 +41,7 @@ add_executable(astra_engine MACOSX_BUNDLE main.cpp
         src/assets/image_handler.cpp
         src/assets/shader.cpp
         src/render/mesh.cpp
+        src/assets/texture.cpp
 )
 
 target_compile_definitions(astra_engine PRIVATE
