@@ -13,11 +13,12 @@ namespace astra::render {
         int indexCount;
 
     public:
-        Mesh(const std::vector<GLfloat> &vertices, const std::vector<GLuint> &indices);
+        Mesh(const std::vector<math::Vertex> &vertices, const std::vector<GLuint> &indices);
 
         ~Mesh();
 
-        void addAttribute(GLuint layout, GLint size, GLenum type, GLsizei stride, const void *offset);
+        void addAttribute(GLuint layout, GLint size, GLenum type, GLboolean normalize, GLsizei stride,
+                          const void *offset);
 
         void draw() const;
 

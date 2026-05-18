@@ -2,7 +2,7 @@
 #include "render/mesh.hpp"
 
 namespace astra::render {
-    Mesh::Mesh(const std::vector<GLfloat> &vertices, const std::vector<GLuint> &indices) : VAO(0), VBO(0), EBO(0),
+    Mesh::Mesh(const std::vector<math::Vertex> &vertices, const std::vector<GLuint> &indices) : VAO(0), VBO(0), EBO(0),
         indexCount(indices.size()) {
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
@@ -13,7 +13,7 @@ namespace astra::render {
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(
             GL_ARRAY_BUFFER,
-            vertices.size() * sizeof(GLfloat),
+            vertices.size() * sizeof(math::Vertex),
             vertices.data(),
             GL_STATIC_DRAW
         );
@@ -33,13 +33,14 @@ namespace astra::render {
         glDeleteBuffers(1, &EBO);
     }
 
-    void Mesh::addAttribute(const GLuint layout, const GLint size, const GLenum type, const GLsizei stride,
+    void Mesh::addAttribute(const GLuint layout, const GLint size, const GLenum type, GLboolean normalize,
+                            const GLsizei stride,
                             const void *offset) {
         glVertexAttribPointer(
             layout,
             size,
             type,
-            GL_FALSE,
+            normalize,
             stride,
             offset
         );
