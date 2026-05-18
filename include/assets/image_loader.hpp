@@ -3,5 +3,5 @@
 #include "assets/image.hpp"
 
 namespace astra::assets::image_handler {
-    [[nodiscard]] Image load(const char *file);
+    [[nodiscard]] Image load(const std::string &filePath, bool verticalFlip = true);
 }
