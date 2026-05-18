@@ -37,9 +37,9 @@ add_executable(astra_engine MACOSX_BUNDLE main.cpp
         src/ecs/world/world.cpp
         src/ecs/system/interaction_system.cpp
         src/ecs/system/camera_system.cpp
-        src/assets/image_loader.cpp
         src/assets/shader.cpp
         src/render/mesh.cpp
+        src/assets/image.cpp
         src/assets/texture.cpp
 )
 

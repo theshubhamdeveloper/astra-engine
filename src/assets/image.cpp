@@ -1,11 +1,10 @@
-#include "assets/image_loader.hpp"
-#include "stb_image.h"
+#include "assets/image.hpp"
 #include "core/assert.hpp"
 #include <iostream>
-#include "math/color.hpp"
+#include "stb_image.h"
 
-namespace astra::assets::image_handler {
-    Image load(const std::string &filePath, const bool verticalFlip) {
+namespace astra::assets {
+    Image Image::load(const std::string &filePath, const bool verticalFlip) {
         stbi_set_flip_vertically_on_load(verticalFlip);
 
         Image image;
@@ -18,7 +17,7 @@ namespace astra::assets::image_handler {
                           4);
 
         if (!data) {
-            std::cerr << "STB Message:" << stbi_failure_reason() << std::endl;
+            std::cerr << "STB Message: " << stbi_failure_reason() << std::endl;
             ASSERT(data);
         }
 
