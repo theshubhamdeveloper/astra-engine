@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 4.0)
+
 project(astra_engine)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(ASSETS_DIR ${CMAKE_SOURCE_DIR}/assets)
@@ -19,28 +22,39 @@ target_include_directories(glad PUBLIC
         third_party/glad/include
 )
 
+add_library(stb INTERFACE)
+
+target_include_directories(stb INTERFACE
+        third_party/stb
+)
+
 find_package(OpenGL REQUIRED)
 
-add_executable(astra_engine MACOSX_BUNDLE main.cpp
+add_executable(astra_engine MACOSX_BUNDLE
+        src/main.cpp
+
         src/platform/window.cpp
-        src/render/draw.cpp
+
         src/input/input.cpp
         src/input/keyboard.cpp
         src/input/mouse.cpp
+
         src/core/time.cpp
-        src/ecs/entity/entity_manager.cpp
-        src/ecs/component/component_manager.cpp
-        src/ecs/system/system_manager.cpp
-        src/render/renderer.cpp
-        src/render/render_dispatch.cpp
-        src/ecs/system/shape_system.cpp
-        src/ecs/world/world.cpp
-        src/ecs/system/interaction_system.cpp
-        src/ecs/system/camera_system.cpp
-        src/assets/shader.cpp
-        src/render/mesh.cpp
+
+        src/ecs/entity_manager.cpp
+        src/ecs/world.cpp
+
+        src/ecs/systems/render_system.cpp
+        src/ecs/systems/interaction_system.cpp
+        src/ecs/systems/camera_system.cpp
+
+        src/graphics/renderer.cpp
+        src/graphics/render_dispatch.cpp
+        src/graphics/shader.cpp
+        src/graphics/mesh.cpp
+        src/graphics/texture.cpp
+
         src/assets/image.cpp
-        src/assets/texture.cpp
 )
 
 target_compile_definitions(astra_engine PRIVATE
@@ -49,15 +63,16 @@ target_compile_definitions(astra_engine PRIVATE
 
 target_include_directories(astra_engine PRIVATE
         include
-        third_party/stb
 )
 
 target_link_libraries(astra_engine PRIVATE
         SDL3::SDL3
-        glad
         OpenGL::GL
+        glad
+        stb
 )
 
+# Copy assets
 add_custom_command(TARGET astra_engine POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${ASSETS_DIR}

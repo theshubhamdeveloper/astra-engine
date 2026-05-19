@@ -1,4 +1,4 @@
-#include "input/keyboard.hpp"
+#include <astra/input/keyboard.hpp>
 
 namespace astra::input {
     Keyboard::Keyboard() : current{false}, previous{false} {

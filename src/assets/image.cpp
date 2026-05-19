@@ -1,7 +1,10 @@
-#include "assets/image.hpp"
-#include "core/assert.hpp"
+#define STB_IMAGE_IMPLEMENTATION
+
 #include <iostream>
-#include "stb_image.h"
+
+#include <stb_image.h>
+#include <astra/assets/image.hpp>
+#include <astra/core/assert.hpp>
 
 namespace astra::assets {
     Image Image::load(const std::string &filePath, const bool verticalFlip) {

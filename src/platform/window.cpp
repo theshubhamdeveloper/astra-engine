@@ -1,11 +1,12 @@
-#include <glad/glad.h>
-#include "platform/window.hpp"
 #include <iostream>
-#include "SDL3/SDL_init.h"
-#include "SDL3/SDL_video.h"
-#include "math/point.hpp"
 #include <utility>
-#include "math/color.hpp"
+
+#include <glad/glad.h>
+#include <SDL3/SDL_init.h>
+#include <SDL3/SDL_video.h>
+#include <astra/platform/window.hpp>
+#include <astra/math/point.hpp>
+#include <astra/math/color.hpp>
 
 namespace astra::platform {
     Window::Window(std::string title, const math::Point &size)

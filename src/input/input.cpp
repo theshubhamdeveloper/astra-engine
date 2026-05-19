@@ -1,6 +1,7 @@
-#include "input/input.hpp"
-#include "SDL3/SDL_events.h"
 #include <ranges>
+
+#include <SDL3/SDL_events.h>
+#include <astra/input/input.hpp>
 
 namespace astra::input {
     Input::Input() : quitRequested_(false), windowResizeRequested_(false) {

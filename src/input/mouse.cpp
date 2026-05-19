@@ -1,5 +1,5 @@
-#include "input/mouse.hpp"
-#include "SDL3/SDL_mouse.h"
+#include <SDL3/SDL_mouse.h>
+#include <astra/input/mouse.hpp>
 
 namespace astra::input {
     Mouse::Mouse()

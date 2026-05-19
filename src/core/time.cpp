@@ -1,5 +1,5 @@
-#include "core/time.hpp"
-#include "SDL3/SDL_timer.h"
+#include <SDL3/SDL_timer.h>
+#include <astra/core/time.hpp>
 
 namespace astra::core {
     Time::Time()
