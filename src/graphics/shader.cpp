@@ -34,8 +34,10 @@ namespace astra::graphics {
 
         glAttachShader(id, vertexShader);
         glAttachShader(id, fragmentShader);
-
         glLinkProgram(id);
+
+        glDeleteShader(fragmentShader);
+        glDeleteShader(vertexShader);
     }
 
     Shader::~Shader() {
