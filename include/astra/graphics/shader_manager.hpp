@@ -1,22 +1,27 @@
 #pragma once
 
-#include <unordered_map>
+#include <vector>
 
 #include <astra/core/assert.hpp>
 #include <astra/graphics/shader.hpp>
 
 namespace astra::graphics {
+    struct ShaderHandel {
+        uint32_t id;
+    };
+
     class ShaderManager {
-        std::unordered_map<std::string, Shader> shaderMap;
+        std::vector<Shader> shaders;
 
     public:
-        void loadShader(const std::string &name, const std::string &vertFilePath, const std::string &fragFilePath) {
-            shaderMap.try_emplace(name, vertFilePath, fragFilePath);
+        ShaderHandel loadShader(const std::string &vertFilePath, const std::string &fragFilePath) {
+            shaders.emplace_back(vertFilePath, fragFilePath);
+            return {static_cast<uint32_t>(shaders.size()) - 1};
         }
 
-        [[nodiscard]] const Shader &getShader(const std::string &name) const {
-            ASSERT(shaderMap.contains(name));
-            return shaderMap.at(name);
+        [[nodiscard]] const Shader &getShader(const ShaderHandel &shaderHandel) const {
+            ASSERT(shaders.size() > shaderHandel.id);
+            return shaders.at(shaderHandel.id);
         }
     };
 }
