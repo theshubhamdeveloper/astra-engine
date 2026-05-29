@@ -9,6 +9,6 @@ namespace astra::assets {
         int channels;
         std::vector<uint8_t> pixels;
 
-        static Image load(const std::string &filePath, bool verticalFlip = true);
+        static Image load(const std::string &filePath, bool verticalFlip = false);
     };
 }

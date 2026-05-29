@@ -20,7 +20,7 @@ namespace astra::graphics {
         }
 
         [[nodiscard]] const Texture &getTexture(const TextureHandel &textureHandel) const {
-            ASSERT(textures.size() < textureHandel.id);
+            ASSERT(textures.size() > textureHandel.id);
             return textures.at(textureHandel.id);
         }
     };
