@@ -5,13 +5,20 @@
 #include <astra/core/assert.hpp>
 #include <astra/graphics/shader.hpp>
 
+#include "texture.hpp"
+
 namespace astra::graphics {
     struct ShaderHandel {
         uint32_t id;
     };
 
-    class ShaderManager {
+    struct TextureHandel {
+        uint32_t id;
+    };
+
+    class ResourceManager {
         std::vector<Shader> shaders;
+        std::vector<Texture> textures;
 
     public:
         ShaderHandel loadShader(const std::string &vertFilePath, const std::string &fragFilePath) {
@@ -22,6 +29,16 @@ namespace astra::graphics {
         [[nodiscard]] const Shader &getShader(const ShaderHandel &shaderHandel) const {
             ASSERT(shaders.size() > shaderHandel.id);
             return shaders.at(shaderHandel.id);
+        }
+
+        TextureHandel loadTexture(const std::string &filePath) {
+            textures.emplace_back(assets::Image::load(filePath));
+            return {static_cast<uint32_t>(textures.size()) - 1};
+        }
+
+        [[nodiscard]] const Texture &getTexture(const TextureHandel &textureHandel) const {
+            ASSERT(textures.size() > textureHandel.id);
+            return textures.at(textureHandel.id);
         }
     };
 }

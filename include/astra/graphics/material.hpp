@@ -1,7 +1,6 @@
 #pragma once
 
-#include <astra/graphics/shader_manager.hpp>
-#include <astra/graphics/texture_manager.hpp>
+#include <astra/graphics/resource_manager.hpp>
 
 namespace astra::graphics {
     struct Material {

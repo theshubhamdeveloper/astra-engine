@@ -3,7 +3,6 @@
 #include <astra/graphics/batch.hpp>
 #include <astra/graphics/camera.hpp>
 #include <astra/graphics/mesh.hpp>
-#include <astra/graphics/shader_manager.hpp>
 #include <astra/graphics/texture.hpp>
 #include <astra/math/mat3.hpp>
 #include <astra/math/vector.hpp>
@@ -11,7 +10,7 @@
 
 namespace astra::graphics {
     class Renderer {
-        ShaderManager shaderManager;
+        ResourceManager resourceManager;
 
         Batch colorBatch;
         std::unique_ptr<Mesh> quadMesh;

@@ -44,21 +44,18 @@ namespace astra::graphics {
     }
 
     void Renderer::initialize() {
-        const ShaderHandel textureShader = shaderManager.loadShader("../Resources/assets/shaders/graphics_2d.vert",
-                                                                    "../Resources/assets/shaders/texture.frag");
-
-        const ShaderHandel colorShader = shaderManager.loadShader("../Resources/assets/shaders/graphics_2d.vert",
-                                                                  "../Resources/assets/shaders/color.frag");
+        const ShaderHandel graphicsShader = resourceManager.loadShader("../Resources/assets/shaders/graphics_2d.vert",
+                                                                       "../Resources/assets/shaders/graphics_2d.frag");
 
 
         colorBatch.material.shader = colorShader;
+        colorBatch.material.shader = graphicsShader;
 
         generateQuadMesh();
     }
 
     void Renderer::flush(const GraphicCamera &camera) {
-        const Shader &shader = shaderManager.getShader(colorBatch.material.shader);
-
+        const Shader &shader = resourceManager.getShader(colorBatch.material.shader);
         shader.use();
         shader.setUniformMat3f("uProjection", camera.projection);
         shader.setUniformMat3f("uView", camera.getView());
