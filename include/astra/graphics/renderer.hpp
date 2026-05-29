@@ -1,19 +1,37 @@
 #pragma once
 
+#include <astra/graphics/batch.hpp>
+#include <astra/graphics/camera.hpp>
+#include <astra/graphics/mesh.hpp>
+#include <astra/graphics/shader_manager.hpp>
+#include <astra/graphics/texture.hpp>
+#include <astra/math/mat3.hpp>
 #include <astra/math/vector.hpp>
 #include <astra/math/vertex.hpp>
 
 namespace astra::graphics {
     class Renderer {
-        math::Vec2 dpiScale;
+        ShaderManager shaderManager;
+
+        Batch colorBatch;
+        std::unique_ptr<Mesh> quadMesh;
+
+        math::Mat3 view;
 
     public:
-        Renderer(const math::Point &windowSizeInPixels, const math::Vec2 &dpiScale);
+        Renderer();
+
+        void generateQuadMesh();
+
+        void initialize();
+
+        void flush(const GraphicCamera &camera);
 
         void drawTriangle(const math::Vec2 &a, const math::Vec2 &b, const math::Vec2 &c,
                           const math::Color &color) const;
 
-        void drawRect(const math::Vec2 &pos, const math::Vec2 &size, const math::Color &color) const;
+        void drawRect(const math::Vec2 &pos, const math::Vec2 &size,
+                      float rotation, const math::Color &color);
 
         void drawRect(const math::Vec2 &pos, const math::Vec2 &size, const Texture &texture) const;
 
