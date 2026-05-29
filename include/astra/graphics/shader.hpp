@@ -1,16 +1,21 @@
 #pragma once
 
 #include <string>
+
 #include <glad/glad.h>
+
+#include <astra/math/mat3.hpp>
 
 namespace astra::graphics {
     struct Shader {
     private:
-        GLuint id;
+        uint32_t id;
 
         static std::string getFileContent(const std::string &filePath);
 
-        static GLuint generateShader(const std::string &filePath, const GLenum &shaderType);
+        static uint32_t generateShader(const std::string &filePath, const GLenum &shaderType);
+
+        [[nodiscard]] int getUniformLocation(const std::string &uniformName) const;
 
     public:
         Shader(const std::string &vertexFilePath, const std::string &fragmentFilePath);
@@ -19,6 +24,16 @@ namespace astra::graphics {
 
         void use() const;
 
-        [[nodiscard]] GLuint getID() const;
+        void setUniform1i(const std::string &uniformName, int value) const;
+
+        void setUniformVec2f(const std::string &uniformName, const math::Vec2 &value) const;
+
+        void setUniformVec3f(const std::string &uniformName, const math::Vec3 &value) const;
+
+        void setUniformMat3f(const std::string &uniformName, const math::Mat3 &value) const;
+
+        void unbind() const;
+
+        [[nodiscard]] uint32_t getID() const;
     };
 }

@@ -3,9 +3,9 @@
 #include <astra/graphics/shader.hpp>
 
 namespace astra::graphics {
-    Texture::Texture(const assets::Image &image, const GLuint unit) : id(0), unit(unit) {
+    Texture::Texture(const assets::Image &image) : id(0) {
         glGenTextures(1, &id);
-        glActiveTexture(GL_TEXTURE0 + unit);
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, id);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -22,16 +22,7 @@ namespace astra::graphics {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    void Texture::bindToUniform(const Shader &shader, const std::string &uniform) const {
-        shader.use();
-        use();
-        glUniform1i(
-            glGetUniformLocation(shader.getID(), uniform.c_str()),
-            unit
-        );
-    }
-
-    void Texture::use() const {
+    void Texture::use(const uint32_t unit) const {
         glActiveTexture(GL_TEXTURE0 + unit);
         glBindTexture(GL_TEXTURE_2D, id);
     }

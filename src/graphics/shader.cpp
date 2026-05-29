@@ -1,6 +1,7 @@
 #include <fstream>
 
 #include <glad/glad.h>
+
 #include <astra/core/assert.hpp>
 #include <astra/graphics/shader.hpp>
 
@@ -26,6 +27,12 @@ namespace astra::graphics {
         return shader;
     }
 
+    int Shader::getUniformLocation(const std::string &uniformName) const {
+        const int location = glGetUniformLocation(id, uniformName.c_str());
+        ASSERT(location != -1);
+        return location;
+    }
+
     Shader::Shader(const std::string &vertexFilePath, const std::string &fragmentFilePath) {
         id = glCreateProgram();
 
@@ -46,6 +53,26 @@ namespace astra::graphics {
 
     void Shader::use() const {
         glUseProgram(id);
+    }
+
+    void Shader::setUniform1i(const std::string &uniformName, const int value) const {
+        glUniform1i(getUniformLocation(uniformName), value);
+    }
+
+    void Shader::setUniformVec2f(const std::string &uniformName, const math::Vec2 &value) const {
+        glUniform2f(getUniformLocation(uniformName), value.x, value.y);
+    }
+
+    void Shader::setUniformVec3f(const std::string &uniformName, const math::Vec3 &value) const {
+        glUniform3f(getUniformLocation(uniformName), value.x, value.y, value.z);
+    }
+
+    void Shader::setUniformMat3f(const std::string &uniformName, const math::Mat3 &value) const {
+        glUniformMatrix3fv(getUniformLocation(uniformName), 1, GL_TRUE, value.m);
+    }
+
+    void Shader::unbind() const {
+        glUseProgram(0);
     }
 
     GLuint Shader::getID() const {

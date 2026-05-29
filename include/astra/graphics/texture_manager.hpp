@@ -14,8 +14,8 @@ namespace astra::graphics {
         std::vector<Texture> textures;
 
     public:
-        TextureHandel loadTexture(const std::string &filePath, GLuint unit) {
-            textures.emplace_back(assets::Image::load(filePath), unit);
+        TextureHandel loadTexture(const std::string &filePath) {
+            textures.emplace_back(assets::Image::load(filePath));
             return {static_cast<uint32_t>(textures.size()) - 1};
         }
 

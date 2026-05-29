@@ -7,14 +7,11 @@
 namespace astra::graphics {
     struct Texture {
     private:
-        GLuint id;
-        GLuint unit;
+        uint32_t id;
 
     public:
-        Texture(const assets::Image &image, GLuint unit);
+        explicit Texture(const assets::Image &image);
 
-        void bindToUniform(const Shader &shader, const std::string &uniform) const;
-
-        void use() const;
+        void use(uint32_t unit) const;
     };
 }
