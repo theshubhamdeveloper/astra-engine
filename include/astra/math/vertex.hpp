@@ -1,7 +1,7 @@
 #pragma once
 
 #include <astra/math/color.hpp>
-#include <astra/math/vec2.hpp>
+#include <astra/math/vector.hpp>
 
 namespace astra::math {
     struct Vertex {

@@ -3,8 +3,7 @@
 #include <string>
 
 #include <SDL3/SDL.h>
-#include <astra/math/point.hpp>
-#include <astra/math/vec2.hpp>
+#include <astra/math/vector.hpp>
 
 namespace astra::math {
     struct Color;
@@ -16,11 +15,11 @@ namespace astra::platform {
         SDL_GLContext glContext;
 
         std::string title;
-        math::Point windowSize;
+        math::Vec2 windowSize;
         math::Vec2 dpiScale;
 
     public:
-        Window(std::string title, const math::Point &size);
+        Window(std::string title, const math::Vec2 &size);
 
         void initialize(bool resizable);
 
@@ -32,7 +31,7 @@ namespace astra::platform {
 
         void updateOnResize();
 
-        [[nodiscard]] const math::Point &getWindowSize() const;
+        [[nodiscard]] const math::Vec2 &getWindowSize() const;
 
         [[nodiscard]] const math::Vec2 &getDpiScale() const;
     };

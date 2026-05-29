@@ -2,7 +2,7 @@
 #include <astra/ecs/systems/camera_system.hpp>
 #include <astra/input/mouse.hpp>
 #include <astra/math/geometry.hpp>
-#include <astra/math/vec2.hpp>
+#include <astra/math/vector.hpp>
 
 namespace astra::ecs::systems {
     InteractionSystem::InteractionSystem(ComponentManager &componentManager, const components::Camera &camera,

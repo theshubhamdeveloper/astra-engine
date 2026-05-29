@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include <astra/math/vec2.hpp>
+#include <astra/math/vector.hpp>
 
 namespace astra::input {
     constexpr int MOUSE_BUTTON_COUNT = 5;

@@ -1,7 +1,9 @@
+#include <numbers>
+
+#include <astra/math/vector.hpp>
 #include <astra/graphics/renderer.hpp>
 #include <astra/graphics/texture.hpp>
-#include <astra/math/point.hpp>
-#include <astra/math/vec2.hpp>
+
 
 namespace astra::graphics {
     Renderer::Renderer(const math::Point &windowSizeInPixels, const math::Vec2 &dpiScale) : dpiScale(dpiScale) {
@@ -23,7 +25,6 @@ namespace astra::graphics {
     void Renderer::drawLine(const math::Vec2 &a, const math::Vec2 &b, const math::Color &color) const {
     }
 
-    void Renderer::onWindowResize(const math::Point &newWindowSizeInPixels, const math::Vec2 &newDpiScale) {
-        dpiScale = newDpiScale;
+    void Renderer::onWindowResize(const math::Vec2 &newSize) {
     }
 }

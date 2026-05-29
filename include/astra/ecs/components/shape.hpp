@@ -4,7 +4,7 @@
 
 #include <astra/graphics/texture.hpp>
 #include <astra/math/color.hpp>
-#include <astra/math/vec2.hpp>
+#include <astra/math/vector.hpp>
 
 namespace astra::ecs::components {
     struct RectGeometry {

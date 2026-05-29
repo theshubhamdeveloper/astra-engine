@@ -1,6 +1,6 @@
 #pragma once
 
-#include <astra/math/vec2.hpp>
+#include <astra/math/vector.hpp>
 
 namespace astra::ecs::components {
     struct Viewport {

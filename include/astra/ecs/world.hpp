@@ -6,7 +6,6 @@
 #include <astra/ecs/system_manager.hpp>
 #include <astra/graphics/renderer.hpp>
 #include <astra/input/input.hpp>
-#include <astra/math/point.hpp>
 
 namespace astra::ecs {
     class World {
@@ -16,10 +15,10 @@ namespace astra::ecs {
         components::Camera camera;
 
     public:
-        void initialize(graphics::Renderer &renderer, input::Input &input, const math::Point &viewportSize);
+        void initialize(graphics::Renderer &renderer, input::Input &input, const math::Vec2 &viewportSize);
 
         void update(double deltaTime);
 
-        void setViewportSize(const math::Point &size);
+        void setViewportSize(const math::Vec2 &size);
     };
 }

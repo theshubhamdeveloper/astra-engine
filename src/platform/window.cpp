@@ -4,12 +4,13 @@
 #include <glad/glad.h>
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_video.h>
-#include <astra/platform/window.hpp>
-#include <astra/math/point.hpp>
+
 #include <astra/math/color.hpp>
+#include <astra/math/vector.hpp>
+#include <astra/platform/window.hpp>
 
 namespace astra::platform {
-    Window::Window(std::string title, const math::Point &size)
+    Window::Window(std::string title, const math::Vec2 &size)
         : window(nullptr), glContext(), title(std::move(title)), windowSize(size) {
     }
 
@@ -27,8 +28,9 @@ namespace astra::platform {
         window = SDL_CreateWindow(title.c_str(), windowSize.x, windowSize.y,
                                   flags);
 
-        math::Point windowSizeInPixels;
-        SDL_GetWindowSizeInPixels(window, &windowSizeInPixels.x, &windowSizeInPixels.y);
+        int windowSizeInPixelsX = 0;
+        int windowSizeInPixelsY = 0;
+        SDL_GetWindowSizeInPixels(window, &windowSizeInPixelsX, &windowSizeInPixelsY);
 
         glContext = SDL_GL_CreateContext(window);
 
@@ -37,8 +39,10 @@ namespace astra::platform {
             std::abort();
         }
 
-        glViewport(0, 0, windowSizeInPixels.x, windowSizeInPixels.y);
-        SDL_GL_SwapWindow(window);
+        glViewport(0, 0, windowSizeInPixelsX, windowSizeInPixelsY);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
 
@@ -60,7 +64,7 @@ namespace astra::platform {
     void Window::updateOnResize() {
     }
 
-    const math::Point &Window::getWindowSize() const {
+    const math::Vec2 &Window::getWindowSize() const {
         return windowSize;
     }
 

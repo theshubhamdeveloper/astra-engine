@@ -1,8 +1,6 @@
 #pragma once
 
-#include <astra/graphics/texture.hpp>
-#include <astra/math/point.hpp>
-#include <astra/math/vec2.hpp>
+#include <astra/math/vector.hpp>
 #include <astra/math/vertex.hpp>
 
 namespace astra::graphics {
@@ -23,6 +21,6 @@ namespace astra::graphics {
 
         void drawLine(const math::Vec2 &a, const math::Vec2 &b, const math::Color &color) const;
 
-        void onWindowResize(const math::Point &newWindowSizeInPixels, const math::Vec2 &newDpiScale);
+        void onWindowResize(const math::Vec2 &newSize);
     };
 }

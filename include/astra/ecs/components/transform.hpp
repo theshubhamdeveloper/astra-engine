@@ -2,13 +2,13 @@
 
 #include <cstdint>
 
-#include <astra/math/vec2.hpp>
+#include <astra/math/vector.hpp>
 
 namespace astra::ecs::components {
     struct Transform {
         math::Vec2 position;
         math::Vec2 scale;
-        float rotation;
-        int32_t zindex;
+        float rotation = 0.0f;
+        int32_t zindex = 0;
     };
 }

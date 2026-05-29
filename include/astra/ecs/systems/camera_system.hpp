@@ -3,7 +3,7 @@
 #include <astra/ecs/components/camera.hpp>
 #include <astra/ecs/system.hpp>
 #include <astra/input/input.hpp>
-#include <astra/math/vec2.hpp>
+#include <astra/math/vector.hpp>
 
 namespace astra::ecs::systems {
     class CameraSystem : public System {

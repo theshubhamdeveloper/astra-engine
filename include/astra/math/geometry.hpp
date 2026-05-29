@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vec2.hpp"
+#include <astra/math/vector.hpp>
 
 namespace astra::math {
     constexpr float triangleEdge(const Vec2 &a, const Vec2 &b, const Vec2 &c) {
