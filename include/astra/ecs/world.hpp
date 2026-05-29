@@ -1,9 +1,9 @@
 #pragma once
 
-#include <astra/ecs/components/camera.hpp>
 #include <astra/ecs/component_manager.hpp>
 #include <astra/ecs/entity_manager.hpp>
 #include <astra/ecs/system_manager.hpp>
+#include <astra/ecs/components/camera.hpp>
 #include <astra/graphics/renderer.hpp>
 #include <astra/input/input.hpp>
 
@@ -15,10 +15,10 @@ namespace astra::ecs {
         components::Camera camera;
 
     public:
-        void initialize(graphics::Renderer &renderer, input::Input &input, const math::Vec2 &viewportSize);
+        void initialize(graphics::Renderer &renderer, const input::Input &input);
 
         void update(double deltaTime);
 
-        void setViewportSize(const math::Vec2 &size);
+        [[nodiscard]] const components::Camera &getCamera() const;
     };
 }

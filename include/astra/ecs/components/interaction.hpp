@@ -2,7 +2,7 @@
 
 namespace astra::ecs::components {
     struct Interaction {
-        bool enabled;
+        bool enabled = true;
 
         bool hovered;
         bool entered;

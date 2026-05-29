@@ -14,11 +14,9 @@ namespace astra::ecs::systems {
 
     class RenderSystem : public System {
         graphics::Renderer &renderer;
-        const components::Camera &camera;
 
     public:
-        explicit RenderSystem(ComponentManager &componentManager, const components::Camera &camera,
-                              graphics::Renderer &renderer);
+        explicit RenderSystem(ComponentManager &componentManager, graphics::Renderer &renderer);
 
     private:
         void update(double deltaTime) override;

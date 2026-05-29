@@ -75,25 +75,22 @@ namespace astra::ecs::systems {
                 continue;
 
             components::Interaction &interaction = interactionStorage->getComponentAt(interactionIndex);
-            components::Shape &shape = shapeStorage->getComponent(entityId);
+            auto &[geometry, style] = shapeStorage->getComponent(entityId);
             components::Transform &transform = transformStorage->getComponent(entityId);
 
-            if (!interaction.enabled || !shape.style.display)
+            if (!interaction.enabled || !style.display)
                 continue;
 
             std::visit(
                 [this, &topHitItem, &interaction, &transform](auto &&shapeGeometry) {
-                    components::Transform screenPosTransform = transform;
-                    screenPosTransform.position = CameraSystem::worldToScreen(camera, transform.position);
-                    screenPosTransform.scale *= camera.zoom;
-
-                    if (hitTest(screenPosTransform, shapeGeometry, interaction, input.mouse.position) &&
+                    if (hitTest(transform, shapeGeometry, interaction,
+                                CameraSystem::screenToWorld(camera, input.mouse.position)) &&
                         topHitItem.zindex <= transform.zindex) {
                         topHitItem.interaction = &interaction;
                         topHitItem.zindex = transform.zindex;
                     }
                 },
-                shape.geometry);
+                geometry);
         };
 
         return topHitItem.interaction;
@@ -103,10 +100,10 @@ namespace astra::ecs::systems {
     bool InteractionSystem::hitTest(const components::Transform &transform,
                                     const components::RectGeometry &rectangleGeometry,
                                     const components::Interaction &interaction, const math::Vec2 &position) {
-        if (position.x > transform.position.x &&
-            position.x < transform.position.x + (rectangleGeometry.size.x * transform.scale.x) &&
-            position.y > transform.position.y &&
-            position.y < transform.position.y + (rectangleGeometry.size.y * transform.scale.y))
+        if (position.x > transform.position.x - (rectangleGeometry.size.x * transform.scale.x) / 2 &&
+            position.x < transform.position.x + (rectangleGeometry.size.x * transform.scale.x) / 2 &&
+            position.y > transform.position.y - (rectangleGeometry.size.y * transform.scale.y) / 2 &&
+            position.y < transform.position.y + (rectangleGeometry.size.y * transform.scale.y) / 2)
             return true;
 
         return false;
