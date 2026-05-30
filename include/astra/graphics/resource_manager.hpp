@@ -8,11 +8,11 @@
 
 namespace astra::graphics {
     struct ShaderHandel {
-        uint32_t id;
+        uint32_t id = 0;
     };
 
     struct TextureHandel {
-        uint32_t id;
+        uint32_t id = 0;
     };
 
     class ResourceManager {
@@ -21,6 +21,9 @@ namespace astra::graphics {
         std::string resourceRootPath;
 
     public:
+        ResourceManager() : shaders(1), textures(1) {
+        }
+
         void setResourceRootPath(const std::string &path) {
             resourceRootPath = path;
         }

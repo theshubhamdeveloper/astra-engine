@@ -9,7 +9,7 @@
 namespace astra::graphics {
     struct Shader {
     private:
-        uint32_t id;
+        uint32_t id = 0;
 
         static std::string getFileContent(const std::string &filePath);
 
@@ -18,6 +18,8 @@ namespace astra::graphics {
         [[nodiscard]] int getUniformLocation(const std::string &uniformName) const;
 
     public:
+        Shader() = default;
+
         Shader(const std::string &vertexFilePath, const std::string &fragmentFilePath);
 
         ~Shader();

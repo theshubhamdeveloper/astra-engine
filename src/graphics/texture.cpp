@@ -3,7 +3,7 @@
 #include <astra/graphics/shader.hpp>
 
 namespace astra::graphics {
-    Texture::Texture(const assets::Image &image) : id(0) {
+    Texture::Texture(const assets::Image &image) {
         glGenTextures(1, &id);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, id);
