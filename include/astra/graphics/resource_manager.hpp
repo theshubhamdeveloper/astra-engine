@@ -4,8 +4,7 @@
 
 #include <astra/core/assert.hpp>
 #include <astra/graphics/shader.hpp>
-
-#include "texture.hpp"
+#include <astra/graphics/texture.hpp>
 
 namespace astra::graphics {
     struct ShaderHandel {
@@ -19,10 +18,15 @@ namespace astra::graphics {
     class ResourceManager {
         std::vector<Shader> shaders;
         std::vector<Texture> textures;
+        std::string resourceRootPath;
 
     public:
+        void setResourceRootPath(const std::string &path) {
+            resourceRootPath = path;
+        }
+
         ShaderHandel loadShader(const std::string &vertFilePath, const std::string &fragFilePath) {
-            shaders.emplace_back(vertFilePath, fragFilePath);
+            shaders.emplace_back(resourceRootPath + vertFilePath, resourceRootPath + fragFilePath);
             return {static_cast<uint32_t>(shaders.size()) - 1};
         }
 
@@ -32,7 +36,7 @@ namespace astra::graphics {
         }
 
         TextureHandel loadTexture(const std::string &filePath) {
-            textures.emplace_back(assets::Image::load(filePath));
+            textures.emplace_back(assets::Image::load(resourceRootPath + filePath));
             return {static_cast<uint32_t>(textures.size()) - 1};
         }
 

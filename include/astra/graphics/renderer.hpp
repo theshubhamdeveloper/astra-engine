@@ -10,15 +10,15 @@
 
 namespace astra::graphics {
     class Renderer {
-        ResourceManager resourceManager;
+        ResourceManager &resourceManager;
 
-        Batch colorBatch;
+        Batch batch;
         std::unique_ptr<Mesh> quadMesh;
 
         math::Mat3 view;
 
     public:
-        Renderer();
+        explicit Renderer(ResourceManager &resourceManager);
 
         void generateQuadMesh();
 

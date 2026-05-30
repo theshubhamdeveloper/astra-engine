@@ -18,12 +18,15 @@ int main() {
     }
 
     auto window = platform::Window("Astra Engine", {SCREEN_WIDTH, SCREEN_HEIGHT});
+    auto resourceManager = graphics::ResourceManager();
     auto time = core::Time();
     auto input = input::Input();
-    auto renderer = graphics::Renderer();
+    auto renderer = graphics::Renderer(resourceManager);
     auto world = ecs::World();
 
     window.initialize(false);
+
+    resourceManager.setResourceRootPath("../Resources/assets/");
 
     renderer.initialize();
 
@@ -49,7 +52,7 @@ int main() {
         if (input.quitRequested())
             running = false;
 
-        window.clear(math::Color::white());
+        window.clear(math::Color{14, 26, 37});
 
         world.update(time.deltaTime());
 

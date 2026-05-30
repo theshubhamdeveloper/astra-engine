@@ -72,9 +72,18 @@ target_link_libraries(astra_engine PRIVATE
         stb
 )
 
-# Copy assets
-add_custom_command(TARGET astra_engine POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${ASSETS_DIR}
-        $<TARGET_BUNDLE_CONTENT_DIR:astra_engine>/Resources/assets
-)
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_custom_command(
+            TARGET astra_engine POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E create_symlink
+            ${ASSETS_DIR}
+            $<TARGET_BUNDLE_CONTENT_DIR:astra_engine>/Resources/assets
+    )
+else ()
+    add_custom_command(
+            TARGET astra_engine POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${ASSETS_DIR}
+            $<TARGET_BUNDLE_CONTENT_DIR:astra_engine>/Resources/assets
+    )
+endif ()

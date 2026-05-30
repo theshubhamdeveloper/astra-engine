@@ -5,7 +5,7 @@
 
 
 namespace astra::graphics {
-    Renderer::Renderer() : colorBatch() {
+    Renderer::Renderer(ResourceManager &resourceManager) : resourceManager(resourceManager), batch() {
     }
 
     void Renderer::generateQuadMesh() {
@@ -44,26 +44,30 @@ namespace astra::graphics {
     }
 
     void Renderer::initialize() {
-        const ShaderHandel graphicsShader = resourceManager.loadShader("../Resources/assets/shaders/graphics_2d.vert",
-                                                                       "../Resources/assets/shaders/graphics_2d.frag");
+        const ShaderHandel graphicsShader = resourceManager.loadShader("shaders/graphics_2d.vert",
+                                                                       "shaders/graphics_2d.frag");
 
-
-        colorBatch.material.shader = colorShader;
-        colorBatch.material.shader = graphicsShader;
+        batch.material.shader = graphicsShader;
+        // batch.material.texture = resourceManager.loadTexture("images/texture.png");
 
         generateQuadMesh();
     }
 
     void Renderer::flush(const GraphicCamera &camera) {
-        const Shader &shader = resourceManager.getShader(colorBatch.material.shader);
+        const Shader &shader = resourceManager.getShader(batch.material.shader);
         shader.use();
+
+        // resourceManager.getTexture(batch.material.texture).use(0);
+
         shader.setUniformMat3f("uProjection", camera.projection);
         shader.setUniformMat3f("uView", camera.getView());
+        // shader.setUniform1i("uUseTex", 1);
+        // shader.setUniform1i("uTex", 0);
 
-        quadMesh->addDynamicVertex(colorBatch.vertices);
+        quadMesh->addDynamicVertex(batch.vertices);
         quadMesh->draw();
 
-        colorBatch.vertices.clear();
+        batch.vertices.clear();
     }
 
     void Renderer::drawTriangle(const math::Vec2 &a, const math::Vec2 &b, const math::Vec2 &c,
@@ -76,10 +80,10 @@ namespace astra::graphics {
                            math::Mat3::rotation(rotation * core::RADIAN_CONVERSION_FACTOR) *
                            math::Mat3::scale(size.x, size.y);
 
-        colorBatch.vertices.emplace_back(model.transformPoint({-0.5f, 0.5f}), math::Vec2{0, 1}, color);
-        colorBatch.vertices.emplace_back(model.transformPoint({0.5f, 0.5f}), math::Vec2{1, 1}, color);
-        colorBatch.vertices.emplace_back(model.transformPoint({-0.5f, -0.5f}), math::Vec2{0, 0}, color);
-        colorBatch.vertices.emplace_back(model.transformPoint({0.5f, -0.5f}), math::Vec2{1, 0}, color);
+        batch.vertices.emplace_back(model.transformPoint({-0.5f, 0.5f}), math::Vec2{0, 1}, color);
+        batch.vertices.emplace_back(model.transformPoint({0.5f, 0.5f}), math::Vec2{1, 1}, color);
+        batch.vertices.emplace_back(model.transformPoint({-0.5f, -0.5f}), math::Vec2{0, 0}, color);
+        batch.vertices.emplace_back(model.transformPoint({0.5f, -0.5f}), math::Vec2{1, 0}, color);
     }
 
     void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size, const Texture &texture) const {
