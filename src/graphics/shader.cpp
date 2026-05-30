@@ -24,6 +24,10 @@ namespace astra::graphics {
         glShaderSource(shader, 1, std::array{vertexShaderCode.data()}.data(), nullptr);
         glCompileShader(shader);
 
+        GLint compileSuccess = 0;
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &compileSuccess);
+        ASSERT(compileSuccess != false);
+
         return shader;
     }
 
@@ -43,6 +47,10 @@ namespace astra::graphics {
         glAttachShader(id, fragmentShader);
         glLinkProgram(id);
 
+        GLint linkSuccess = 0;
+        glGetProgramiv(id, GL_LINK_STATUS, &linkSuccess);
+        ASSERT(linkSuccess);
+
         glDeleteShader(fragmentShader);
         glDeleteShader(vertexShader);
     }
@@ -57,6 +65,10 @@ namespace astra::graphics {
 
     void Shader::setUniform1i(const std::string &uniformName, const int value) const {
         glUniform1i(getUniformLocation(uniformName), value);
+    }
+
+    void Shader::setUniform1iv(const std::string &uniformName, const int count, const int *value) const {
+        glUniform1iv(getUniformLocation(uniformName), count, value);
     }
 
     void Shader::setUniformVec2f(const std::string &uniformName, const math::Vec2 &value) const {

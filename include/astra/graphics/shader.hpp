@@ -28,6 +28,8 @@ namespace astra::graphics {
 
         void setUniform1i(const std::string &uniformName, int value) const;
 
+        void setUniform1iv(const std::string &uniformName, int count, const int *value) const;
+
         void setUniformVec2f(const std::string &uniformName, const math::Vec2 &value) const;
 
         void setUniformVec3f(const std::string &uniformName, const math::Vec3 &value) const;
