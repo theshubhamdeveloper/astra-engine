@@ -14,10 +14,9 @@ namespace astra::graphics {
         GLuint VAO;
         GLuint VBO;
         GLuint EBO;
-        int indexCount;
 
     public:
-        Mesh(const std::vector<GLuint> &indices);
+        explicit Mesh(const std::vector<GLuint> &indices);
 
         ~Mesh();
 
@@ -26,7 +25,7 @@ namespace astra::graphics {
 
         void addDynamicVertex(const std::vector<math::Vertex> &vertices) const;
 
-        void draw() const;
+        void draw(int elementCount) const;
 
         void unbind() const;
     };

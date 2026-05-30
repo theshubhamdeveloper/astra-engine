@@ -3,8 +3,7 @@
 #include <astra/graphics/mesh.hpp>
 
 namespace astra::graphics {
-    Mesh::Mesh(const std::vector<GLuint> &indices) : VAO(0), VBO(0), EBO(0),
-                                                     indexCount(indices.size()) {
+    Mesh::Mesh(const std::vector<GLuint> &indices) : VAO(0), VBO(0), EBO(0) {
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
         glGenBuffers(1, &EBO);
@@ -22,7 +21,7 @@ namespace astra::graphics {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glBufferData(
             GL_ELEMENT_ARRAY_BUFFER,
-            indexCount * sizeof(GLuint),
+            indices.size() * sizeof(GLuint),
             indices.data(),
             GL_STATIC_DRAW
         );
@@ -63,9 +62,9 @@ namespace astra::graphics {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    void Mesh::draw() const {
+    void Mesh::draw(const int elementCount) const {
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, elementCount, GL_UNSIGNED_INT, nullptr);
         glBindVertexArray(0);
     }
 
