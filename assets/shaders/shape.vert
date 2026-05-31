@@ -3,14 +3,18 @@
 layout (location = 0) in vec2 aPos;
 layout (location = 1) in vec2 aUV;
 layout (location = 2) in vec4 aColor;
-layout (location = 3) in float aTexId;
+layout (location = 3) in vec2 aSize;
+layout (location = 4) in vec4 aRadius;
+layout (location = 5) in float aTexId;
 
 uniform mat3 uProjection;
 uniform mat3 uView;
 
 out vec2 uv;
 out vec4 color;
-out float texId;
+flat out vec2 size;
+flat out vec4 radius;
+flat out float texId;
 
 void main() {
     vec3 MVP = uProjection * uView * vec3(aPos, 1.0f);
@@ -19,5 +23,7 @@ void main() {
 
     color = aColor;
     uv = aUV;
+    size = aSize;
     texId = aTexId;
+    radius = aRadius;
 }

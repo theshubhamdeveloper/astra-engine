@@ -4,7 +4,8 @@
 #include <astra/ecs/systems/render_system.hpp>
 
 namespace astra::ecs {
-    void World::initialize(graphics::Renderer &renderer, const input::Input &input) {
+    void World::initialize(graphics::Renderer &renderer, const input::Input &input,
+                           graphics::ResourceManager &resourceManager) {
         camera.zoomSpeed = 0.2f;
         camera.moveSpeed = 1.5f;
         systemManager.addSystem(new systems::RenderSystem(componentManager, renderer));

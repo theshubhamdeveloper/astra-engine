@@ -2,14 +2,14 @@
 
 #include <variant>
 
-#include <astra/graphics/texture.hpp>
+#include <astra/graphics/resource_manager.hpp>
 #include <astra/math/color.hpp>
 #include <astra/math/vector.hpp>
 
 namespace astra::ecs::components {
     struct RectGeometry {
         math::Vec2 size;
-        float cornerRadius = 0;
+        math::Vec4 cornerRadius;
     };
 
     struct CircleGeometry {
@@ -32,7 +32,7 @@ namespace astra::ecs::components {
     struct ShapeStyle {
         bool display = true;
         math::Color backgroundColor = math::Color::transparent();
-        std::optional<graphics::Texture> backgroundImage = std::nullopt;
+        graphics::TextureHandel backgroundImage;
         math::Color stroke = math::Color::black();
         float strokeWidth = 0;
         float opacity = 1;

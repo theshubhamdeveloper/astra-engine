@@ -15,7 +15,8 @@ namespace astra::ecs {
         components::Camera camera;
 
     public:
-        void initialize(graphics::Renderer &renderer, const input::Input &input);
+        void initialize(graphics::Renderer &renderer, const input::Input &input,
+                        graphics::ResourceManager &resourceManager);
 
         void update(double deltaTime);
 

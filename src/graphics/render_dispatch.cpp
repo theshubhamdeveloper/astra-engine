@@ -5,29 +5,48 @@
 namespace astra::graphics::dispatch {
     void shape(Renderer &renderer, const ecs::components::Transform &transform,
                const ecs::components::RectGeometry &rectangleGeometry, const ecs::components::ShapeStyle &style) {
-        if (style.backgroundImage.has_value()) {
-            // renderer.drawRect(transform.position,
-            //                   {
-            //                       rectangleGeometry.size.x * transform.scale.x,
-            //                       rectangleGeometry.size.y * transform.scale.y
-            //                   },
-            //                   style.backgroundImage.value());
+        if (style.backgroundImage.id != 0) {
+            renderer.drawRect(transform.position,
+                              {
+                                  rectangleGeometry.size.x * transform.scale.x,
+                                  rectangleGeometry.size.y * transform.scale.y
+                              },
+                              transform.rotation, rectangleGeometry.cornerRadius,
+                              style.backgroundImage);
             return;
         }
 
         renderer.drawRect(transform.position,
-                          {rectangleGeometry.size.x * transform.scale.x, rectangleGeometry.size.y * transform.scale.y},
-                          transform.rotation,
+                          {
+                              rectangleGeometry.size.x * transform.scale.x,
+                              rectangleGeometry.size.y * transform.scale.y
+                          },
+                          transform.rotation, rectangleGeometry.cornerRadius,
                           style.backgroundColor);
     }
 
     void shape(Renderer &renderer, const ecs::components::Transform &transform,
                const ecs::components::CircleGeometry &circleGeometry, const ecs::components::ShapeStyle &style) {
-        // renderer.drawCircle(transform.position,
-        //                     static_cast<u_int32_t>(circleGeometry.radius * std::max(
-        //                                                transform.scale.x, transform.scale.y)),
-        //                     style.backgroundColor);
+        if (style.backgroundImage.id != 0) {
+            renderer.drawRect(transform.position,
+                              {
+                                  circleGeometry.radius * transform.scale.x,
+                                  circleGeometry.radius * transform.scale.y
+                              },
+                              transform.rotation, math::Vec4{circleGeometry.radius / 2},
+                              style.backgroundImage);
+            return;
+        }
+
+        renderer.drawRect(transform.position,
+                          {
+                              circleGeometry.radius * transform.scale.x,
+                              circleGeometry.radius * transform.scale.y
+                          },
+                          transform.rotation, math::Vec4{circleGeometry.radius / 2},
+                          style.backgroundColor);
     }
+
 
     void shape(Renderer &renderer, const ecs::components::Transform &transform,
                const ecs::components::TriangleGeometry &triangleGeometry, const ecs::components::ShapeStyle &style) {

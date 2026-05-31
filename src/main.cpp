@@ -38,7 +38,7 @@ int main() {
 
     renderer.initialize();
 
-    world.initialize(renderer, input);
+    world.initialize(renderer, input, resourceManager);
 
 
     const ecs::components::Camera &worldCamera = world.getCamera();
@@ -61,11 +61,6 @@ int main() {
         window.clear(math::Color{14, 26, 37});
 
         world.update(time.deltaTime());
-
-        renderer.drawRect({1000, 1000}, {200, 200}, 0, {255, 0, 0});
-        renderer.drawRect({500, 500}, {200, 200}, 0, lufiTex);
-        renderer.drawRect({900, 500}, {200, 200}, 0, lufiTex);
-        renderer.drawRect({500, 1000}, {200, 200}, 0, lufiTex);
 
         //sync graphicCamera and worldCamera
         graphicCamera.position = worldCamera.position;

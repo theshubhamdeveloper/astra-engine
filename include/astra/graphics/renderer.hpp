@@ -33,15 +33,14 @@ namespace astra::graphics {
                           const math::Color &color);
 
         void drawRect(const math::Vec2 &pos, const math::Vec2 &size,
-                      float rotation, const math::Color &color, const TextureHandel &texture);
+                      float rotation, const math::Color &color,
+                      const math::Vec4 &cornerRadius, const TextureHandel &texture);
 
         void drawRect(const math::Vec2 &pos, const math::Vec2 &size,
-                      float rotation, const math::Color &color);
+                      float rotation, const math::Vec4 &cornerRadius, const math::Color &color);
 
         void drawRect(const math::Vec2 &pos, const math::Vec2 &size,
-                      float rotation, const TextureHandel &texture);
-
-        void drawCircle(const math::Vec2 &pos, uint32_t r, const math::Color &color);
+                      float rotation, const math::Vec4 &cornerRadius, const TextureHandel &texture);
 
         void drawLine(const math::Vec2 &a, const math::Vec2 &b, const math::Color &color);
 
