@@ -8,5 +8,6 @@ namespace astra::math {
         Vec2 position;
         Vec2 uv;
         Color color;
+        float texId = 0;
     };
 }

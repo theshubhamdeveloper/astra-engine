@@ -5,7 +5,8 @@
 
 
 namespace astra::graphics {
-    Renderer::Renderer(ResourceManager &resourceManager) : resourceManager(resourceManager), batch() {
+    Renderer::Renderer(ResourceManager &resourceManager,
+                       const GraphicCamera &camera) : resourceManager(resourceManager), camera(camera) {
     }
 
     void Renderer::generateQuadMesh() {
@@ -29,7 +30,7 @@ namespace astra::graphics {
                                sizeof(math::Vertex),
                                nullptr);
         quadMesh->addAttribute(1,
-                               4,
+                               2,
                                GL_FLOAT,
                                GL_FALSE,
                                sizeof(math::Vertex),
@@ -40,59 +41,97 @@ namespace astra::graphics {
                                GL_TRUE,
                                sizeof(math::Vertex),
                                reinterpret_cast<void *>(offsetof(math::Vertex, color)));
+        quadMesh->addAttribute(3,
+                               1,
+                               GL_FLOAT,
+                               GL_FALSE,
+                               sizeof(math::Vertex),
+                               reinterpret_cast<void *>(offsetof(math::Vertex, texId)));
         quadMesh->unbind();
     }
 
     void Renderer::initialize() {
-        const ShaderHandel graphicsShader = resourceManager.loadShader("shaders/graphics_2d.vert",
-                                                                       "shaders/graphics_2d.frag");
+        const ShaderHandel graphicsShader = resourceManager.loadShader("shaders/rect.vert",
+                                                                       "shaders/rect.frag");
 
-        batch.material.shader = graphicsShader;
-        // batch.material.texture = resourceManager.loadTexture("images/texture.png");
-
+        rectBatch.material.shader = graphicsShader;
+        rectBatch.addTextureInSlot(resourceManager.loadTexture(assets::Image{1, 1, 4, {255, 255, 255, 255}}));
         generateQuadMesh();
     }
 
-    void Renderer::flush(const GraphicCamera &camera) {
+    void Renderer::flush() {
+        flush(rectBatch);
+    }
+
+    void Renderer::flush(Batch &batch) const {
         const Shader &shader = resourceManager.getShader(batch.material.shader);
         shader.use();
 
-        // resourceManager.getTexture(batch.material.texture).use(0);
+        const int texCount = batch.material.textures.size();
+        std::vector<int> texSlots(texCount);
+        for (int i = 0; i < texCount; ++i) {
+            texSlots[i] = i;
+            resourceManager.getTexture(batch.material.textures[i]).use(i);
+        }
 
         shader.setUniformMat3f("uProjection", camera.projection);
         shader.setUniformMat3f("uView", camera.getView());
-        // shader.setUniform1i("uUseTex", 1);
-        // shader.setUniform1i("uTex", 0);
+        shader.setUniform1iv("uTex", texCount, texSlots.data());
 
         quadMesh->addDynamicVertex(batch.vertices);
-        quadMesh->draw();
+        quadMesh->draw((batch.vertices.size() / 4) * 6);
 
         batch.vertices.clear();
+        batch.material.textures.erase(batch.material.textures.begin() + 1, batch.material.textures.end());
+    }
+
+    void Renderer::checkCanFlush(Batch &batch) const {
+        if (batch.material.textures.size() == MAX_TEXTURE_SLOTS) {
+            flush(batch);
+            return;
+        }
+
+        if (batch.vertices.size() < MAX_VERTICES) {
+            flush(batch);
+        }
     }
 
     void Renderer::drawTriangle(const math::Vec2 &a, const math::Vec2 &b, const math::Vec2 &c,
-                                const math::Color &color) const {
+                                const math::Color &color) {
     }
 
     void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size,
-                            const float rotation, const math::Color &color) {
+                            const float rotation, const math::Color &color, const TextureHandel &texture) {
         const auto model = math::Mat3::translation(pos.x, pos.y) *
                            math::Mat3::rotation(rotation * core::RADIAN_CONVERSION_FACTOR) *
                            math::Mat3::scale(size.x, size.y);
 
-        batch.vertices.emplace_back(model.transformPoint({-0.5f, 0.5f}), math::Vec2{0, 1}, color);
-        batch.vertices.emplace_back(model.transformPoint({0.5f, 0.5f}), math::Vec2{1, 1}, color);
-        batch.vertices.emplace_back(model.transformPoint({-0.5f, -0.5f}), math::Vec2{0, 0}, color);
-        batch.vertices.emplace_back(model.transformPoint({0.5f, -0.5f}), math::Vec2{1, 0}, color);
+        const uint32_t texSlot = rectBatch.addTextureInSlot(texture);
+
+        rectBatch.vertices.emplace_back(model.transformPoint({-0.5f, 0.5f}), math::Vec2{0, 1}, color,
+                                        texSlot);
+        rectBatch.vertices.emplace_back(model.transformPoint({0.5f, 0.5f}), math::Vec2{1, 1}, color,
+                                        texSlot);
+        rectBatch.vertices.emplace_back(model.transformPoint({-0.5f, -0.5f}), math::Vec2{0, 0}, color,
+                                        texSlot);
+        rectBatch.vertices.emplace_back(model.transformPoint({0.5f, -0.5f}), math::Vec2{1, 0}, color,
+                                        texSlot);
     }
 
-    void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size, const Texture &texture) const {
+    void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size, const float rotation,
+                            const math::Color &color) {
+        drawRect(pos, size, rotation, color, rectBatch.material.textures[0]);
     }
 
-    void Renderer::drawCircle(const math::Vec2 &pos, const uint32_t r, const math::Color &color) const {
+    void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size, const float rotation,
+                            const TextureHandel &texture) {
+        drawRect(pos, size, rotation, math::Color::white(), texture);
     }
 
-    void Renderer::drawLine(const math::Vec2 &a, const math::Vec2 &b, const math::Color &color) const {
+    void Renderer::drawCircle(const math::Vec2 &pos, const uint32_t r, const math::Color &color) {
+    }
+
+    void Renderer::drawLine(const math::Vec2 &a, const math::Vec2 &b, const math::Color &color) {
     }
 
     void Renderer::onWindowResize(const math::Vec2 &newSize) {

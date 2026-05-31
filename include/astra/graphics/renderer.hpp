@@ -3,40 +3,47 @@
 #include <astra/graphics/batch.hpp>
 #include <astra/graphics/camera.hpp>
 #include <astra/graphics/mesh.hpp>
-#include <astra/graphics/texture.hpp>
-#include <astra/math/mat3.hpp>
 #include <astra/math/vector.hpp>
 #include <astra/math/vertex.hpp>
 
 namespace astra::graphics {
+    constexpr uint32_t MAX_TEXTURE_SLOTS = 16;
+
     class Renderer {
         ResourceManager &resourceManager;
+        const GraphicCamera &camera;
 
-        Batch batch;
+        Batch rectBatch;
         std::unique_ptr<Mesh> quadMesh;
 
-        math::Mat3 view;
-
     public:
-        explicit Renderer(ResourceManager &resourceManager);
+        explicit Renderer(ResourceManager &resourceManager, const GraphicCamera &camera);
 
         void generateQuadMesh();
 
         void initialize();
 
-        void flush(const GraphicCamera &camera);
+        void flush();
+
+        void flush(Batch &batch) const;
+
+        void checkCanFlush(Batch &batch) const;
 
         void drawTriangle(const math::Vec2 &a, const math::Vec2 &b, const math::Vec2 &c,
-                          const math::Color &color) const;
+                          const math::Color &color);
+
+        void drawRect(const math::Vec2 &pos, const math::Vec2 &size,
+                      float rotation, const math::Color &color, const TextureHandel &texture);
 
         void drawRect(const math::Vec2 &pos, const math::Vec2 &size,
                       float rotation, const math::Color &color);
 
-        void drawRect(const math::Vec2 &pos, const math::Vec2 &size, const Texture &texture) const;
+        void drawRect(const math::Vec2 &pos, const math::Vec2 &size,
+                      float rotation, const TextureHandel &texture);
 
-        void drawCircle(const math::Vec2 &pos, uint32_t r, const math::Color &color) const;
+        void drawCircle(const math::Vec2 &pos, uint32_t r, const math::Color &color);
 
-        void drawLine(const math::Vec2 &a, const math::Vec2 &b, const math::Color &color) const;
+        void drawLine(const math::Vec2 &a, const math::Vec2 &b, const math::Color &color);
 
         void onWindowResize(const math::Vec2 &newSize);
     };

@@ -2,18 +2,17 @@
 
 in vec4 color;
 in vec2 uv;
+in float texId;
 
-uniform bool uUseTex;
-uniform sampler2D uTex;
+uniform sampler2D uTex[16];
 
 out vec4 FragColor;
 
 void main() {
     vec4 finalColor = color;
 
-    if (uUseTex) {
-        finalColor *= texture(uTex, uv);
-    }
+    int id = int(texId);
+    finalColor *= texture(uTex[id], uv);
 
     FragColor = finalColor;
 }

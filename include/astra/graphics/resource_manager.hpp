@@ -34,7 +34,7 @@ namespace astra::graphics {
         }
 
         [[nodiscard]] const Shader &getShader(const ShaderHandel &shaderHandel) const {
-            ASSERT(shaders.size() > shaderHandel.id);
+            ASSERT(shaders.size() > shaderHandel.id || shaderHandel.id > 0);
             return shaders.at(shaderHandel.id);
         }
 
@@ -43,8 +43,13 @@ namespace astra::graphics {
             return {static_cast<uint32_t>(textures.size()) - 1};
         }
 
+        TextureHandel loadTexture(const assets::Image &image) {
+            textures.emplace_back(image);
+            return {static_cast<uint32_t>(textures.size()) - 1};
+        }
+
         [[nodiscard]] const Texture &getTexture(const TextureHandel &textureHandel) const {
-            ASSERT(textures.size() > textureHandel.id);
+            ASSERT(shaders.size() > textureHandel.id || textureHandel.id > 0);
             return textures.at(textureHandel.id);
         }
     };

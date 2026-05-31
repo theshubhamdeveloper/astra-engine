@@ -18,10 +18,18 @@ int main() {
     }
 
     auto window = platform::Window("Astra Engine", {SCREEN_WIDTH, SCREEN_HEIGHT});
+
     auto resourceManager = graphics::ResourceManager();
+
     auto time = core::Time();
     auto input = input::Input();
-    auto renderer = graphics::Renderer(resourceManager);
+
+    auto graphicCamera = graphics::GraphicCamera{
+        {0, 0}, 0, 1,
+        graphics::GraphicCamera::orthographic(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0)
+    };
+    auto renderer = graphics::Renderer(resourceManager, graphicCamera);
+
     auto world = ecs::World();
 
     window.initialize(false);
@@ -32,12 +40,10 @@ int main() {
 
     world.initialize(renderer, input);
 
-    auto graphicCamera = graphics::GraphicCamera{
-        {0, 0}, 0, 1,
-        graphics::GraphicCamera::orthographic(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0)
-    };
 
     const ecs::components::Camera &worldCamera = world.getCamera();
+
+    const graphics::TextureHandel lufiTex = resourceManager.loadTexture("images/texture.png");
 
     bool running = true;
 
@@ -56,11 +62,16 @@ int main() {
 
         world.update(time.deltaTime());
 
+        renderer.drawRect({1000, 1000}, {200, 200}, 0, {255, 0, 0});
+        renderer.drawRect({500, 500}, {200, 200}, 0, lufiTex);
+        renderer.drawRect({900, 500}, {200, 200}, 0, lufiTex);
+        renderer.drawRect({500, 1000}, {200, 200}, 0, lufiTex);
+
         //sync graphicCamera and worldCamera
         graphicCamera.position = worldCamera.position;
         graphicCamera.zoom = worldCamera.zoom;
 
-        renderer.flush(graphicCamera);
+        renderer.flush();
 
         input.updateCurrentToPrevious();
 

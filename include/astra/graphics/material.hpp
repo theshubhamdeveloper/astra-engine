@@ -5,6 +5,6 @@
 namespace astra::graphics {
     struct Material {
         ShaderHandel shader;
-        TextureHandel texture;
+        std::vector<TextureHandel> textures;
     };
 }
