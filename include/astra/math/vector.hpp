@@ -9,6 +9,11 @@ namespace astra::math {
 
         constexpr Vec2() = default;
 
+        explicit constexpr Vec2(
+            const float f
+        ) : x(f), y(f) {
+        }
+
         constexpr Vec2(const float x, const float y) : x(x), y(y) {
         }
 
@@ -149,6 +154,11 @@ namespace astra::math {
         float z = 0.0f;
 
         constexpr Vec3() = default;
+
+        explicit constexpr Vec3(
+            const float f
+        ) : x(f), y(f), z(f) {
+        }
 
         constexpr Vec3(const float x, const float y, const float z)
             : x(x), y(y), z(z) {
@@ -307,6 +317,204 @@ namespace astra::math {
             vec.x * scalar,
             vec.y * scalar,
             vec.z * scalar
+        };
+    }
+
+    struct Vec4 {
+        float x = 0.0f;
+        float y = 0.0f;
+        float z = 0.0f;
+        float w = 0.0f;
+
+        constexpr Vec4() = default;
+
+        explicit constexpr Vec4(
+            const float f
+        ) : x(f), y(f), z(f), w(f) {
+        }
+
+        constexpr Vec4(
+            const float x,
+            const float y,
+            const float z,
+            const float w
+        ) : x(x), y(y), z(z), w(w) {
+        }
+
+        explicit constexpr Vec4(
+            const Vec2 &vec,
+            const float z = 0.0f,
+            const float w = 0.0f
+        ) : x(vec.x), y(vec.y), z(z), w(w) {
+        }
+
+        explicit constexpr Vec4(
+            const Vec3 &vec,
+            const float w = 0.0f
+        ) : x(vec.x), y(vec.y), z(vec.z), w(w) {
+        }
+
+        // Static
+        static constexpr Vec4 zero() {
+            return {0.0f, 0.0f, 0.0f, 0.0f};
+        }
+
+        static constexpr Vec4 one() {
+            return {1.0f, 1.0f, 1.0f, 1.0f};
+        }
+
+        // Operators
+        constexpr Vec4 operator+(const Vec4 &other) const {
+            return {x + other.x, y + other.y, z + other.z, w + other.w};
+        }
+
+        constexpr Vec4 operator-(const Vec4 &other) const {
+            return {x - other.x, y - other.y, z - other.z, w - other.w};
+        }
+
+        constexpr Vec4 operator*(const Vec4 &other) const {
+            return {x * other.x, y * other.y, z * other.z, w * other.w};
+        }
+
+        constexpr Vec4 operator/(const Vec4 &other) const {
+            return {x / other.x, y / other.y, z / other.z, w / other.w};
+        }
+
+        constexpr Vec4 operator*(const float scalar) const {
+            return {
+                x * scalar,
+                y * scalar,
+                z * scalar,
+                w * scalar
+            };
+        }
+
+        constexpr Vec4 operator/(const float scalar) const {
+            return {
+                x / scalar,
+                y / scalar,
+                z / scalar,
+                w / scalar
+            };
+        }
+
+        Vec4 &operator+=(const Vec4 &other) {
+            x += other.x;
+            y += other.y;
+            z += other.z;
+            w += other.w;
+            return *this;
+        }
+
+        Vec4 &operator-=(const Vec4 &other) {
+            x -= other.x;
+            y -= other.y;
+            z -= other.z;
+            w -= other.w;
+            return *this;
+        }
+
+        Vec4 &operator*=(const float scalar) {
+            x *= scalar;
+            y *= scalar;
+            z *= scalar;
+            w *= scalar;
+            return *this;
+        }
+
+        Vec4 &operator/=(const float scalar) {
+            x /= scalar;
+            y /= scalar;
+            z /= scalar;
+            w /= scalar;
+            return *this;
+        }
+
+        constexpr Vec4 operator-() const {
+            return {-x, -y, -z, -w};
+        }
+
+        constexpr bool operator==(const Vec4 &other) const {
+            return x == other.x &&
+                   y == other.y &&
+                   z == other.z &&
+                   w == other.w;
+        }
+
+        constexpr bool operator!=(const Vec4 &other) const {
+            return !(*this == other);
+        }
+
+        // Calculation
+        [[nodiscard]] float length() const {
+            return std::sqrt(
+                x * x +
+                y * y +
+                z * z +
+                w * w
+            );
+        }
+
+        [[nodiscard]] constexpr float lengthSquared() const {
+            return x * x +
+                   y * y +
+                   z * z +
+                   w * w;
+        }
+
+        [[nodiscard]] Vec4 normalized() const {
+            const float len = length();
+
+            if (len == 0.0f)
+                return zero();
+
+            return {
+                x / len,
+                y / len,
+                z / len,
+                w / len
+            };
+        }
+
+        void normalize() {
+            const float len = length();
+
+            if (len == 0.0f)
+                return;
+
+            x /= len;
+            y /= len;
+            z /= len;
+            w /= len;
+        }
+
+        [[nodiscard]] constexpr float dot(const Vec4 &other) const {
+            return x * other.x +
+                   y * other.y +
+                   z * other.z +
+                   w * other.w;
+        }
+
+        [[nodiscard]] float distance(const Vec4 &other) const {
+            return (*this - other).length();
+        }
+
+        [[nodiscard]] constexpr float distanceSquared(
+            const Vec4 &other
+        ) const {
+            return (*this - other).lengthSquared();
+        }
+    };
+
+    constexpr Vec4 operator*(
+        const float scalar,
+        const Vec4 &vec
+    ) {
+        return {
+            vec.x * scalar,
+            vec.y * scalar,
+            vec.z * scalar,
+            vec.w * scalar
         };
     }
 }
