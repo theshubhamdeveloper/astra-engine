@@ -5,7 +5,8 @@
 
 namespace astra::ecs {
     void World::initialize(graphics::Renderer &renderer, const input::Input &input) {
-        camera = {{0, 0}, 1};
+        camera.zoomSpeed = 0.2f;
+        camera.moveSpeed = 1.5f;
         systemManager.addSystem(new systems::RenderSystem(componentManager, renderer));
         systemManager.addSystem(new systems::InteractionSystem(componentManager, camera, input));
         systemManager.addSystem(new systems::CameraSystem(componentManager, camera, input));
