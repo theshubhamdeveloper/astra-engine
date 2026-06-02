@@ -12,8 +12,5 @@ namespace astra::graphics::dispatch {
                const ecs::components::CircleGeometry &circleGeometry, const ecs::components::ShapeStyle &style);
 
     void shape(Renderer &renderer, const ecs::components::Transform &transform,
-               const ecs::components::TriangleGeometry &triangleGeometry, const ecs::components::ShapeStyle &style);
-
-    void shape(Renderer &renderer, const ecs::components::Transform &transform,
                const ecs::components::LineGeometry &lineGeometry, const ecs::components::ShapeStyle &style);
 }

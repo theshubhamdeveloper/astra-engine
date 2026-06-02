@@ -120,18 +120,6 @@ namespace astra::ecs::systems {
     }
 
     bool InteractionSystem::hitTest(const components::Transform &transform,
-                                    const components::TriangleGeometry &triangleGeometry,
-                                    const components::Interaction &interaction,
-                                    const math::Vec2 &position) {
-        if (math::isPointInsideTriangle(triangleGeometry.a + transform.position,
-                                        triangleGeometry.b + transform.position,
-                                        triangleGeometry.c + transform.position, position))
-            return true;
-
-        return false;
-    }
-
-    bool InteractionSystem::hitTest(const components::Transform &transform,
                                     const components::LineGeometry &lineGeometry,
                                     const components::Interaction &interaction, const math::Vec2 &position) {
         // TODO: HitTest for Line

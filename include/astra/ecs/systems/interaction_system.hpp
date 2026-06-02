@@ -36,10 +36,6 @@ namespace astra::ecs::systems {
         static bool hitTest(const components::Transform &transform, const components::CircleGeometry &circleGeometry,
                             const components::Interaction &interaction, const math::Vec2 &position);
 
-        static bool hitTest(const components::Transform &transform,
-                            const components::TriangleGeometry &triangleGeometry,
-                            const components::Interaction &interaction, const math::Vec2 &position);
-
         static bool hitTest(const components::Transform &transform, const components::LineGeometry &lineGeometry,
                             const components::Interaction &interaction, const math::Vec2 &position);
     };

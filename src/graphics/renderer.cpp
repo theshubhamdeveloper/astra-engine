@@ -108,10 +108,6 @@ namespace astra::graphics {
         }
     }
 
-    void Renderer::drawTriangle(const math::Vec2 &a, const math::Vec2 &b, const math::Vec2 &c,
-                                const math::Color &color) {
-    }
-
     void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size,
                             const float rotation, const math::Color &color, const math::Vec4 &cornerRadius,
                             const TextureHandel &texture) {

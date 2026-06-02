@@ -47,14 +47,6 @@ namespace astra::graphics::dispatch {
                           style.backgroundColor);
     }
 
-
-    void shape(Renderer &renderer, const ecs::components::Transform &transform,
-               const ecs::components::TriangleGeometry &triangleGeometry, const ecs::components::ShapeStyle &style) {
-        // renderer.drawTriangle(triangleGeometry.a + transform.position,
-        //                       triangleGeometry.b + transform.position,
-        //                       triangleGeometry.c + transform.position, style.backgroundColor);
-    }
-
     void shape(Renderer &renderer, const ecs::components::Transform &transform,
                const ecs::components::LineGeometry &lineGeometry, const ecs::components::ShapeStyle &style) {
         // renderer.drawLine(lineGeometry.start, lineGeometry.start, style.backgroundColor);
