@@ -30,7 +30,7 @@ int main() {
     };
     auto renderer = graphics::Renderer(resourceManager, graphicCamera);
 
-    auto world = ecs::World();
+    auto world = ecs::World(input);
 
     window.initialize(false);
 
@@ -38,12 +38,9 @@ int main() {
 
     renderer.initialize();
 
-    world.initialize(renderer, input, resourceManager);
-
+    world.initialize(renderer, resourceManager);
 
     const ecs::components::Camera &worldCamera = world.getCamera();
-
-    const graphics::TextureHandel lufiTex = resourceManager.loadTexture("images/texture.png");
 
     bool running = true;
 

@@ -13,9 +13,12 @@ namespace astra::ecs {
         ComponentManager componentManager;
         SystemManager systemManager;
         components::Camera camera;
+        const input::Input &input;
 
     public:
-        void initialize(graphics::Renderer &renderer, const input::Input &input,
+        explicit World(const input::Input &input);
+
+        void initialize(graphics::Renderer &renderer,
                         graphics::ResourceManager &resourceManager);
 
         void update(double deltaTime);

@@ -4,7 +4,10 @@
 #include <astra/ecs/systems/render_system.hpp>
 
 namespace astra::ecs {
-    void World::initialize(graphics::Renderer &renderer, const input::Input &input,
+    World::World(const input::Input &input) : input(input) {
+    }
+
+    void World::initialize(graphics::Renderer &renderer,
                            graphics::ResourceManager &resourceManager) {
         camera.zoomSpeed = 0.2f;
         camera.moveSpeed = 1.5f;

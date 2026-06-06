@@ -5,7 +5,9 @@ layout (location = 1) in vec2 aUV;
 layout (location = 2) in vec4 aColor;
 layout (location = 3) in vec2 aSize;
 layout (location = 4) in vec4 aRadius;
-layout (location = 5) in float aTexId;
+layout (location = 5) in vec4 aStrokeColor;
+layout (location = 6) in float aStrokeWidth;
+layout (location = 7) in float aTexId;
 
 uniform mat3 uProjection;
 uniform mat3 uView;
@@ -14,6 +16,8 @@ out vec2 uv;
 out vec4 color;
 flat out vec2 size;
 flat out vec4 radius;
+flat out vec4 strokeColor;
+flat out float strokeWidth;
 flat out float texId;
 
 void main() {
@@ -24,6 +28,8 @@ void main() {
     color = aColor;
     uv = aUV;
     size = aSize;
-    texId = aTexId;
     radius = aRadius;
+    strokeColor = aStrokeColor;
+    strokeWidth = aStrokeWidth;
+    texId = aTexId;
 }

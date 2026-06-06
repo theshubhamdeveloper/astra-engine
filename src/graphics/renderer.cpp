@@ -53,6 +53,18 @@ namespace astra::graphics {
                                sizeof(math::Vertex),
                                reinterpret_cast<void *>(offsetof(math::Vertex, cornerRadius)));
         quadMesh->addAttribute(5,
+                               4,
+                               GL_UNSIGNED_BYTE,
+                               GL_TRUE,
+                               sizeof(math::Vertex),
+                               reinterpret_cast<void *>(offsetof(math::Vertex, strokeColor)));
+        quadMesh->addAttribute(6,
+                               1,
+                               GL_FLOAT,
+                               GL_FALSE,
+                               sizeof(math::Vertex),
+                               reinterpret_cast<void *>(offsetof(math::Vertex, strokeWidth)));
+        quadMesh->addAttribute(7,
                                1,
                                GL_FLOAT,
                                GL_FALSE,
@@ -110,33 +122,35 @@ namespace astra::graphics {
 
     void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size,
                             const float rotation, const math::Color &color, const math::Vec4 &cornerRadius,
+                            const float strokeWidth, const math::Color &strokeColor,
                             const TextureHandel &texture) {
+        // Padding 2px for aa
         const auto model = math::Mat3::translation(pos.x, pos.y) *
                            math::Mat3::rotation(rotation * core::RADIAN_CONVERSION_FACTOR) *
-                           math::Mat3::scale(size.x, size.y);
+                           math::Mat3::scale(size.x + (strokeWidth * 2) + 2, size.y + (strokeWidth * 2) + 2);
 
         const uint32_t texSlot = rectBatch.addTextureInSlot(texture);
 
         rectBatch.vertices.emplace_back(model.transformPoint({-0.5f, 0.5f}), math::Vec2{0, 1}, color,
-                                        size, cornerRadius, texSlot);
+                                        size, cornerRadius, strokeWidth, strokeColor, texSlot);
         rectBatch.vertices.emplace_back(model.transformPoint({0.5f, 0.5f}), math::Vec2{1, 1}, color,
-                                        size, cornerRadius, texSlot);
+                                        size, cornerRadius, strokeWidth, strokeColor, texSlot);
         rectBatch.vertices.emplace_back(model.transformPoint({-0.5f, -0.5f}), math::Vec2{0, 0}, color,
-                                        size, cornerRadius, texSlot);
+                                        size, cornerRadius, strokeWidth, strokeColor, texSlot);
         rectBatch.vertices.emplace_back(model.transformPoint({0.5f, -0.5f}), math::Vec2{1, 0}, color,
-                                        size, cornerRadius, texSlot);
+                                        size, cornerRadius, strokeWidth, strokeColor, texSlot);
     }
 
     void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size, const float rotation,
-                            const math::Vec4 &cornerRadius,
-                            const math::Color &color) {
-        drawRect(pos, size, rotation, color, cornerRadius, rectBatch.material.textures[0]);
+                            const math::Vec4 &cornerRadius, const math::Color &color, const float strokeWidth,
+                            const math::Color &strokeColor) {
+        drawRect(pos, size, rotation, color, cornerRadius, strokeWidth, strokeColor, rectBatch.material.textures[0]);
     }
 
     void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size, const float rotation,
-                            const math::Vec4 &cornerRadius,
+                            const math::Vec4 &cornerRadius, const float strokeWidth, const math::Color &strokeColor,
                             const TextureHandel &texture) {
-        drawRect(pos, size, rotation, math::Color::white(), cornerRadius, texture);
+        drawRect(pos, size, rotation, math::Color::white(), cornerRadius, strokeWidth, strokeColor, texture);
     }
 
     void Renderer::drawLine(const math::Vec2 &a, const math::Vec2 &b, const math::Color &color) {

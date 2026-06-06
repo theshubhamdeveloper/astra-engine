@@ -12,6 +12,8 @@ namespace astra::graphics::dispatch {
                                   rectangleGeometry.size.y * transform.scale.y
                               },
                               transform.rotation, rectangleGeometry.cornerRadius,
+                              style.strokeWidth,
+                              style.stroke,
                               style.backgroundImage);
             return;
         }
@@ -22,7 +24,9 @@ namespace astra::graphics::dispatch {
                               rectangleGeometry.size.y * transform.scale.y
                           },
                           transform.rotation, rectangleGeometry.cornerRadius,
-                          style.backgroundColor);
+                          style.backgroundColor,
+                          style.strokeWidth,
+                          style.stroke);
     }
 
     void shape(Renderer &renderer, const ecs::components::Transform &transform,
@@ -33,7 +37,9 @@ namespace astra::graphics::dispatch {
                                   circleGeometry.radius * transform.scale.x,
                                   circleGeometry.radius * transform.scale.y
                               },
-                              transform.rotation, math::Vec4{circleGeometry.radius / 2},
+                              transform.rotation, math::Vec4{(circleGeometry.radius + style.strokeWidth * 2) / 2},
+                              style.strokeWidth,
+                              style.stroke,
                               style.backgroundImage);
             return;
         }
@@ -43,8 +49,10 @@ namespace astra::graphics::dispatch {
                               circleGeometry.radius * transform.scale.x,
                               circleGeometry.radius * transform.scale.y
                           },
-                          transform.rotation, math::Vec4{circleGeometry.radius / 2},
-                          style.backgroundColor);
+                          transform.rotation, math::Vec4{(circleGeometry.radius + style.strokeWidth * 2) / 2},
+                          style.backgroundColor,
+                          style.strokeWidth,
+                          style.stroke);
     }
 
     void shape(Renderer &renderer, const ecs::components::Transform &transform,

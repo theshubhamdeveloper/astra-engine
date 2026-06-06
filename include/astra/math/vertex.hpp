@@ -10,6 +10,8 @@ namespace astra::math {
         Color color;
         Vec2 size;
         Vec4 cornerRadius;
+        float strokeWidth;
+        Color strokeColor;
         float texId = 0;
     };
 }
