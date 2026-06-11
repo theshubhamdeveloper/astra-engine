@@ -2,6 +2,7 @@
 
 in vec4 color;
 in vec2 uv;
+
 flat in vec2 size;
 flat in vec4 radius;
 flat in vec4 strokeColor;
@@ -12,54 +13,48 @@ uniform sampler2D uTex[16];
 
 out vec4 FragColor;
 
-float sdfRoundedBox(vec2 p, vec2 b, vec4 r)
-{
-    r.xy = (p.x > 0.0) ? r.xy : r.zw;
-    r.x = (p.y > 0.0) ? r.x : r.y;
+float sdfRoundedBox(vec2 p, vec2 halfSize, vec4 radius) {
+    radius.xy = (p.x > 0.0) ? radius.xy : radius.zw;
+    radius.x = (p.y > 0.0) ? radius.x : radius.y;
 
-    vec2 q = abs(p) - b + r.x;
+    vec2 q = abs(p) - halfSize + radius.x;
 
-    return min(max(q.x, q.y), 0.0)
-    + length(max(q, 0.0))
-    - r.x;
+    return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - radius.x;
 }
 
-void main()
-{
-    vec4 fillColor = color;
+void main() {
+    const float aaPadding = 1.0;
 
-    fillColor *= texture(uTex[int(texId)], uv);
+    vec2 strokeSize = vec2(strokeWidth * 2.0);
+    vec2 shapeSize = size + strokeSize;
+    vec2 renderSize = shapeSize + aaPadding * 2.0;
 
+    vec2 localPos = (uv - 0.5) * renderSize;
 
-    vec2 totalSize = size + strokeWidth * 2.0;
-    // Padding 2px for aa
-    vec2 p = (uv - 0.5) * (totalSize + 2);
+    vec2 contentOffset = vec2(strokeWidth + aaPadding);
 
-    float d = sdfRoundedBox(
-        p,
-        totalSize * 0.5,
-        radius
-    );
+    vec2 contentUV = (uv * renderSize - contentOffset) / size;
+    contentUV = clamp(contentUV, 0.0, 1.0);
 
-    float aa = fwidth(d);
+    vec4 fillColor = color * texture(uTex[int(texId)], contentUV);
 
-    if (strokeWidth <= 0.0)
-    {
-        float alpha = 1.0 - smoothstep(0.0, aa, d);
+    float distanceToShape = sdfRoundedBox(localPos, shapeSize * 0.5, radius);
+
+    float aaWidth = 0.5;
+
+    if (strokeWidth <= 0.0) {
+        float alpha = 1.0 - smoothstep(0.0, aaWidth, distanceToShape);
+
         fillColor.a *= alpha;
         FragColor = fillColor;
         return;
     }
 
-    float outerAlpha = 1.0 - smoothstep(0.0, aa, d);
+    float outerMask = 1.0 - smoothstep(0.0, aaWidth, distanceToShape);
+    float innerMask = 1.0 - smoothstep(-strokeWidth - aaWidth, -strokeWidth + aaWidth, distanceToShape);
 
-    float innerAlpha = 1.0 - smoothstep(-strokeWidth - aa,
-                                        -strokeWidth + aa,
-                                        d);
+    vec4 finalColor = mix(strokeColor, fillColor, innerMask);
+    finalColor.a *= outerMask;
 
-    vec4 result = mix(strokeColor, fillColor, innerAlpha);
-
-    result.a *= outerAlpha;
-
-    FragColor = result;
+    FragColor = finalColor;
 }
