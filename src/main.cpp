@@ -1,4 +1,5 @@
 #include <SDL3/SDL.h>
+#include <freetype/freetype.h>
 
 #include <astra/core/time.hpp>
 #include <astra/ecs/world.hpp>
@@ -13,9 +14,16 @@ constexpr int SCREEN_HEIGHT = 720;
 
 int main() {
     if (SDL_Init(SDL_INIT_VIDEO) == false) {
-        SDL_Log("SDL could not initialize! SDL error: %s\n", SDL_GetError());
+        std::cout << "SDL could not initialize! SDL error: \n" << SDL_GetError() << std::endl;
         return 3;
     }
+
+    FT_Library library;
+
+    if (FT_Init_FreeType(&library) != FT_Err_Ok) {
+        std::cout << "Could not initialize FreeType library! \n" << std::endl;
+        return 3;
+    };
 
     auto window = platform::Window("Astra Engine", {SCREEN_WIDTH, SCREEN_HEIGHT});
 

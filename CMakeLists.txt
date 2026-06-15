@@ -14,6 +14,8 @@ set(ASSETS_DIR ${CMAKE_SOURCE_DIR}/assets)
 
 add_subdirectory(third_party/SDL EXCLUDE_FROM_ALL)
 
+add_subdirectory(third_party/freetype EXCLUDE_FROM_ALL)
+
 add_library(glad
         third_party/glad/src/glad.c
 )
@@ -70,6 +72,7 @@ target_link_libraries(astra_engine PRIVATE
         OpenGL::GL
         glad
         stb
+        freetype
 )
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
