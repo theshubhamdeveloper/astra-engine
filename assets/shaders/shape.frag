@@ -40,7 +40,7 @@ void main() {
 
     float distanceToShape = sdfRoundedBox(localPos, shapeSize * 0.5, radius);
 
-    float aaWidth = 0.5;
+    float aaWidth = fwidth(distanceToShape);
 
     if (strokeWidth <= 0.0) {
         float alpha = 1.0 - smoothstep(0.0, aaWidth, distanceToShape);

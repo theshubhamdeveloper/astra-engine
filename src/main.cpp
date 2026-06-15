@@ -34,7 +34,7 @@ int main() {
 
     window.initialize(false);
 
-    resourceManager.setResourceRootPath("../Resources/assets/");
+    resourceManager.setResourceRootPath("../Resources/");
 
     renderer.initialize();
 

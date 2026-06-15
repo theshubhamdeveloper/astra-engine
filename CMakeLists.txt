@@ -77,13 +77,13 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
             TARGET astra_engine POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E create_symlink
             ${ASSETS_DIR}
-            $<TARGET_BUNDLE_CONTENT_DIR:astra_engine>/Resources/assets
+            $<TARGET_BUNDLE_CONTENT_DIR:astra_engine>/Resources
     )
 else ()
     add_custom_command(
             TARGET astra_engine POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory
             ${ASSETS_DIR}
-            $<TARGET_BUNDLE_CONTENT_DIR:astra_engine>/Resources/assets
+            $<TARGET_BUNDLE_CONTENT_DIR:astra_engine>/Resources
     )
 endif ()
