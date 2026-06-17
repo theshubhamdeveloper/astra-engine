@@ -127,7 +127,7 @@ namespace astra::graphics {
         // Padding 2px for aa
         const auto model = math::Mat3::translation(pos.x, pos.y) *
                            math::Mat3::rotation(rotation * core::RADIAN_CONVERSION_FACTOR) *
-                           math::Mat3::scale(size.x + (strokeWidth * 2) + 2, size.y + (strokeWidth * 2) + 2);
+                           math::Mat3::scale(size.x + (strokeWidth * 2), size.y + (strokeWidth * 2));
 
         const uint32_t texSlot = rectBatch.addTextureInSlot(texture);
 
