@@ -1,10 +1,10 @@
 #pragma once
 
-#include <astra/graphics/resource_manager.hpp>
+#include <astra/core/resource_handles.hpp>
 
 namespace astra::graphics {
     struct Material {
-        ShaderHandel shader;
-        std::vector<TextureHandel> textures;
+        core::ShaderHandle shader;
+        std::vector<core::TextureHandle> textures;
     };
 }

@@ -11,7 +11,7 @@ namespace astra::graphics {
         Material material;
 
 
-        uint32_t addTextureInSlot(const TextureHandel &texture) {
+        uint32_t addTextureInSlot(const core::TextureHandle &texture) {
             for (int i = 0; i < material.textures.size(); ++i) {
                 if (material.textures[i].id == texture.id) {
                     return i;

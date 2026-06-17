@@ -2,7 +2,7 @@
 
 #include <variant>
 
-#include <astra/graphics/resource_manager.hpp>
+#include <astra/core/resource_manager.hpp>
 #include <astra/math/color.hpp>
 #include <astra/math/vector.hpp>
 
@@ -26,7 +26,7 @@ namespace astra::ecs::components {
     struct ShapeStyle {
         bool display = true;
         math::Color backgroundColor = math::Color::transparent();
-        graphics::TextureHandel backgroundImage;
+        core::TextureHandle backgroundImage;
         math::Color stroke = math::Color::black();
         float strokeWidth = 0;
         float opacity = 1;

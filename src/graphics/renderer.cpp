@@ -4,7 +4,7 @@
 #include <astra/math/vector.hpp>
 
 namespace astra::graphics {
-    Renderer::Renderer(ResourceManager &resourceManager,
+    Renderer::Renderer(core::ResourceManager &resourceManager,
                        const GraphicCamera &camera) : resourceManager(resourceManager), camera(camera) {
     }
 
@@ -74,8 +74,8 @@ namespace astra::graphics {
     }
 
     void Renderer::initialize() {
-        const ShaderHandel graphicsShader = resourceManager.loadShader("shaders/shape.vert",
-                                                                       "shaders/shape.frag");
+        const core::ShaderHandle graphicsShader = resourceManager.loadShader("shaders/shape.vert",
+                                                                             "shaders/shape.frag");
 
         rectBatch.material.shader = graphicsShader;
         rectBatch.addTextureInSlot(resourceManager.loadTexture(assets::Image{1, 1, 4, {255, 255, 255, 255}}));
@@ -123,7 +123,7 @@ namespace astra::graphics {
     void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size,
                             const float rotation, const math::Color &color, const math::Vec4 &cornerRadius,
                             const float strokeWidth, const math::Color &strokeColor,
-                            const TextureHandel &texture) {
+                            const core::TextureHandle &texture) {
         // Padding 2px for aa
         const auto model = math::Mat3::translation(pos.x, pos.y) *
                            math::Mat3::rotation(rotation * core::RADIAN_CONVERSION_FACTOR) *
@@ -149,7 +149,7 @@ namespace astra::graphics {
 
     void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size, const float rotation,
                             const math::Vec4 &cornerRadius, const float strokeWidth, const math::Color &strokeColor,
-                            const TextureHandel &texture) {
+                            const core::TextureHandle &texture) {
         drawRect(pos, size, rotation, math::Color::white(), cornerRadius, strokeWidth, strokeColor, texture);
     }
 

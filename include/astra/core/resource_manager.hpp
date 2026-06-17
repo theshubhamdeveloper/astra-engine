@@ -3,21 +3,17 @@
 #include <vector>
 
 #include <astra/core/assert.hpp>
+#include <astra/core/resource_handles.hpp>
 #include <astra/graphics/shader.hpp>
 #include <astra/graphics/texture.hpp>
 
-namespace astra::graphics {
-    struct ShaderHandel {
-        uint32_t id = 0;
-    };
 
-    struct TextureHandel {
-        uint32_t id = 0;
-    };
-
+namespace astra::core {
     class ResourceManager {
         std::vector<Shader> shaders;
         std::vector<Texture> textures;
+        std::vector<graphics::Shader> shaders;
+        std::vector<graphics::Texture> textures;
         std::string resourceRootPath;
 
     public:
@@ -28,22 +24,22 @@ namespace astra::graphics {
             resourceRootPath = path;
         }
 
-        ShaderHandel loadShader(const std::string &vertFilePath, const std::string &fragFilePath) {
+        ShaderHandle loadShader(const std::string &vertFilePath, const std::string &fragFilePath) {
             shaders.emplace_back(resourceRootPath + vertFilePath, resourceRootPath + fragFilePath);
             return {static_cast<uint32_t>(shaders.size()) - 1};
         }
 
-        [[nodiscard]] const Shader &getShader(const ShaderHandel &shaderHandel) const {
-            ASSERT(shaders.size() > shaderHandel.id || shaderHandel.id > 0);
-            return shaders.at(shaderHandel.id);
+        [[nodiscard]] const graphics::Shader &getShader(const ShaderHandle &shaderHandle) const {
+            ASSERT(shaders.size() > shaderHandle.id || shaderHandle.id > 0);
+            return shaders.at(shaderHandle.id);
         }
 
-        TextureHandel loadTexture(const std::string &filePath) {
+        TextureHandle loadTexture(const std::string &filePath) {
             textures.emplace_back(assets::Image::load(resourceRootPath + filePath));
             return {static_cast<uint32_t>(textures.size()) - 1};
         }
 
-        TextureHandel loadTexture(const assets::Image &image) {
+        TextureHandle loadTexture(const assets::Image &image) {
             textures.emplace_back(image);
             return {static_cast<uint32_t>(textures.size()) - 1};
         }

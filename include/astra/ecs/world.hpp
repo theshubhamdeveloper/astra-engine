@@ -19,7 +19,7 @@ namespace astra::ecs {
         explicit World(const input::Input &input);
 
         void initialize(graphics::Renderer &renderer,
-                        graphics::ResourceManager &resourceManager);
+                        core::ResourceManager &resourceManager);
 
         void update(double deltaTime);
 

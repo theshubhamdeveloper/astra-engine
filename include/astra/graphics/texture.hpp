@@ -2,7 +2,6 @@
 
 #include <glad/glad.h>
 #include <astra/assets/image.hpp>
-#include <astra/graphics/shader.hpp>
 
 namespace astra::graphics {
     struct Texture {

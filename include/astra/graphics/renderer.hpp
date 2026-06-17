@@ -1,5 +1,6 @@
 #pragma once
 
+#include <astra/core/resource_manager.hpp>
 #include <astra/graphics/batch.hpp>
 #include <astra/graphics/camera.hpp>
 #include <astra/graphics/mesh.hpp>
@@ -10,14 +11,14 @@ namespace astra::graphics {
     constexpr uint32_t MAX_TEXTURE_SLOTS = 16;
 
     class Renderer {
-        ResourceManager &resourceManager;
+        core::ResourceManager &resourceManager;
         const GraphicCamera &camera;
 
         Batch rectBatch;
         std::unique_ptr<Mesh> quadMesh;
 
     public:
-        explicit Renderer(ResourceManager &resourceManager, const GraphicCamera &camera);
+        explicit Renderer(core::ResourceManager &resourceManager, const GraphicCamera &camera);
 
         void generateQuadMesh();
 
@@ -32,7 +33,7 @@ namespace astra::graphics {
         void drawRect(const math::Vec2 &pos, const math::Vec2 &size,
                       float rotation, const math::Color &color,
                       const math::Vec4 &cornerRadius, float strokeWidth, const math::Color &strokeColor,
-                      const TextureHandel &texture);
+                      const core::TextureHandle &texture);
 
         void drawRect(const math::Vec2 &pos, const math::Vec2 &size,
                       float rotation, const math::Vec4 &cornerRadius, const math::Color &color, float strokeWidth,
@@ -40,7 +41,7 @@ namespace astra::graphics {
 
         void drawRect(const math::Vec2 &pos, const math::Vec2 &size,
                       float rotation, const math::Vec4 &cornerRadius, float strokeWidth, const math::Color &strokeColor,
-                      const TextureHandel &texture);
+                      const core::TextureHandle &texture);
 
         void drawLine(const math::Vec2 &a, const math::Vec2 &b, const math::Color &color);
 
