@@ -9,4 +9,8 @@ namespace astra::core {
     struct TextureHandle {
         uint32_t id = 0;
     };
+
+    struct FontHandle {
+        uint32_t id = 0;
+    };
 }

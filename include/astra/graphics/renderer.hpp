@@ -43,6 +43,9 @@ namespace astra::graphics {
                       float rotation, const math::Vec4 &cornerRadius, float strokeWidth, const math::Color &strokeColor,
                       const core::TextureHandle &texture);
 
+        void drawText(const math::Vec2 &pos, const core::FontHandle &font, const std::string &text,
+                      const math::Color &color);
+
         void drawLine(const math::Vec2 &a, const math::Vec2 &b, const math::Color &color);
 
         void onWindowResize(const math::Vec2 &newSize);

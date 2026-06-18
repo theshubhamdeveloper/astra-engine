@@ -110,12 +110,12 @@ namespace astra::graphics {
     }
 
     void Renderer::checkCanFlush(Batch &batch) const {
-        if (batch.material.textures.size() == MAX_TEXTURE_SLOTS) {
+        if (batch.material.textures.size() >= MAX_TEXTURE_SLOTS) {
             flush(batch);
             return;
         }
 
-        if (batch.vertices.size() < MAX_VERTICES) {
+        if (batch.vertices.size() >= MAX_VERTICES) {
             flush(batch);
         }
     }
@@ -139,6 +139,7 @@ namespace astra::graphics {
                                         size, cornerRadius, strokeWidth, strokeColor, texSlot);
         rectBatch.vertices.emplace_back(model.transformPoint({0.5f, -0.5f}), math::Vec2{1, 0}, color,
                                         size, cornerRadius, strokeWidth, strokeColor, texSlot);
+        checkCanFlush(rectBatch);
     }
 
     void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size, const float rotation,
@@ -151,6 +152,25 @@ namespace astra::graphics {
                             const math::Vec4 &cornerRadius, const float strokeWidth, const math::Color &strokeColor,
                             const core::TextureHandle &texture) {
         drawRect(pos, size, rotation, math::Color::white(), cornerRadius, strokeWidth, strokeColor, texture);
+    }
+
+    void Renderer::drawText(const math::Vec2 &pos, const core::FontHandle &font, const std::string &text,
+                            const math::Color &color) {
+        math::Vec2 pen = pos;
+        for (const auto &textChar: text) {
+            const auto &[texture, size, advance, bearing] = resourceManager.getFont(font).getGlyph(textChar);
+            math::Vec2 glyphPos{
+                pen.x + bearing.x + size.x * 0.5f,
+                pen.y - bearing.y + size.y * 0.5f
+            };
+            if (size != math::Vec2::zero())
+                drawRect(glyphPos,
+                         size, 0, color, math::Vec4{0}, 0,
+                         math::Color::transparent(),
+                         texture);
+
+            pen.x += advance.x;
+        }
     }
 
     void Renderer::drawLine(const math::Vec2 &a, const math::Vec2 &b, const math::Color &color) {

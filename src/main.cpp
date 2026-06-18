@@ -1,5 +1,5 @@
-#include <SDL3/SDL.h>
 #include <freetype/freetype.h>
+#include <SDL3/SDL.h>
 
 #include <astra/core/resource_manager.hpp>
 #include <astra/core/time.hpp>
@@ -28,7 +28,7 @@ int main() {
 
     auto window = platform::Window("Astra Engine", {SCREEN_WIDTH, SCREEN_HEIGHT});
 
-    auto resourceManager = core::ResourceManager();
+    auto resourceManager = core::ResourceManager(library);
 
     auto time = core::Time();
     auto input = input::Input();
