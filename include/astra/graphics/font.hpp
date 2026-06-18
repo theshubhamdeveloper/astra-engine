@@ -22,11 +22,16 @@ namespace astra::graphics {
         const Glyph &loadGlyph(char codepoint);
 
     public:
+        explicit Font(core::ResourceManager &resourceManager) : resourceManager(resourceManager), face(nullptr) {
+        }
+
         Font(core::ResourceManager &resourceManager, FT_Library library,
              const std::string &fontPath);
 
         void setFontSize(uint32_t size);
 
         const Glyph &getGlyph(char codepoint);
+
+        int lineHeight() const;
     };
 }

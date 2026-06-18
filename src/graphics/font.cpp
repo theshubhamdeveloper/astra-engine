@@ -59,4 +59,8 @@ namespace astra::graphics {
 
         return loadGlyph(codepoint);
     }
+
+    int Font::lineHeight() const {
+        return face->size->metrics.height >> 6;
+    }
 }

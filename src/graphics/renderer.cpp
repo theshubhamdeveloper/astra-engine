@@ -156,13 +156,22 @@ namespace astra::graphics {
 
     void Renderer::drawText(const math::Vec2 &pos, const core::FontHandle &font, const std::string &text,
                             const math::Color &color) {
+        const int lineHeight = resourceManager.getFont(font).lineHeight();
         math::Vec2 pen = pos;
-        for (const auto &textChar: text) {
-            const auto &[texture, size, advance, bearing] = resourceManager.getFont(font).getGlyph(textChar);
+
+        for (const auto &c: text) {
+            const auto &[texture, size, advance, bearing] = resourceManager.getFont(font).getGlyph(c);
+            if (c == '\n') {
+                pen.x = pos.x;
+                pen.y += lineHeight;
+                continue;
+            }
+
             math::Vec2 glyphPos{
                 pen.x + bearing.x + size.x * 0.5f,
                 pen.y - bearing.y + size.y * 0.5f
             };
+
             if (size != math::Vec2::zero())
                 drawRect(glyphPos,
                          size, 0, color, math::Vec4{0}, 0,
