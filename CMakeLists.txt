@@ -50,6 +50,7 @@ add_executable(astra_engine MACOSX_BUNDLE
         src/ecs/systems/interaction_system.cpp
         src/ecs/systems/camera_system.cpp
 
+        src/graphics/font.cpp
         src/graphics/renderer.cpp
         src/graphics/render_dispatch.cpp
         src/graphics/shader.cpp
@@ -73,6 +74,15 @@ target_link_libraries(astra_engine PRIVATE
         glad
         stb
         freetype
+)
+
+target_compile_options(astra_engine PRIVATE
+        -fsanitize=address
+        -g
+)
+
+target_link_options(astra_engine PRIVATE
+        -fsanitize=address
 )
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
