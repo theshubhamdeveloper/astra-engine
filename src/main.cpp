@@ -66,13 +66,15 @@ int main() {
 
         window.clear(math::Color{14, 26, 37});
 
+        renderer.begin();
+
         world.update(time.deltaTime());
 
         //sync graphicCamera and worldCamera
         graphicCamera.position = worldCamera.position;
         graphicCamera.zoom = worldCamera.zoom;
 
-        renderer.flush();
+        renderer.end();
 
         input.updateCurrentToPrevious();
 

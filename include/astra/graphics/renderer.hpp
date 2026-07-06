@@ -17,6 +17,8 @@ namespace astra::graphics {
         Batch rectBatch;
         std::unique_ptr<Mesh> quadMesh;
 
+        uint32_t drawCallsCount = 0;
+
     public:
         explicit Renderer(core::ResourceManager &resourceManager, const GraphicCamera &camera);
 
@@ -24,12 +26,12 @@ namespace astra::graphics {
 
         void initialize();
 
-        void flush();
+        void begin();
 
-        void flush(Batch &batch) const;
+        void end();
 
-        void checkCanFlush(Batch &batch) const;
-
+        void draw(Batch &batch);
+        
         void drawRect(const math::Vec2 &pos, const math::Vec2 &size,
                       float rotation, const math::Color &color,
                       const math::Vec4 &cornerRadius, float strokeWidth, const math::Color &strokeColor,

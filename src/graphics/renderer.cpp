@@ -82,12 +82,13 @@ namespace astra::graphics {
         generateQuadMesh();
     }
 
-    void Renderer::flush() {
-        flush(rectBatch);
+    void Renderer::begin() {
+        drawCallsCount = 0;
     }
 
-    void Renderer::flush(Batch &batch) const {
+    void Renderer::draw(Batch &batch) {
         if (batch.vertices.empty()) return;
+        drawCallsCount += 1;
         const Shader &shader = resourceManager.getShader(batch.material.shader);
         shader.use();
 
@@ -109,21 +110,20 @@ namespace astra::graphics {
         batch.material.textures.erase(batch.material.textures.begin() + 1, batch.material.textures.end());
     }
 
-    void Renderer::checkCanFlush(Batch &batch) const {
-        if (batch.material.textures.size() >= MAX_TEXTURE_SLOTS) {
-            flush(batch);
-            return;
-        }
 
-        if (batch.vertices.size() >= MAX_VERTICES) {
-            flush(batch);
-        }
+    void Renderer::end() {
+        std::cout << drawCallsCount << std::endl;
+        draw(rectBatch);
     }
 
     void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size,
                             const float rotation, const math::Color &color, const math::Vec4 &cornerRadius,
                             const float strokeWidth, const math::Color &strokeColor,
                             const core::TextureHandle &texture) {
+        if (rectBatch.material.textures.size() >= MAX_TEXTURE_SLOTS || rectBatch.vertices.size() >= MAX_VERTICES) {
+            draw(rectBatch);
+        }
+
         // Padding 2px for aa
         const auto model = math::Mat3::translation(pos.x, pos.y) *
                            math::Mat3::rotation(rotation * core::RADIAN_CONVERSION_FACTOR) *
@@ -139,7 +139,6 @@ namespace astra::graphics {
                                         size, cornerRadius, strokeWidth, strokeColor, texSlot);
         rectBatch.vertices.emplace_back(model.transformPoint({0.5f, -0.5f}), math::Vec2{1, 0}, color,
                                         size, cornerRadius, strokeWidth, strokeColor, texSlot);
-        checkCanFlush(rectBatch);
     }
 
     void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size, const float rotation,
