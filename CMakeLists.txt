@@ -41,6 +41,7 @@ add_executable(astra_engine MACOSX_BUNDLE
         src/input/keyboard.cpp
         src/input/mouse.cpp
 
+        src/core/atlas_builder.cpp
         src/core/time.cpp
 
         src/ecs/entity_manager.cpp
