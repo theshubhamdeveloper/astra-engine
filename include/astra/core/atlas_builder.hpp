@@ -9,17 +9,31 @@ namespace astra::core {
         math::Vec2 pos;
         math::Vec2 size;
 
+        float right() const {
+            return pos.x + size.x;
+        }
+
+        float bottom() const {
+            return pos.y + size.y;
+        }
+
         [[nodiscard]] bool intersects(const Rect &other) const {
-            return !(pos.x + size.x <= other.pos.x || pos.x >= other.pos.x + other.size.x ||
-                     pos.y + size.y <= other.pos.y || pos.y >= other.pos.y + other.size.y);
+            return !(right() <= other.pos.x ||
+                     pos.x >= other.right() ||
+                     bottom() <= other.pos.y ||
+                     pos.y >= other.bottom());
         }
 
         [[nodiscard]] bool contains(const Rect &other) const {
-            return (pos.x <= other.pos.x && pos.x + size.x >= other.pos.x + other.size.x &&
-                    pos.y <= other.pos.y && pos.y + size.y >= other.pos.y + other.size.y);
+            return (pos.x <= other.pos.x && right() >= other.right() &&
+                    pos.y <= other.pos.y && bottom() >= other.bottom());
         }
     };
 
+    struct AtlasRegion {
+        float u0 = 0, v0 = 0;
+        float u1 = 0, v1 = 0;
+    };
 
     class AtlasBuilder {
         std::vector<Rect> freeRects;
@@ -27,9 +41,9 @@ namespace astra::core {
     public:
         assets::Image atlas;
 
-        explicit AtlasBuilder(const math::Vec2 &size);
+        explicit AtlasBuilder(const math::Vec2 &size, int colorChannels);
 
-        void add(const assets::Image &image, uint32_t padding);
+        AtlasRegion add(const assets::Image &image, uint32_t padding);
 
         int bestFreeIndex(const math::Vec2 &size) const;
 

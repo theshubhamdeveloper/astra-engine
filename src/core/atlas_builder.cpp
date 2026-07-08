@@ -5,27 +5,36 @@
 #include "astra/core/assert.hpp"
 
 namespace astra::core {
-    AtlasBuilder::AtlasBuilder(const math::Vec2 &size) {
-        atlas = assets::Image{static_cast<int>(size.x), static_cast<int>(size.y), 4};
+    AtlasBuilder::AtlasBuilder(const math::Vec2 &size, const int colorChannels) {
+        atlas = assets::Image{static_cast<int>(size.x), static_cast<int>(size.y), colorChannels};
         atlas.pixels.resize(size.x * size.y * 4, 0);
         freeRects.push_back({{0, 0}, size});
     }
 
-    void AtlasBuilder::add(const assets::Image &image, const uint32_t padding) {
+    AtlasRegion AtlasBuilder::add(const assets::Image &image, const uint32_t padding) {
         const auto imageSize = math::Vec2{
             static_cast<float>(image.width + padding * 2), static_cast<float>(image.height + padding * 2)
         };
 
         const int freeIndex = bestFreeIndex(imageSize);
         if (freeIndex == -1) {
-            std::cout << "No space\n";
-            return;
+            return {};
         }
 
         auto [pos, size] = freeRects[freeIndex];
 
         copyImage(pos, image, padding);
         spilt(Rect{pos, imageSize});
+        
+        const math::Vec2 atlasSize = {
+            static_cast<float>(atlas.width), static_cast<float>(atlas.height)
+        };
+        return {
+            pos.x / atlasSize.x,
+            pos.y / atlasSize.y,
+            (pos.x + imageSize.x) / atlasSize.x,
+            (pos.y + imageSize.y) / atlasSize.y,
+        };
     }
 
     int AtlasBuilder::bestFreeIndex(const math::Vec2 &size) const {
@@ -65,10 +74,10 @@ namespace astra::core {
             }
 
             // Bottom
-            if (placedRect.pos.y + placedRect.size.y < freeRect.pos.y + freeRect.size.y) {
+            if (placedRect.bottom() < freeRect.bottom()) {
                 nextFreeRects.push_back({
-                    {freeRect.pos.x, placedRect.pos.y + placedRect.size.y},
-                    {freeRect.size.x, (freeRect.pos.y + freeRect.size.y) - (placedRect.pos.y + placedRect.size.y)}
+                    {freeRect.pos.x, placedRect.bottom()},
+                    {freeRect.size.x, freeRect.bottom() - placedRect.bottom()}
                 });
             }
 
@@ -80,8 +89,8 @@ namespace astra::core {
             // Right
             if (placedRect.pos.x + placedRect.size.y < freeRect.pos.x + freeRect.size.x) {
                 nextFreeRects.push_back({
-                    {placedRect.pos.x + placedRect.size.x, freeRect.pos.y},
-                    {(freeRect.pos.x + freeRect.size.x) - (placedRect.pos.x + placedRect.size.x), freeRect.size.y}
+                    {placedRect.right(), freeRect.pos.y},
+                    {freeRect.right() - placedRect.right(), freeRect.size.y}
                 });
             }
         }
@@ -96,7 +105,6 @@ namespace astra::core {
             }
         }
 
-        // Removing waste
         nextFreeRects.erase(
             std::ranges::remove_if(nextFreeRects, [](const Rect &r) {
                 return r.size.x <= 0 || r.size.y <= 0;
@@ -115,10 +123,10 @@ namespace astra::core {
         const size_t rowStride = image.width * atlas.channels;
 
         for (int row = 0; row < image.height; ++row) {
-            auto srcStart = image.pixels.begin() + (row * rowStride);
-            auto destStart = atlas.pixels.begin() + (((startY + row) * atlas.width + startX) * atlas.channels);
+            const auto srcStart = image.pixels.begin() + (row * rowStride);
+            const auto destStart = atlas.pixels.begin() + (((startY + row) * atlas.width + startX) * atlas.channels);
 
-            std::copy(srcStart, srcStart + rowStride, destStart);
+            std::copy_n(srcStart, rowStride, destStart);
         }
     }
 }
