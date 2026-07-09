@@ -85,12 +85,12 @@ namespace astra::graphics {
     }
 
     void Renderer::begin() {
-        drawCallsCount = 0;
+        drawCalls = 0;
     }
 
     void Renderer::draw(Batch &batch) {
         if (batch.vertices.empty()) return;
-        drawCallsCount += 1;
+        drawCalls += 1;
         const Shader &shader = resourceManager.shaders.get(batch.material.shader);
         shader.use();
 
@@ -114,8 +114,8 @@ namespace astra::graphics {
 
 
     void Renderer::end() {
-        std::cout << drawCallsCount << std::endl;
         draw(rectBatch);
+        previousDrawCalls = drawCalls;
     }
 
     void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size,
@@ -155,14 +155,42 @@ namespace astra::graphics {
         drawRect(pos, size, rotation, math::Color::white(), cornerRadius, strokeWidth, strokeColor, texture);
     }
 
+    void Renderer::drawTextRect(const math::Vec2 &pos, const math::Vec2 &size,
+                                const float rotation, const math::Color &color, const math::Vec4 &cornerRadius,
+                                const float strokeWidth, const math::Color &strokeColor,
+                                const core::TextureHandle &texture, const core::AtlasRegion &uv) {
+        if (rectBatch.material.textures.size() >= MAX_TEXTURE_SLOTS || rectBatch.vertices.size() >= MAX_VERTICES) {
+            draw(rectBatch);
+        }
+
+        // Padding 2px for aa
+        const auto model = math::Mat3::translation(pos.x, pos.y) *
+                           math::Mat3::rotation(rotation * core::RADIAN_CONVERSION_FACTOR) *
+                           math::Mat3::scale(size.x + (strokeWidth * 2), size.y + (strokeWidth * 2));
+
+        const uint32_t texSlot = rectBatch.addTextureInSlot(texture);
+
+        rectBatch.vertices.emplace_back(model.transformPoint({-0.5f, 0.5f}), math::Vec2{uv.u0, uv.v1}, color,
+                                        size, cornerRadius, strokeWidth, strokeColor, texSlot);
+        rectBatch.vertices.emplace_back(model.transformPoint({0.5f, 0.5f}), math::Vec2{uv.u1, uv.v1}, color,
+                                        size, cornerRadius, strokeWidth, strokeColor, texSlot);
+        rectBatch.vertices.emplace_back(model.transformPoint({-0.5f, -0.5f}), math::Vec2{uv.u0, uv.v0}, color,
+                                        size, cornerRadius, strokeWidth, strokeColor, texSlot);
+        rectBatch.vertices.emplace_back(model.transformPoint({0.5f, -0.5f}), math::Vec2{uv.u1, uv.v0}, color,
+                                        size, cornerRadius, strokeWidth, strokeColor, texSlot);
+    }
+
     void Renderer::drawText(const math::Vec2 &pos, const core::FontHandle &fontHandle, const std::string &text,
                             const math::Color &color) {
         Font &font = resourceManager.fonts.get(fontHandle);
+        const core::TextureHandle &fontAtlas = font.getAtlas();
+
         const int lineHeight = font.lineHeight();
+
         math::Vec2 pen = pos;
 
         for (const auto &c: text) {
-            const auto &[texture, size, advance, bearing] = font.getGlyph(c);
+            const auto &[region, size, advance, bearing] = font.getGlyph(c);
             if (c == '\n') {
                 pen.x = pos.x;
                 pen.y += lineHeight;
@@ -175,10 +203,10 @@ namespace astra::graphics {
             };
 
             if (size != math::Vec2::zero())
-                drawRect(glyphPos,
-                         size, 0, color, math::Vec4{0}, 0,
-                         math::Color::transparent(),
-                         texture);
+                drawTextRect(glyphPos,
+                             size, 0, color, math::Vec4{0}, 0,
+                             math::Color::transparent(), fontAtlas,
+                             region);
 
             pen.x += advance.x;
         }
@@ -188,5 +216,9 @@ namespace astra::graphics {
     }
 
     void Renderer::onWindowResize(const math::Vec2 &newSize) {
+    }
+
+    uint32_t Renderer::getDrawCallsCount() const {
+        return previousDrawCalls;
     }
 }

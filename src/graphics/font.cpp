@@ -3,7 +3,7 @@
 #include <astra/graphics/font.hpp>
 
 namespace astra::graphics {
-    core::TextureHandle Font::generateCurrentGlyphTexture() const {
+    core::AtlasRegion Font::addCurrentGlyphInAtlas() {
         const FT_GlyphSlotRec_ slot = *face->glyph;
         std::vector<uint8_t> pixels;
 
@@ -15,17 +15,17 @@ namespace astra::graphics {
             }
         }
 
-        return resourceManager->textures.load({
-            static_cast<int>(slot.bitmap.width), static_cast<int>(slot.bitmap.rows),
-            4, pixels
-        });
+        return atlasBuilder.add({
+                                    static_cast<int>(slot.bitmap.width), static_cast<int>(slot.bitmap.rows),
+                                    4, pixels
+                                }, 0);
     }
 
     const Glyph &Font::loadGlyph(const char codepoint) {
         auto status = FT_Load_Char(face, codepoint, FT_LOAD_RENDER);
         ASSERT(status == FT_Err_Ok);
 
-        return glyphs.try_emplace(codepoint, generateCurrentGlyphTexture(),
+        return glyphs.try_emplace(codepoint, addCurrentGlyphInAtlas(),
                                   math::Vec2{
                                       static_cast<float>(face->glyph->bitmap.width),
                                       static_cast<float>(face->glyph->bitmap.rows)
@@ -40,14 +40,27 @@ namespace astra::graphics {
                                   }).first->second;
     }
 
-    Font::Font(const Desc &desc) : resourceManager(desc.resourceManager), face() {
+    Font::Font(const Desc &desc) : resourceManager(desc.resourceManager), face(),
+                                   atlasBuilder(math::Vec2{512}, 4) {
         auto status = FT_New_Face(desc.library, desc.fontPath.c_str(), 0, &face);
         ASSERT(status == FT_Err_Ok);
+
+        FT_Set_Pixel_Sizes(face, 0, desc.size);
+        generateBasicGlyph();
+
+        atlas = resourceManager->textures.load({atlasBuilder.atlas});
     }
 
-    void Font::setFontSize(const uint32_t size) {
-        FT_Set_Pixel_Sizes(face, 0, size);
+    void Font::generateBasicGlyph() {
+        for (char c = 32; c < 127; c++)
+            loadGlyph(c);
+    }
+
+    void Font::setSize(const uint32_t size) {
         glyphs.clear();
+        FT_Set_Pixel_Sizes(face, 0, size);
+        generateBasicGlyph();
+        resourceManager->textures.get(atlas).setPixels(atlasBuilder.atlas);
     }
 
     const Glyph &Font::getGlyph(const char codepoint) {
@@ -60,5 +73,9 @@ namespace astra::graphics {
 
     int Font::lineHeight() const {
         return face->size->metrics.height >> 6;
+    }
+
+    const core::TextureHandle &Font::getAtlas() const {
+        return atlas;
     }
 }
