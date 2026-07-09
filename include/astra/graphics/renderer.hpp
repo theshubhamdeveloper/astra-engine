@@ -31,7 +31,7 @@ namespace astra::graphics {
         void end();
 
         void draw(Batch &batch);
-        
+
         void drawRect(const math::Vec2 &pos, const math::Vec2 &size,
                       float rotation, const math::Color &color,
                       const math::Vec4 &cornerRadius, float strokeWidth, const math::Color &strokeColor,
@@ -45,7 +45,7 @@ namespace astra::graphics {
                       float rotation, const math::Vec4 &cornerRadius, float strokeWidth, const math::Color &strokeColor,
                       const core::TextureHandle &texture);
 
-        void drawText(const math::Vec2 &pos, const core::FontHandle &font, const std::string &text,
+        void drawText(const math::Vec2 &pos, const core::FontHandle &fontHandle, const std::string &text,
                       const math::Color &color);
 
         void drawLine(const math::Vec2 &a, const math::Vec2 &b, const math::Color &color);

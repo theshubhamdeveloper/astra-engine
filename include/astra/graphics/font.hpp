@@ -1,37 +1,38 @@
 #pragma once
 
 #include <string>
-#include <freetype/freetype.h>
 
 #include <astra/core/assert.hpp>
-#include <astra/core/resource_handles.hpp>
 #include <astra/graphics/glyph.hpp>
+#include <freetype/freetype.h>
 
 namespace astra::core {
     class ResourceManager;
 }
 
 namespace astra::graphics {
-    class Font {
-        core::ResourceManager &resourceManager;
-        FT_Face face;
-        std::unordered_map<char, Glyph> glyphs;
+    struct Font {
+        struct Desc {
+            core::ResourceManager *resourceManager;
+            FT_Library library;
+            const std::string &fontPath;
+        };
 
-        [[nodiscard]] core::TextureHandle generateCurrentGlyphTexture() const;
-
-        const Glyph &loadGlyph(char codepoint);
-
-    public:
-        explicit Font(core::ResourceManager &resourceManager) : resourceManager(resourceManager), face(nullptr) {
-        }
-
-        Font(core::ResourceManager &resourceManager, FT_Library library,
-             const std::string &fontPath);
+        explicit Font(const Desc &desc);
 
         void setFontSize(uint32_t size);
 
         const Glyph &getGlyph(char codepoint);
 
-        int lineHeight() const;
+        [[nodiscard]] int lineHeight() const;
+
+    private:
+        core::ResourceManager *resourceManager = nullptr;
+        FT_Face face = nullptr;
+        std::unordered_map<char, Glyph> glyphs;
+
+        [[nodiscard]] core::TextureHandle generateCurrentGlyphTexture() const;
+
+        const Glyph &loadGlyph(char codepoint);
     };
 }

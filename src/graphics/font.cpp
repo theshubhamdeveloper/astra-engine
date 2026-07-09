@@ -1,4 +1,5 @@
 #include <astra/core/resource_manager.hpp>
+#include <astra/core/resource_handles.hpp>
 #include <astra/graphics/font.hpp>
 
 namespace astra::graphics {
@@ -8,15 +9,13 @@ namespace astra::graphics {
 
         pixels.resize(slot.bitmap.width * slot.bitmap.rows * 4, 255);
 
-        if (pixels.empty()) return {0};
-
         for (uint32_t y = 0; y < slot.bitmap.rows; y++) {
             for (uint32_t x = 0; x < slot.bitmap.width; x++) {
                 pixels[(y * slot.bitmap.width + x) * 4 + 3] = slot.bitmap.buffer[y * slot.bitmap.width + x];
             }
         }
 
-        return resourceManager.loadTexture({
+        return resourceManager->textures.load({
             static_cast<int>(slot.bitmap.width), static_cast<int>(slot.bitmap.rows),
             4, pixels
         });
@@ -41,9 +40,8 @@ namespace astra::graphics {
                                   }).first->second;
     }
 
-    Font::Font(core::ResourceManager &resourceManager, FT_Library library,
-               const std::string &fontPath) : resourceManager(resourceManager), face() {
-        auto status = FT_New_Face(library, fontPath.c_str(), 0, &face);
+    Font::Font(const Desc &desc) : resourceManager(desc.resourceManager), face() {
+        auto status = FT_New_Face(desc.library, desc.fontPath.c_str(), 0, &face);
         ASSERT(status == FT_Err_Ok);
     }
 

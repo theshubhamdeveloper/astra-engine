@@ -74,11 +74,13 @@ namespace astra::graphics {
     }
 
     void Renderer::initialize() {
-        const core::ShaderHandle graphicsShader = resourceManager.loadShader("shaders/shape.vert",
-                                                                             "shaders/shape.frag");
+        const core::ShaderHandle graphicsShader = resourceManager.shaders.load({
+            "../Resources/shaders/shape.vert",
+            "../Resources/shaders/shape.frag"
+        });
 
         rectBatch.material.shader = graphicsShader;
-        rectBatch.addTextureInSlot(resourceManager.loadTexture(assets::Image{1, 1, 4, {255, 255, 255, 255}}));
+        rectBatch.addTextureInSlot(resourceManager.textures.load({assets::Image{1, 1, 4, {255, 255, 255, 255}}}));
         generateQuadMesh();
     }
 
@@ -89,14 +91,14 @@ namespace astra::graphics {
     void Renderer::draw(Batch &batch) {
         if (batch.vertices.empty()) return;
         drawCallsCount += 1;
-        const Shader &shader = resourceManager.getShader(batch.material.shader);
+        const Shader &shader = resourceManager.shaders.get(batch.material.shader);
         shader.use();
 
         const int texCount = batch.material.textures.size();
         std::vector<int> texSlots(texCount);
         for (int i = 0; i < texCount; ++i) {
             texSlots[i] = i;
-            resourceManager.getTexture(batch.material.textures[i]).use(i);
+            resourceManager.textures.get(batch.material.textures[i]).use(i);
         }
 
         shader.setUniformMat3f("uProjection", camera.projection);
@@ -153,13 +155,14 @@ namespace astra::graphics {
         drawRect(pos, size, rotation, math::Color::white(), cornerRadius, strokeWidth, strokeColor, texture);
     }
 
-    void Renderer::drawText(const math::Vec2 &pos, const core::FontHandle &font, const std::string &text,
+    void Renderer::drawText(const math::Vec2 &pos, const core::FontHandle &fontHandle, const std::string &text,
                             const math::Color &color) {
-        const int lineHeight = resourceManager.getFont(font).lineHeight();
+        Font &font = resourceManager.fonts.get(fontHandle);
+        const int lineHeight = font.lineHeight();
         math::Vec2 pen = pos;
 
         for (const auto &c: text) {
-            const auto &[texture, size, advance, bearing] = resourceManager.getFont(font).getGlyph(c);
+            const auto &[texture, size, advance, bearing] = font.getGlyph(c);
             if (c == '\n') {
                 pen.x = pos.x;
                 pen.y += lineHeight;

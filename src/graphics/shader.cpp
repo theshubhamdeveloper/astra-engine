@@ -37,11 +37,11 @@ namespace astra::graphics {
         return location;
     }
 
-    Shader::Shader(const std::string &vertexFilePath, const std::string &fragmentFilePath) {
+    Shader::Shader(const Desc &desc) {
         id = glCreateProgram();
 
-        const GLuint vertexShader = generateShader(vertexFilePath, GL_VERTEX_SHADER);
-        const GLuint fragmentShader = generateShader(fragmentFilePath, GL_FRAGMENT_SHADER);
+        const GLuint vertexShader = generateShader(desc.vertexFilePath, GL_VERTEX_SHADER);
+        const GLuint fragmentShader = generateShader(desc.fragmentFilePath, GL_FRAGMENT_SHADER);
 
         glAttachShader(id, vertexShader);
         glAttachShader(id, fragmentShader);

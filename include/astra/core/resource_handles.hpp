@@ -1,16 +1,22 @@
 #pragma once
-#include <cstdint>
 
 namespace astra::core {
-    struct ShaderHandle {
-        uint32_t id = 0;
+    struct TextureTag {
     };
 
-    struct TextureHandle {
-        uint32_t id = 0;
+    struct FontTag {
     };
 
-    struct FontHandle {
-        uint32_t id = 0;
+    struct ShaderTag {
     };
+
+    template<typename T>
+    struct Handle {
+        uint32_t id = 0;
+        uint32_t generation = 0;
+    };
+
+    using ShaderHandle = Handle<ShaderTag>;
+    using TextureHandle = Handle<TextureTag>;
+    using FontHandle = Handle<FontTag>;
 }

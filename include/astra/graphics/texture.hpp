@@ -1,18 +1,20 @@
 #pragma once
 
-#include <glad/glad.h>
 #include <astra/assets/image.hpp>
 
 namespace astra::graphics {
     struct Texture {
-    private:
-        uint32_t id = 0;
+        struct Desc {
+            assets::Image image;
+        };
 
-    public:
         Texture() = default;
 
-        explicit Texture(const assets::Image &image);
+        explicit Texture(const Desc &desc);
 
         void use(uint32_t unit) const;
+
+    private :
+        uint32_t id = 0;
     };
 }

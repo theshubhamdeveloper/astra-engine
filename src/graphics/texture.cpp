@@ -2,7 +2,7 @@
 #include <astra/graphics/texture.hpp>
 
 namespace astra::graphics {
-    Texture::Texture(const assets::Image &image) {
+    Texture::Texture(const Desc &desc) {
         glGenTextures(1, &id);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, id);
@@ -14,8 +14,8 @@ namespace astra::graphics {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                     image.pixels.data());
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, desc.image.width, desc.image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     desc.image.pixels.data());
 
         glGenerateMipmap(GL_TEXTURE_2D);
 

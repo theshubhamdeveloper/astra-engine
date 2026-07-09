@@ -3,66 +3,55 @@
 #include <vector>
 
 #include <astra/core/assert.hpp>
-#include <astra/core/resource_handles.hpp>
+#include <astra/core/types.hpp>
 #include <astra/graphics/font.hpp>
 #include <astra/graphics/shader.hpp>
 #include <astra/graphics/texture.hpp>
 
-
 namespace astra::core {
+    template<typename T, typename Handle>
+    struct AssetStorage {
+        Handle load(const T::Desc &desc) {
+            uint32_t index;
+            if (freeSlots.empty()) {
+                data.emplace_back();
+                generations.push_back(0);
+                index = data.size() - 1;
+            } else {
+                index = freeSlots.front();
+                freeSlots.pop();
+            }
+
+            data[index] = CreateScope<T>(desc);
+            return {index, generations[index]};
+        }
+
+        T &get(const Handle &handle) {
+            ASSERT(exits(handle));
+            return *data[handle.id];
+        }
+
+        void destroy(const Handle &handle) {
+            ASSERT(exits(handle));
+            data[handle.id].reset();
+            generations[handle.id] += 1;
+        }
+
+        [[nodiscard]] bool exits(const Handle &handle) const {
+            return handle.id < generations.size() && generations[handle.id] == handle.generation;
+        }
+
+    private:
+        std::vector<Scope<T> > data;
+        std::vector<uint32_t> generations;
+        std::queue<uint32_t> freeSlots;
+    };
+
+
     class ResourceManager {
-        std::vector<graphics::Shader> shaders;
-        std::vector<graphics::Texture> textures;
-        std::vector<graphics::Font> fonts;
-        std::string resourceRootPath;
-        FT_Library ftLibrary;
-
     public:
-        explicit ResourceManager(const FT_Library ftLibrary) : shaders(1), textures(1), ftLibrary(ftLibrary) {
-        }
-
-        void setResourceRootPath(const std::string &path) {
-            resourceRootPath = path;
-        }
-
-        ShaderHandle loadShader(const std::string &vertFilePath, const std::string &fragFilePath) {
-            shaders.emplace_back(resourceRootPath + vertFilePath, resourceRootPath + fragFilePath);
-            return {static_cast<uint32_t>(shaders.size()) - 1};
-        }
-
-        [[nodiscard]] const graphics::Shader &getShader(const ShaderHandle &shaderHandle) const {
-            ASSERT(shaders.size() > shaderHandle.id || shaderHandle.id > 0);
-            return shaders.at(shaderHandle.id);
-        }
-
-        TextureHandle loadTexture(const std::string &filePath) {
-            textures.emplace_back(assets::Image::load(resourceRootPath + filePath));
-            return {static_cast<uint32_t>(textures.size()) - 1};
-        }
-
-        TextureHandle loadTexture(const assets::Image &image) {
-            textures.emplace_back(image);
-            return {static_cast<uint32_t>(textures.size()) - 1};
-        }
-
-        [[nodiscard]] const graphics::Texture &getTexture(const TextureHandle &textureHandle) const {
-            ASSERT(textures.size() > textureHandle.id || textureHandle.id > 0);
-            return textures.at(textureHandle.id);
-        }
-
-        FontHandle loadFont(const std::string &filePath) {
-            fonts.emplace_back(*this, ftLibrary, resourceRootPath + filePath);
-            return {static_cast<uint32_t>(fonts.size()) - 1};
-        }
-
-        [[nodiscard]] const graphics::Font &getFont(const FontHandle &fontHandle) const {
-            ASSERT(fonts.size() > fontHandle.id || fontHandle.id > 0);
-            return fonts.at(fontHandle.id);
-        }
-
-        [[nodiscard]] graphics::Font &getFont(const FontHandle &fontHandle) {
-            ASSERT(fonts.size() > fontHandle.id || fontHandle.id > 0);
-            return fonts.at(fontHandle.id);
-        }
+        AssetStorage<graphics::Texture, TextureHandle> textures;
+        AssetStorage<graphics::Shader, ShaderHandle> shaders;
+        AssetStorage<graphics::Font, FontHandle> fonts;
     };
 }

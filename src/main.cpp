@@ -28,22 +28,23 @@ int main() {
 
     auto window = platform::Window("Astra Engine", {SCREEN_WIDTH, SCREEN_HEIGHT});
 
-    auto resourceManager = core::ResourceManager(library);
+    auto resourceManager = core::ResourceManager();
 
     auto time = core::Time();
     auto input = input::Input();
 
     auto graphicCamera = graphics::GraphicCamera{
-        {0, 0}, 0, 1,
-        graphics::GraphicCamera::orthographic(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0)
+        {0, 0},
+        0,
+        1,
+        graphics::GraphicCamera::orthographic(0, SCREEN_WIDTH, SCREEN_HEIGHT,
+                                              0)
     };
     auto renderer = graphics::Renderer(resourceManager, graphicCamera);
 
     auto world = ecs::World(input);
 
     window.initialize(false);
-
-    resourceManager.setResourceRootPath("../Resources/");
 
     renderer.initialize();
 
