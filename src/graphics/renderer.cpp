@@ -187,6 +187,8 @@ namespace astra::graphics {
 
         const int lineHeight = font.lineHeight();
 
+        char previousChar = 0;
+
         math::Vec2 pen = pos;
 
         for (const auto &c: text) {
@@ -196,6 +198,9 @@ namespace astra::graphics {
                 pen.y += lineHeight;
                 continue;
             }
+
+            pen += font.getKerning(previousChar, c);
+
 
             math::Vec2 glyphPos{
                 pen.x + bearing.x + size.x * 0.5f,
@@ -209,6 +214,7 @@ namespace astra::graphics {
                              region);
 
             pen.x += advance.x;
+            previousChar = c;
         }
     }
 

@@ -71,6 +71,20 @@ namespace astra::graphics {
         return loadGlyph(codepoint);
     }
 
+    math::Vec2 Font::getKerning(const char leftChar, const char rightChar) const {
+        FT_Vector kerning;
+
+        FT_Get_Kerning(
+            face,
+            FT_Get_Char_Index(face, leftChar),
+            FT_Get_Char_Index(face, rightChar),
+            FT_KERNING_DEFAULT,
+            &kerning
+        );
+
+        return {static_cast<float>(kerning.x >> 6), static_cast<float>(kerning.y >> 6)};
+    }
+
     int Font::lineHeight() const {
         return face->size->metrics.height >> 6;
     }

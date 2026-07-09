@@ -30,6 +30,8 @@ namespace astra::graphics {
 
         const Glyph &getGlyph(char codepoint);
 
+        math::Vec2 getKerning(char leftChar, char rightChar) const;
+
         [[nodiscard]] int lineHeight() const;
 
         [[nodiscard]] const core::TextureHandle &getAtlas() const;
