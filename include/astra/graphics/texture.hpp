@@ -12,6 +12,8 @@ namespace astra::graphics {
 
         explicit Texture(const Desc &desc);
 
+        void setPixels(const assets::Image &image);
+
         void use(uint32_t unit) const;
 
     private :

@@ -22,6 +22,24 @@ namespace astra::graphics {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+    void Texture::setPixels(const assets::Image &image) {
+        glBindTexture(GL_TEXTURE_2D, id);
+
+        glTexSubImage2D(
+            GL_TEXTURE_2D,
+            0,
+            0,
+            0,
+            image.width,
+            image.height,
+            GL_RGBA,
+            GL_UNSIGNED_BYTE,
+            image.pixels.data()
+        );
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
     void Texture::use(const uint32_t unit) const {
         glActiveTexture(GL_TEXTURE0 + unit);
         glBindTexture(GL_TEXTURE_2D, id);
