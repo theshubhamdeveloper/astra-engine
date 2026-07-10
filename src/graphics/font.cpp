@@ -41,7 +41,7 @@ namespace astra::graphics {
     }
 
     Font::Font(const Desc &desc) : resourceManager(desc.resourceManager), face(),
-                                   atlasBuilder(math::Vec2{512}, 4) {
+                                   atlasBuilder(math::Vec2{512}, 4), size(desc.size) {
         auto status = FT_New_Face(desc.library, desc.fontPath.c_str(), 0, &face);
         ASSERT(status == FT_Err_Ok);
 
@@ -56,10 +56,15 @@ namespace astra::graphics {
             loadGlyph(c);
     }
 
-    void Font::setSize(const uint32_t size) {
+    void Font::setSize(const uint32_t newSize) {
+        if (size == newSize) return;
         glyphs.clear();
-        FT_Set_Pixel_Sizes(face, 0, size);
+
+        FT_Set_Pixel_Sizes(face, 0, newSize);
+        size = newSize;
+
         generateBasicGlyph();
+
         resourceManager->textures.get(atlas).setPixels(atlasBuilder.atlas);
     }
 

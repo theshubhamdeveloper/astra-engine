@@ -22,18 +22,18 @@ namespace astra::graphics {
             uint32_t size;
         };
 
-        Font() : resourceManager(nullptr), face(nullptr), atlasBuilder(math::Vec2{0}, 0) {
+        Font() : resourceManager(nullptr), face(nullptr), atlasBuilder(math::Vec2{0}, 0), size(0) {
         }
 
         explicit Font(const Desc &desc);
 
         void generateBasicGlyph();
 
-        void setSize(uint32_t size);
+        void setSize(uint32_t newSize);
 
         const Glyph &getGlyph(char codepoint);
 
-        math::Vec2 getKerning(char leftChar, char rightChar) const;
+        [[nodiscard]] math::Vec2 getKerning(char leftChar, char rightChar) const;
 
         [[nodiscard]] int lineHeight() const;
 
@@ -45,6 +45,7 @@ namespace astra::graphics {
         core::TextureHandle atlas;
         core::AtlasBuilder atlasBuilder;
         std::unordered_map<char, Glyph> glyphs;
+        uint32_t size;
 
         core::AtlasRegion addCurrentGlyphInAtlas();
 

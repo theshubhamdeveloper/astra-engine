@@ -29,6 +29,11 @@ namespace astra::graphics {
         drawCalls = 0;
     }
 
+    void Renderer::end() {
+        draw();
+        previousDrawCalls = drawCalls;
+    }
+
     void Renderer::draw() {
         if (batch.getVertices().empty() || !batch.shader || !batch.mesh) return;
 
@@ -51,103 +56,69 @@ namespace astra::graphics {
         drawCalls += 1;
     }
 
-    void Renderer::end() {
-        draw();
-        previousDrawCalls = drawCalls;
-    }
-
-    void Renderer::prepareBatch(const core::ShaderHandle &shader, const core::MeshHandle &mesh) {
-        if (!batch.shader || !batch.mesh) {
-            batch.shader = shader;
-            batch.mesh = mesh;
-            return;
-        }
-
-        if (batch.shader != shader || batch.mesh != mesh || batch.textureCount() == MAX_TEXTURE_SLOTS ||
-            batch.getVertexCount() >= resourceManager.meshes.get(batch.mesh).getMaxVertices()) {
-            draw();
-            batch.shader = shapeShader;
-            batch.mesh = shapeMesh;
-        }
-    }
-
-    void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size,
-                            const float rotation, const math::Color &color, const math::Vec4 &cornerRadius,
-                            const float strokeWidth, const math::Color &strokeColor,
-                            const core::TextureHandle &texture) {
+    void Renderer::drawRect(const Rect &rect) {
         prepareBatch(shapeShader, shapeMesh);
 
-        // Padding 2px for aa
-        const auto model = math::Mat3::translation(pos.x, pos.y) *
-                           math::Mat3::rotation(rotation * core::RADIAN_CONVERSION_FACTOR) *
-                           math::Mat3::scale(size.x + (strokeWidth * 2), size.y + (strokeWidth * 2));
+        const auto &[position, size, rotation, style] = rect;
 
-        const float texSlot = batch.pushTexture(texture);
+        const auto model = math::Mat3::translation(position.x, position.y) *
+                           math::Mat3::rotation(rotation * core::RADIAN_CONVERSION_FACTOR) *
+                           math::Mat3::scale(size.x + (style.strokeWidth * 2), size.y + (style.strokeWidth * 2));
+
+        const auto texSlot = static_cast<float>(batch.pushTexture(style.texture ? style.texture : whiteTexture));
 
         batch.pushVertex(ShapeVertex{
             model.transformPoint({-0.5f, 0.5f}), math::Vec2{0, 1}, size,
-            cornerRadius, color, strokeColor, strokeWidth, texSlot
+            style.cornerRadius, style.fill, style.strokeColor, style.strokeWidth, texSlot
         });
         batch.pushVertex(ShapeVertex{
             model.transformPoint({0.5f, 0.5f}), math::Vec2{1, 1}, size,
-            cornerRadius, color, strokeColor, strokeWidth, texSlot
+            style.cornerRadius, style.fill, style.strokeColor, style.strokeWidth, texSlot
         });
         batch.pushVertex(ShapeVertex{
             model.transformPoint({-0.5f, -0.5f}), math::Vec2{0, 0},
             size,
-            cornerRadius, color, strokeColor, strokeWidth, texSlot
+            style.cornerRadius, style.fill, style.strokeColor, style.strokeWidth, texSlot
         });
         batch.pushVertex(ShapeVertex{
             model.transformPoint({0.5f, -0.5f}), math::Vec2{1, 0}, size,
-            cornerRadius, color, strokeColor, strokeWidth, texSlot
+            style.cornerRadius, style.fill, style.strokeColor, style.strokeWidth, texSlot
         });
     }
 
-    void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size, const float rotation,
-                            const math::Vec4 &cornerRadius, const math::Color &color, const float strokeWidth,
-                            const math::Color &strokeColor) {
-        drawRect(pos, size, rotation, color, cornerRadius, strokeWidth, strokeColor, whiteTexture);
-    }
+    void Renderer::drawText(const Text &text) {
+        const auto &[position, fontHandle, data, color, size] = text;
 
-    void Renderer::drawRect(const math::Vec2 &pos, const math::Vec2 &size, const float rotation,
-                            const math::Vec4 &cornerRadius, const float strokeWidth, const math::Color &strokeColor,
-                            const core::TextureHandle &texture) {
-        drawRect(pos, size, rotation, math::Color::white(), cornerRadius, strokeWidth, strokeColor, texture);
-    }
-
-    void Renderer::drawText(const math::Vec2 &pos, const core::FontHandle &fontHandle, const std::string &text,
-                            const math::Color &color) {
         Font &font = resourceManager.fonts.get(fontHandle);
-        const core::TextureHandle &fontAtlas = font.getAtlas();
+        font.setSize(size);
 
+        const core::TextureHandle &atlas = font.getAtlas();
         const int lineHeight = font.lineHeight();
 
-        char previousChar = 0;
+        math::Vec2 pen = position;
 
-        math::Vec2 pen = pos;
+        for (const auto &c: data) {
+            const auto &[region, glyphSize, advance, bearing] = font.getGlyph(c);
 
-        for (const auto &c: text) {
-            const auto &[region, size, advance, bearing] = font.getGlyph(c);
             if (c == '\n') {
-                pen.x = pos.x;
+                pen.x = position.x;
                 pen.y += lineHeight;
                 continue;
             }
-
-            pen += font.getKerning(previousChar, c);
 
             const math::Vec2 glyphPos = {
                 pen.x + bearing.x,
                 pen.y - bearing.y
             };
 
-            if (size != math::Vec2::zero()) {
+            if (glyphSize != math::Vec2::zero()) {
                 prepareBatch(textShader, textMesh);
 
-                const auto model = math::Mat3::translation(glyphPos.x + size.x * 0.5f, glyphPos.y + size.y * 0.5f) *
-                                   math::Mat3::scale(size.x, size.y);
+                const auto model = math::Mat3::translation(glyphPos.x + glyphSize.x * 0.5f,
+                                                           glyphPos.y + glyphSize.y * 0.5f) *
+                                   math::Mat3::scale(glyphSize.x, glyphSize.y);
 
-                const auto texSlot = static_cast<float>(batch.pushTexture(fontAtlas));
+                const auto texSlot = static_cast<float>(batch.pushTexture(atlas));
 
                 batch.pushVertex(TextVertex{
                     model.transformPoint({-0.5f, 0.5f}), math::Vec2{region.u0, region.v1}, color, texSlot
@@ -164,11 +135,26 @@ namespace astra::graphics {
             }
 
             pen.x += advance.x;
-            previousChar = c;
         }
     }
 
-    void Renderer::drawLine(const math::Vec2 &a, const math::Vec2 &b, const math::Color &color) {
+    void Renderer::drawLine(const Line &line) {
+    }
+
+
+    void Renderer::prepareBatch(const core::ShaderHandle &shader, const core::MeshHandle &mesh) {
+        if (!batch.shader || !batch.mesh) {
+            batch.shader = shader;
+            batch.mesh = mesh;
+            return;
+        }
+
+        if (batch.shader != shader || batch.mesh != mesh || batch.textureCount() == MAX_TEXTURE_SLOTS ||
+            batch.getVertexCount() >= resourceManager.meshes.get(batch.mesh).getMaxVertices()) {
+            draw();
+            batch.shader = shapeShader;
+            batch.mesh = shapeMesh;
+        }
     }
 
     void Renderer::onWindowResize(const math::Vec2 &newSize) {

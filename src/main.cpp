@@ -1,5 +1,5 @@
-#include <freetype/freetype.h>
 #include <SDL3/SDL.h>
+#include <freetype/freetype.h>
 
 #include <astra/core/resource_manager.hpp>
 #include <astra/core/time.hpp>
@@ -7,6 +7,8 @@
 #include <astra/graphics/renderer.hpp>
 #include <astra/input/input.hpp>
 #include <astra/platform/window.hpp>
+
+#include "astra/core/atlas_builder.hpp"
 
 using namespace astra;
 
@@ -37,8 +39,7 @@ int main() {
         {0, 0},
         0,
         1,
-        graphics::GraphicCamera::orthographic(0, SCREEN_WIDTH, SCREEN_HEIGHT,
-                                              0)
+        graphics::GraphicCamera::orthographic(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0)
     };
     auto renderer = graphics::Renderer(resourceManager, graphicCamera);
 
@@ -52,15 +53,15 @@ int main() {
 
     const ecs::components::Camera &worldCamera = world.getCamera();
 
+    const auto jetbrainsFont = resourceManager.fonts.load({
+        &resourceManager, library, "../Resources/fonts/jetbrains-mono/static/JetBrainsMono-Regular.ttf", 10
+    });
+
     bool running = true;
 
     while (running) {
         time.update();
-
         input.updateState();
-
-        std::cout << "Frame: " << time.deltaTime() * 1000 << " ms" << "\n"
-                << "FPS: " << time.fps() << "\n";
 
         if (input.quitRequested())
             running = false;
@@ -72,13 +73,34 @@ int main() {
         world.update(time.deltaTime());
 
         //sync graphicCamera and worldCamera
-        graphicCamera.position = worldCamera.position;
+        graphicCamera.position.x = floor(worldCamera.position.x);
+        graphicCamera.position.y = floor(worldCamera.position.y);
         graphicCamera.zoom = worldCamera.zoom;
+
+        renderer.drawText({
+            .position = {0, 0},
+            .font = jetbrainsFont,
+
+            .text = std::format("Frame: {} ms\nFPS: {}\nDraw Calls: {}", time.deltaTime() * 1000, time.fps(),
+                                renderer.getDrawCallCount()),
+
+            .color = {255, 210, 129},
+            .size = 32 * 2
+        });
+
+        renderer.drawRect({
+            .position = {-200, -200},
+            .size = {200, 200},
+            .rotation = 0,
+            .style = {
+                .fill = {128, 255, 124},
+                .strokeWidth = 1,
+            }
+        });
 
         renderer.end();
 
         input.updateCurrentToPrevious();
-
         window.render();
     }
 

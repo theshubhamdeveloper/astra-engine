@@ -10,6 +10,36 @@
 namespace astra::graphics {
     constexpr uint32_t MAX_TEXTURE_SLOTS = 16;
 
+    struct RectStyle {
+        math::Color fill = math::Color::white();
+        math::Vec4 cornerRadius = {};
+        float strokeWidth = 0.0f;
+        math::Color strokeColor = math::Color::white();
+        core::TextureHandle texture = {};
+    };
+
+    struct Rect {
+        math::Vec2 position = {};
+        math::Vec2 size = math::Vec2::one();
+        float rotation = 0.0f;
+        RectStyle style;
+    };
+
+    struct Text {
+        math::Vec2 position = {};
+        core::FontHandle font = {};
+        std::string_view text;
+        math::Color color = math::Color::white();
+        uint32_t size = 16.0f;
+    };
+
+    struct Line {
+        math::Vec2 start = {};
+        math::Vec2 end = {};
+        math::Color color = math::Color::white();
+        float thickness = 1.0f;
+    };
+
     class Renderer {
         core::ResourceManager &resourceManager;
         const GraphicCamera &camera;
@@ -35,33 +65,21 @@ namespace astra::graphics {
 
         void end();
 
-        void prepareBatch(const core::ShaderHandle &shader, const core::MeshHandle &mesh);
-
         void draw();
 
-        void drawRect(const math::Vec2 &pos, const math::Vec2 &size,
-                      float rotation, const math::Color &color,
-                      const math::Vec4 &cornerRadius, float strokeWidth, const math::Color &strokeColor,
-                      const core::TextureHandle &texture);
+        void drawRect(const Rect &rect);
 
-        void drawRect(const math::Vec2 &pos, const math::Vec2 &size,
-                      float rotation, const math::Vec4 &cornerRadius, const math::Color &color, float strokeWidth,
-                      const math::Color &strokeColor);
+        void drawText(const Text &text);
 
-        void drawRect(const math::Vec2 &pos, const math::Vec2 &size,
-                      float rotation, const math::Vec4 &cornerRadius, float strokeWidth, const math::Color &strokeColor,
-                      const core::TextureHandle &texture);
-
-        void drawText(const math::Vec2 &pos, const core::FontHandle &fontHandle, const std::string &text,
-                      const math::Color &color);
-
-        void drawLine(const math::Vec2 &a, const math::Vec2 &b, const math::Color &color);
+        void drawLine(const Line &line);
 
         void onWindowResize(const math::Vec2 &newSize);
 
         [[nodiscard]] uint32_t getDrawCallCount() const;
 
     private:
+        void prepareBatch(const core::ShaderHandle &shader, const core::MeshHandle &mesh);
+
         template<class Vertex>
         core::MeshHandle createQuadMesh(const uint32_t maxVertices) {
             Mesh::Desc desc;
