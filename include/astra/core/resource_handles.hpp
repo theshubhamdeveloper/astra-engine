@@ -12,6 +12,9 @@ namespace astra::core {
     struct ShaderTag {
     };
 
+    struct MeshTag {
+    };
+
     template<typename T>
     struct Handle {
         uint32_t id = 0;
@@ -37,4 +40,5 @@ namespace astra::core {
     using ShaderHandle = Handle<ShaderTag>;
     using TextureHandle = Handle<TextureTag>;
     using FontHandle = Handle<FontTag>;
+    using MeshHandle = Handle<MeshTag>;
 }

@@ -2,9 +2,9 @@
 
 layout (location = 0) in vec2 aPos;
 layout (location = 1) in vec2 aUV;
-layout (location = 2) in vec4 aColor;
-layout (location = 3) in vec2 aSize;
-layout (location = 4) in vec4 aRadius;
+layout (location = 2) in vec2 aSize;
+layout (location = 3) in vec4 aRadius;
+layout (location = 4) in vec4 aColor;
 layout (location = 5) in vec4 aStrokeColor;
 layout (location = 6) in float aStrokeWidth;
 layout (location = 7) in float aTexId;

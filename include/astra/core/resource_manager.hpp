@@ -7,6 +7,7 @@
 #include <astra/graphics/font.hpp>
 #include <astra/graphics/shader.hpp>
 #include <astra/graphics/texture.hpp>
+#include "astra/graphics/mesh.hpp"
 
 namespace astra::core {
     template<typename T, typename Handle>
@@ -59,5 +60,6 @@ namespace astra::core {
         AssetStorage<graphics::Texture, TextureHandle> textures;
         AssetStorage<graphics::Shader, ShaderHandle> shaders;
         AssetStorage<graphics::Font, FontHandle> fonts;
+        AssetStorage<graphics::Mesh, MeshHandle> meshes;
     };
 }

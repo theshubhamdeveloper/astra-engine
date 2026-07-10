@@ -1,61 +1,55 @@
 #include <glad/glad.h>
-
 #include <astra/graphics/mesh.hpp>
 
 namespace astra::graphics {
-    Mesh::Mesh(const std::vector<GLuint> &indices) : VAO(0), VBO(0), EBO(0) {
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-        glGenBuffers(1, &EBO);
+    Mesh::Mesh(const Desc &desc) : maxVertices(desc.maxVertices), vertexSize(desc.vertexSize) {
+        glGenVertexArrays(1, &vao);
+        glGenBuffers(1, &vbo);
+        glGenBuffers(1, &ebo);
 
-        glBindVertexArray(VAO);
+        glBindVertexArray(vao);
 
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
         glBufferData(
             GL_ARRAY_BUFFER,
-            MAX_VERTICES * sizeof(math::Vertex),
+            desc.maxVertices * desc.vertexSize,
             nullptr,
             GL_DYNAMIC_DRAW
         );
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+
         glBufferData(
             GL_ELEMENT_ARRAY_BUFFER,
-            indices.size() * sizeof(GLuint),
-            indices.data(),
+            desc.indexBuffer.size() * sizeof(GLuint),
+            desc.indexBuffer.data(),
             GL_STATIC_DRAW
         );
+
+        for (auto [layout, size, type, normalize, stride, offset]: desc.layout) {
+            glVertexAttribPointer(
+                layout,
+                size,
+                type,
+                normalize,
+                stride,
+                offset);
+            glEnableVertexAttribArray(layout);
+        }
+
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
-    Mesh::~Mesh() {
-        glDeleteBuffers(1, &VBO);
-        glDeleteVertexArrays(1, &VAO);
-        glDeleteBuffers(1, &EBO);
-    }
-
-    void Mesh::addAttribute(const GLuint layout, const GLint size, const GLenum type, GLboolean normalize,
-                            const GLsizei stride,
-                            const void *offset) {
-        glBindVertexArray(VAO);
-
-        glVertexAttribPointer(
-            layout,
-            size,
-            type,
-            normalize,
-            stride,
-            offset
-        );
-        glEnableVertexAttribArray(layout);
-    }
-
-    void Mesh::addDynamicVertex(const std::vector<math::Vertex> &vertices) const {
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    void Mesh::setVertices(const std::vector<uint8_t> &vertices) const {
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
         glBufferSubData(
             GL_ARRAY_BUFFER,
             0,
-            vertices.size() * sizeof(math::Vertex),
+            vertices.size() * sizeof(uint8_t),
             vertices.data()
         );
 
@@ -63,14 +57,18 @@ namespace astra::graphics {
     }
 
     void Mesh::draw(const int elementCount) const {
-        glBindVertexArray(VAO);
+        glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, elementCount, GL_UNSIGNED_INT, nullptr);
         glBindVertexArray(0);
     }
 
-    void Mesh::unbind() const {
-        glBindVertexArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    Mesh::~Mesh() {
+        glDeleteBuffers(1, &vbo);
+        glDeleteVertexArrays(1, &vao);
+        glDeleteBuffers(1, &ebo);
+    }
+
+    uint32_t Mesh::getMaxVertices() const {
+        return maxVertices;
     }
 }

@@ -4,29 +4,36 @@
 
 #include <glad/glad.h>
 
-#include <astra/math/vertex.hpp>
+#include <astra/graphics/vertex.hpp>
 
 namespace astra::graphics {
-    constexpr uint32_t MAX_VERTICES = 4000;
-
     struct Mesh {
-    private:
-        GLuint VAO;
-        GLuint VBO;
-        GLuint EBO;
+        struct Desc {
+            std::vector<uint32_t> indexBuffer;
+            uint32_t maxVertices;
+            uint32_t vertexSize;
+            std::vector<VertexLayout> layout;
+        };
 
-    public:
-        explicit Mesh(const std::vector<GLuint> &indices);
+        Mesh() : maxVertices(0), vertexSize(0) {
+        }
+
+        explicit Mesh(const Desc &desc);
 
         ~Mesh();
 
-        void addAttribute(GLuint layout, GLint size, GLenum type, GLboolean normalize, GLsizei stride,
-                          const void *offset);
-
-        void addDynamicVertex(const std::vector<math::Vertex> &vertices) const;
+        void setVertices(const std::vector<uint8_t> &vertices) const;
 
         void draw(int elementCount) const;
 
-        void unbind() const;
+        [[nodiscard]] uint32_t getMaxVertices() const;
+
+    private:
+        uint32_t vao = 0;
+        uint32_t vbo = 0;
+        uint32_t ebo = 0;
+
+        uint32_t maxVertices;
+        uint32_t vertexSize;
     };
 }

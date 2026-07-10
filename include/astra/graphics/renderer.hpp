@@ -5,7 +5,7 @@
 #include <astra/graphics/camera.hpp>
 #include <astra/graphics/mesh.hpp>
 #include <astra/math/vector.hpp>
-#include <astra/math/vertex.hpp>
+#include <astra/graphics/vertex.hpp>
 
 namespace astra::graphics {
     constexpr uint32_t MAX_TEXTURE_SLOTS = 16;
@@ -13,9 +13,15 @@ namespace astra::graphics {
     class Renderer {
         core::ResourceManager &resourceManager;
         const GraphicCamera &camera;
+        core::TextureHandle whiteTexture;
 
-        Batch rectBatch;
-        std::unique_ptr<Mesh> quadMesh;
+        core::ShaderHandle shapeShader;
+        core::ShaderHandle textShader;
+
+        core::MeshHandle shapeMesh;
+        core::MeshHandle textMesh;
+
+        Batch batch;
 
         uint32_t drawCalls = 0;
         uint32_t previousDrawCalls = 0;
@@ -23,15 +29,15 @@ namespace astra::graphics {
     public:
         explicit Renderer(core::ResourceManager &resourceManager, const GraphicCamera &camera);
 
-        void generateQuadMesh();
-
         void initialize();
 
         void begin();
 
         void end();
 
-        void draw(Batch &batch);
+        void prepareBatch(const core::ShaderHandle &shader, const core::MeshHandle &mesh);
+
+        void draw();
 
         void drawRect(const math::Vec2 &pos, const math::Vec2 &size,
                       float rotation, const math::Color &color,
@@ -46,10 +52,6 @@ namespace astra::graphics {
                       float rotation, const math::Vec4 &cornerRadius, float strokeWidth, const math::Color &strokeColor,
                       const core::TextureHandle &texture);
 
-        void drawTextRect(const math::Vec2 &pos, const math::Vec2 &size, float rotation, const math::Color &color,
-                          const math::Vec4 &cornerRadius, float strokeWidth, const math::Color &strokeColor,
-                          const core::TextureHandle &texture, const core::AtlasRegion &uv);
-
         void drawText(const math::Vec2 &pos, const core::FontHandle &fontHandle, const std::string &text,
                       const math::Color &color);
 
@@ -57,6 +59,25 @@ namespace astra::graphics {
 
         void onWindowResize(const math::Vec2 &newSize);
 
-        uint32_t getDrawCallsCount() const;
+        [[nodiscard]] uint32_t getDrawCallCount() const;
+
+    private:
+        template<class Vertex>
+        core::MeshHandle createQuadMesh(const uint32_t maxVertices) {
+            Mesh::Desc desc;
+            desc.maxVertices = maxVertices;
+            desc.indexBuffer.reserve((desc.maxVertices / 4) * 6);
+            for (int i = 0; i < desc.maxVertices; i += 4) {
+                desc.indexBuffer.push_back(i);
+                desc.indexBuffer.push_back(i + 1);
+                desc.indexBuffer.push_back(i + 2);
+                desc.indexBuffer.push_back(i + 1);
+                desc.indexBuffer.push_back(i + 2);
+                desc.indexBuffer.push_back(i + 3);
+            }
+            desc.vertexSize = sizeof(Vertex);
+            desc.layout.assign(Vertex::getLayout().begin(), Vertex::getLayout().end());
+            return resourceManager.meshes.load(desc);
+        }
     };
 }

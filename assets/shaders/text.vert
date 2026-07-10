@@ -14,7 +14,7 @@ out float texId;
 
 void main() {
     vec3 MVP = uProjection * uView * vec3(aPos, 1.0f);
-    gl_Position = vec4(floor(MVP.xy), 0.0, 1.0);
+    gl_Position = vec4(MVP.xy, 0.0, 1.0);
 
     uv = aUV;
     color = aColor;
