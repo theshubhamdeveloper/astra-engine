@@ -14,6 +14,8 @@ namespace astra::graphics {
             std::string fragmentFilePath;
         };
 
+        Shader() = default;
+
         explicit Shader(const Desc &desc);
 
         ~Shader();

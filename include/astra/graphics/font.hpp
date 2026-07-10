@@ -22,6 +22,9 @@ namespace astra::graphics {
             uint32_t size;
         };
 
+        Font() : resourceManager(nullptr), face(nullptr), atlasBuilder(math::Vec2{0}, 0) {
+        }
+
         explicit Font(const Desc &desc);
 
         void generateBasicGlyph();

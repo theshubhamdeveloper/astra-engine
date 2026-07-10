@@ -11,6 +11,12 @@
 namespace astra::core {
     template<typename T, typename Handle>
     struct AssetStorage {
+        AssetStorage() {
+            // Making Index 0 as Dummy and Invalid
+            data.emplace_back(CreateScope<T>());
+            generations.push_back(0);
+        }
+
         Handle load(const T::Desc &desc) {
             uint32_t index;
             if (freeSlots.empty()) {
@@ -33,6 +39,7 @@ namespace astra::core {
 
         void destroy(const Handle &handle) {
             ASSERT(exits(handle));
+            ASSERT(handle.id != 0);
             data[handle.id].reset();
             generations[handle.id] += 1;
         }
@@ -46,7 +53,6 @@ namespace astra::core {
         std::vector<uint32_t> generations;
         std::queue<uint32_t> freeSlots;
     };
-
 
     class ResourceManager {
     public:
