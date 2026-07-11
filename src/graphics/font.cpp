@@ -4,7 +4,7 @@
 
 namespace astra::graphics {
     core::AtlasRegion Font::addCurrentGlyphInAtlas() {
-        const FT_GlyphSlotRec_ slot = *face->glyph;
+        const FT_GlyphSlotRec_ slot = *m_face->glyph;
         std::vector<uint8_t> pixels;
 
         pixels.resize(slot.bitmap.width * slot.bitmap.rows * 4, 255);
@@ -22,33 +22,33 @@ namespace astra::graphics {
     }
 
     const Glyph &Font::loadGlyph(const char codepoint) {
-        auto status = FT_Load_Char(face, codepoint, FT_LOAD_RENDER);
+        auto status = FT_Load_Char(m_face, codepoint, FT_LOAD_RENDER);
         ASSERT(status == FT_Err_Ok);
 
         return glyphs.try_emplace(codepoint, addCurrentGlyphInAtlas(),
                                   math::uvec2{
-                                      face->glyph->bitmap.width,
-                                      face->glyph->bitmap.rows
+                                      m_face->glyph->bitmap.width,
+                                      m_face->glyph->bitmap.rows
                                   },
                                   math::uvec2{
-                                      static_cast<uint32_t>(face->glyph->advance.x >> 6),
-                                      static_cast<uint32_t>(face->glyph->advance.y >> 6)
+                                      static_cast<uint32_t>(m_face->glyph->advance.x >> 6),
+                                      static_cast<uint32_t>(m_face->glyph->advance.y >> 6)
                                   },
                                   math::uvec2{
-                                      static_cast<uint32_t>(face->glyph->bitmap_left),
-                                      static_cast<uint32_t>(face->glyph->bitmap_top)
+                                      static_cast<uint32_t>(m_face->glyph->bitmap_left),
+                                      static_cast<uint32_t>(m_face->glyph->bitmap_top)
                                   }).first->second;
     }
 
-    Font::Font(const Desc &desc) : resourceManager(desc.resourceManager), face(),
+    Font::Font(const Desc &desc) : resourceManager(desc.resourceManager), m_face(),
                                    atlasBuilder(math::uvec2{512}, 4), size(desc.size) {
-        auto status = FT_New_Face(desc.library, desc.fontPath.c_str(), 0, &face);
+        auto status = FT_New_Face(desc.library, desc.fontPath.c_str(), 0, &m_face);
         ASSERT(status == FT_Err_Ok);
 
-        FT_Set_Pixel_Sizes(face, 0, desc.size);
+        FT_Set_Pixel_Sizes(m_face, 0, desc.size);
         generateBasicGlyph();
 
-        atlas = resourceManager->textures.load({atlasBuilder.atlas});
+        m_atlas = resourceManager->textures.load({atlasBuilder.atlas});
     }
 
     void Font::generateBasicGlyph() {
@@ -60,12 +60,12 @@ namespace astra::graphics {
         if (size == newSize) return;
         glyphs.clear();
 
-        FT_Set_Pixel_Sizes(face, 0, newSize);
+        FT_Set_Pixel_Sizes(m_face, 0, newSize);
         size = newSize;
 
         generateBasicGlyph();
 
-        resourceManager->textures.get(atlas).setPixels(atlasBuilder.atlas);
+        resourceManager->textures.get(m_atlas).setPixels(atlasBuilder.atlas);
     }
 
     const Glyph &Font::getGlyph(const char codepoint) {
@@ -73,16 +73,18 @@ namespace astra::graphics {
         if (it != glyphs.end())
             return it->second;
 
-        return loadGlyph(codepoint);
+        const auto &glyph = loadGlyph(codepoint);
+        resourceManager->textures.get(m_atlas).setPixels(atlasBuilder.atlas);
+        return glyph;
     }
 
-    math::vec2 Font::getKerning(const char leftChar, const char rightChar) const {
+    math::vec2 Font::kerning(const char leftChar, const char rightChar) const {
         FT_Vector kerning;
 
         FT_Get_Kerning(
-            face,
-            FT_Get_Char_Index(face, leftChar),
-            FT_Get_Char_Index(face, rightChar),
+            m_face,
+            FT_Get_Char_Index(m_face, leftChar),
+            FT_Get_Char_Index(m_face, rightChar),
             FT_KERNING_DEFAULT,
             &kerning
         );
@@ -90,11 +92,15 @@ namespace astra::graphics {
         return {static_cast<float>(kerning.x >> 6), static_cast<float>(kerning.y >> 6)};
     }
 
-    int Font::lineHeight() const {
-        return face->size->metrics.height >> 6;
+    int Font::ascender() const {
+        return m_face->size->metrics.ascender >> 6;
     }
 
-    const core::TextureHandle &Font::getAtlas() const {
-        return atlas;
+    int Font::height() const {
+        return m_face->size->metrics.height >> 6;
+    }
+
+    const core::TextureHandle &Font::atlas() const {
+        return m_atlas;
     }
 }

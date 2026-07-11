@@ -97,10 +97,10 @@ namespace astra::graphics {
         Font &font = resourceManager.fonts.get(fontHandle);
         font.setSize(size * m_contentScale.y);
 
-        const core::TextureHandle &atlas = font.getAtlas();
-        const int lineHeight = font.lineHeight();
+        const core::TextureHandle &atlas = font.atlas();
+        const int lineHeight = font.height();
 
-        math::vec2 pen = position;
+        math::vec2 pen = {position.x, position.y + font.ascender()};
 
         for (const auto &c: data) {
             const auto &[region, glyphSize, advance, bearing] = font.getGlyph(c);
