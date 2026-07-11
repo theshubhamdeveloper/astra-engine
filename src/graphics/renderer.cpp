@@ -8,7 +8,9 @@ namespace astra::graphics {
                        const GraphicCamera &camera) : resourceManager(resourceManager), camera(camera) {
     }
 
-    void Renderer::initialize() {
+    void Renderer::initialize(const math::vec2 &contentScale) {
+        m_contentScale = contentScale;
+
         shapeShader = resourceManager.shaders.load({
             "../Resources/shaders/shape.vert",
             "../Resources/shaders/shape.frag"
@@ -26,34 +28,34 @@ namespace astra::graphics {
     }
 
     void Renderer::begin() {
-        drawCalls = 0;
+        m_drawCalls = 0;
     }
 
     void Renderer::end() {
         draw();
-        previousDrawCalls = drawCalls;
+        m_previousDrawCalls = m_drawCalls;
     }
 
     void Renderer::draw() {
-        if (batch.getVertices().empty() || !batch.shader || !batch.mesh) return;
+        if (m_batch.getVertices().empty() || !m_batch.shader || !m_batch.mesh) return;
 
-        const Mesh &mesh = resourceManager.meshes.get(batch.mesh);
+        const Mesh &mesh = resourceManager.meshes.get(m_batch.mesh);
 
-        const Shader &shader = resourceManager.shaders.get(batch.shader);
+        const Shader &shader = resourceManager.shaders.get(m_batch.shader);
         shader.use();
 
         std::vector<int> slots;
-        batch.activateTextures(resourceManager, slots);
+        m_batch.activateTextures(resourceManager, slots);
 
         shader.setUniformMat3f("uProjection", camera.projection);
         shader.setUniformMat3f("uView", camera.getView());
         shader.setUniform1iv("uTex", slots.size(), slots.data());
 
-        mesh.setVertices(batch.getVertices());
-        mesh.draw((batch.getVertexCount() / 4) * 6);
+        mesh.setVertices(m_batch.getVertices());
+        mesh.draw((m_batch.getVertexCount() / 4) * 6);
 
-        batch.clear();
-        drawCalls += 1;
+        m_batch.clear();
+        m_drawCalls += 1;
     }
 
     void Renderer::drawRect(const Rect &rect) {
@@ -61,26 +63,29 @@ namespace astra::graphics {
 
         const auto &[position, size, rotation, style] = rect;
 
-        const auto model = math::Mat3::translation(position.x, position.y) *
+        const math::vec2 sizeStrokeScale = (size + math::vec2{style.strokeWidth * 2}) * m_contentScale;
+
+        const auto model = math::Mat3::translation((position.x + size.x * 0.5f) * m_contentScale.x,
+                                                   (position.y + size.y * 0.5f) * m_contentScale.y) *
                            math::Mat3::rotation(rotation * core::RADIAN_CONVERSION_FACTOR) *
-                           math::Mat3::scale(size.x + (style.strokeWidth * 2), size.y + (style.strokeWidth * 2));
+                           math::Mat3::scale(sizeStrokeScale.x, sizeStrokeScale.y);
 
-        const auto texSlot = static_cast<float>(batch.pushTexture(style.texture ? style.texture : whiteTexture));
+        const auto texSlot = static_cast<float>(m_batch.pushTexture(style.texture ? style.texture : whiteTexture));
 
-        batch.pushVertex(ShapeVertex{
+        m_batch.pushVertex(ShapeVertex{
             model.transformPoint({-0.5f, 0.5f}), math::vec2{0, 1}, size,
             style.cornerRadius, style.fill, style.strokeColor, style.strokeWidth, texSlot
         });
-        batch.pushVertex(ShapeVertex{
+        m_batch.pushVertex(ShapeVertex{
             model.transformPoint({0.5f, 0.5f}), math::vec2{1, 1}, size,
             style.cornerRadius, style.fill, style.strokeColor, style.strokeWidth, texSlot
         });
-        batch.pushVertex(ShapeVertex{
+        m_batch.pushVertex(ShapeVertex{
             model.transformPoint({-0.5f, -0.5f}), math::vec2{0, 0},
             size,
             style.cornerRadius, style.fill, style.strokeColor, style.strokeWidth, texSlot
         });
-        batch.pushVertex(ShapeVertex{
+        m_batch.pushVertex(ShapeVertex{
             model.transformPoint({0.5f, -0.5f}), math::vec2{1, 0}, size,
             style.cornerRadius, style.fill, style.strokeColor, style.strokeWidth, texSlot
         });
@@ -90,7 +95,7 @@ namespace astra::graphics {
         const auto &[position, fontHandle, data, color, size] = text;
 
         Font &font = resourceManager.fonts.get(fontHandle);
-        font.setSize(size);
+        font.setSize(size * m_contentScale.y);
 
         const core::TextureHandle &atlas = font.getAtlas();
         const int lineHeight = font.lineHeight();
@@ -118,18 +123,18 @@ namespace astra::graphics {
                                                            glyphPos.y + glyphSize.y * 0.5f) *
                                    math::Mat3::scale(glyphSize.x, glyphSize.y);
 
-                const auto texSlot = static_cast<float>(batch.pushTexture(atlas));
+                const auto texSlot = static_cast<float>(m_batch.pushTexture(atlas));
 
-                batch.pushVertex(TextVertex{
+                m_batch.pushVertex(TextVertex{
                     model.transformPoint({-0.5f, 0.5f}), math::vec2{region.u0, region.v1}, color, texSlot
                 });
-                batch.pushVertex(TextVertex{
+                m_batch.pushVertex(TextVertex{
                     model.transformPoint({0.5f, 0.5f}), math::vec2{region.u1, region.v1}, color, texSlot
                 });
-                batch.pushVertex(TextVertex{
+                m_batch.pushVertex(TextVertex{
                     model.transformPoint({-0.5f, -0.5f}), math::vec2{region.u0, region.v0}, color, texSlot
                 });
-                batch.pushVertex(TextVertex{
+                m_batch.pushVertex(TextVertex{
                     model.transformPoint({0.5f, -0.5f}), math::vec2{region.u1, region.v0}, color, texSlot
                 });
             }
@@ -143,21 +148,21 @@ namespace astra::graphics {
 
 
     void Renderer::prepareBatch(const core::ShaderHandle &shader, const core::MeshHandle &mesh) {
-        if (!batch.shader || !batch.mesh) {
-            batch.shader = shader;
-            batch.mesh = mesh;
+        if (!m_batch.shader || !m_batch.mesh) {
+            m_batch.shader = shader;
+            m_batch.mesh = mesh;
             return;
         }
 
-        if (batch.shader != shader || batch.mesh != mesh || batch.textureCount() == MAX_TEXTURE_SLOTS ||
-            batch.getVertexCount() >= resourceManager.meshes.get(batch.mesh).getMaxVertices()) {
+        if (m_batch.shader != shader || m_batch.mesh != mesh || m_batch.textureCount() == MAX_TEXTURE_SLOTS ||
+            m_batch.getVertexCount() >= resourceManager.meshes.get(m_batch.mesh).getMaxVertices()) {
             draw();
-            batch.shader = shapeShader;
-            batch.mesh = shapeMesh;
+            m_batch.shader = shader;
+            m_batch.mesh = mesh;
         }
     }
 
-    uint32_t Renderer::getDrawCallCount() const {
-        return previousDrawCalls;
+    uint32_t Renderer::drawCallCount() const {
+        return m_previousDrawCalls;
     }
 }

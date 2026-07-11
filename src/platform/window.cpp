@@ -64,6 +64,10 @@ namespace astra::platform {
     void Window::updateOnResize() {
     }
 
+    const math::uvec2 &Window::sizeInPixels() const {
+        return m_sizeInPixels;
+    }
+
     const math::uvec2 &Window::size() const {
         return m_size;
     }

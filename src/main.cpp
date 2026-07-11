@@ -39,22 +39,25 @@ int main() {
         {},
         0,
         1,
-        graphics::GraphicCamera::orthographic(0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, 0)
     };
+
     auto renderer = graphics::Renderer(resourceManager, graphicCamera);
 
     auto world = ecs::World(input);
 
     window.initialize(false);
 
-    renderer.initialize();
+    graphicCamera.projection =
+            graphics::GraphicCamera::orthographic(0, window.sizeInPixels().x, window.sizeInPixels().y, 0);
+
+    renderer.initialize(math::vec2{window.sizeInPixels()} / math::vec2{window.size()});
 
     world.initialize(renderer, resourceManager);
 
     const ecs::components::Camera &worldCamera = world.getCamera();
 
     const auto jetbrainsFont = resourceManager.fonts.load({
-        &resourceManager, library, "../Resources/fonts/jetbrains-mono/static/JetBrainsMono-Regular.ttf", 10
+        &resourceManager, library, "../Resources/fonts/jetbrains-mono/static/JetBrainsMono-Regular.ttf", 0
     });
 
     bool running = true;
@@ -77,19 +80,9 @@ int main() {
         graphicCamera.position.y = floor(worldCamera.position.y);
         graphicCamera.zoom = worldCamera.zoom;
 
-        renderer.drawText({
-            .position = {0, 0},
-            .font = jetbrainsFont,
-
-            .text = std::format("Frame: {} ms\nFPS: {}\nDraw Calls: {}", time.deltaTime() * 1000, time.fps(),
-                                renderer.getDrawCallCount()),
-
-            .color = {255, 210, 129},
-            .size = 32 * 2
-        });
 
         renderer.drawRect({
-            .position = {-200, -200},
+            .position = {0, 0},
             .size = {200, 200},
             .rotation = 0,
             .style = {
@@ -97,6 +90,16 @@ int main() {
                 .strokeWidth = 1,
             }
         });
+
+        renderer.drawText({
+            .position = {0, 0},
+            .font = jetbrainsFont,
+            .text = std::format("Frame: {} ms\nFPS: {}\nDraw Calls: {}", time.deltaTime() * 1000, time.fps(),
+                                renderer.drawCallCount()),
+            .color = {255, 210, 129},
+            .size = 18
+        });
+
 
         renderer.end();
 

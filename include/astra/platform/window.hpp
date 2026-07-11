@@ -32,5 +32,7 @@ namespace astra::platform {
         void updateOnResize();
 
         [[nodiscard]] const math::uvec2 &size() const;
+
+        const math::uvec2 &sizeInPixels() const;
     };
 }

@@ -51,21 +51,21 @@ namespace astra::graphics {
         core::MeshHandle shapeMesh;
         core::MeshHandle textMesh;
 
-        Batch batch;
+        Batch m_batch;
 
-        uint32_t drawCalls = 0;
-        uint32_t previousDrawCalls = 0;
+        math::vec2 m_contentScale = math::vec2::one();
+
+        uint32_t m_drawCalls = 0;
+        uint32_t m_previousDrawCalls = 0;
 
     public:
         explicit Renderer(core::ResourceManager &resourceManager, const GraphicCamera &camera);
 
-        void initialize();
+        void initialize(const math::vec2 &contentScale);
 
         void begin();
 
         void end();
-
-        void draw();
 
         void drawRect(const Rect &rect);
 
@@ -73,9 +73,12 @@ namespace astra::graphics {
 
         void drawLine(const Line &line);
 
-        [[nodiscard]] uint32_t getDrawCallCount() const;
+        [[nodiscard]] uint32_t drawCallCount() const;
 
     private:
+        void draw();
+
+
         void prepareBatch(const core::ShaderHandle &shader, const core::MeshHandle &mesh);
 
         template<class Vertex>
