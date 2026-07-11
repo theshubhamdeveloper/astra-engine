@@ -31,7 +31,7 @@ namespace astra::graphics::dispatch {
             },
             .rotation = transform.rotation,
             .style = {
-                .cornerRadius = math::Vec4{(circleGeometry.radius + style.strokeWidth * 2) / 2},
+                .cornerRadius = math::vec4{(circleGeometry.radius + style.strokeWidth * 2) / 2},
                 .strokeWidth = style.strokeWidth,
                 .strokeColor = style.stroke,
                 .texture = style.backgroundImage

@@ -22,7 +22,7 @@ namespace astra::graphics {
             uint32_t size;
         };
 
-        Font() : resourceManager(nullptr), face(nullptr), atlasBuilder(math::Vec2{0}, 0), size(0) {
+        Font() : resourceManager(nullptr), face(nullptr), atlasBuilder(math::uvec2{512}, 0), size(0) {
         }
 
         explicit Font(const Desc &desc);
@@ -33,7 +33,7 @@ namespace astra::graphics {
 
         const Glyph &getGlyph(char codepoint);
 
-        [[nodiscard]] math::Vec2 getKerning(char leftChar, char rightChar) const;
+        [[nodiscard]] math::vec2 getKerning(char leftChar, char rightChar) const;
 
         [[nodiscard]] int lineHeight() const;
 

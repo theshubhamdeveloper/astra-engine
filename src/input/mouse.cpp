@@ -3,7 +3,7 @@
 
 namespace astra::input {
     Mouse::Mouse()
-        : position(math::Vec2::zero()), previousPosition(math::Vec2::zero()), buttonsCurrent{false},
+        : position(math::vec2::zero()), previousPosition(math::vec2::zero()), buttonsCurrent{false},
           buttonsPrevious{false},
           wheelDelta(0) {
         float positionX;
@@ -54,11 +54,11 @@ namespace astra::input {
         }
     }
 
-    math::Vec2 Mouse::getMousePosition() const {
+    math::vec2 Mouse::getMousePosition() const {
         return position;
     }
 
-    math::Vec2 Mouse::getMouseDelta() const {
+    math::vec2 Mouse::getMouseDelta() const {
         return previousPosition - position;
     }
 

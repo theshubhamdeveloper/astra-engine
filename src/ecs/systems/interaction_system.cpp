@@ -99,7 +99,7 @@ namespace astra::ecs::systems {
     // TODO: Add rotation
     bool InteractionSystem::hitTest(const components::Transform &transform,
                                     const components::RectGeometry &rectangleGeometry,
-                                    const components::Interaction &interaction, const math::Vec2 &position) {
+                                    const components::Interaction &interaction, const math::vec2 &position) {
         if (position.x > transform.position.x - (rectangleGeometry.size.x * transform.scale.x) / 2 &&
             position.x < transform.position.x + (rectangleGeometry.size.x * transform.scale.x) / 2 &&
             position.y > transform.position.y - (rectangleGeometry.size.y * transform.scale.y) / 2 &&
@@ -111,7 +111,7 @@ namespace astra::ecs::systems {
 
     bool InteractionSystem::hitTest(const components::Transform &transform,
                                     const components::CircleGeometry &circleGeometry,
-                                    const components::Interaction &interaction, const math::Vec2 &position) {
+                                    const components::Interaction &interaction, const math::vec2 &position) {
         const float radius = circleGeometry.radius * std::max(transform.scale.x, transform.scale.y);
         if (position.distanceSquared(transform.position) <= radius * radius)
             return true;
@@ -121,7 +121,7 @@ namespace astra::ecs::systems {
 
     bool InteractionSystem::hitTest(const components::Transform &transform,
                                     const components::LineGeometry &lineGeometry,
-                                    const components::Interaction &interaction, const math::Vec2 &position) {
+                                    const components::Interaction &interaction, const math::vec2 &position) {
         // TODO: HitTest for Line
         return false;
     }

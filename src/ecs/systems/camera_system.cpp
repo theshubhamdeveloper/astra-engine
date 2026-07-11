@@ -20,12 +20,12 @@ namespace astra::ecs::systems {
 
         // Zooming with Mouse Pivot if Cmd or Ctrl or Meta key held
         if (input.keyboard.isKeyDown(SDL_SCANCODE_LGUI)) {
-            const math::Vec2 mousePosBefore = screenToWorld(camera, input.mouse.position);
+            const math::vec2 mousePosBefore = screenToWorld(camera, input.mouse.position);
 
             camera.zoom = std::clamp(camera.zoom + (input.mouse.wheelDelta * camera.zoomSpeed), camera.minZoom,
                                      camera.maxZoom);
 
-            const math::Vec2 mousePosAfter = screenToWorld(camera, input.mouse.position);
+            const math::vec2 mousePosAfter = screenToWorld(camera, input.mouse.position);
 
             camera.position += mousePosBefore - mousePosAfter;
         }

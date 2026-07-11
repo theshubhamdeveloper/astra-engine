@@ -17,8 +17,8 @@ namespace astra::graphics {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, desc.image.width, desc.image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                      desc.image.pixels.data());
 
-        glGenerateMipmap(GL_TEXTURE_2D);
-
+        // glGenerateMipmap(GL_TEXTURE_2D);
+ 
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 

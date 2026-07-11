@@ -71,11 +71,11 @@ namespace astra::graphics {
         glUniform1iv(getUniformLocation(uniformName), count, value);
     }
 
-    void Shader::setUniformVec2f(const std::string &uniformName, const math::Vec2 &value) const {
+    void Shader::setUniformVec2f(const std::string &uniformName, const math::vec2 &value) const {
         glUniform2f(getUniformLocation(uniformName), value.x, value.y);
     }
 
-    void Shader::setUniformVec3f(const std::string &uniformName, const math::Vec3 &value) const {
+    void Shader::setUniformVec3f(const std::string &uniformName, const math::vec3 &value) const {
         glUniform3f(getUniformLocation(uniformName), value.x, value.y, value.z);
     }
 

@@ -68,20 +68,20 @@ namespace astra::graphics {
         const auto texSlot = static_cast<float>(batch.pushTexture(style.texture ? style.texture : whiteTexture));
 
         batch.pushVertex(ShapeVertex{
-            model.transformPoint({-0.5f, 0.5f}), math::Vec2{0, 1}, size,
+            model.transformPoint({-0.5f, 0.5f}), math::vec2{0, 1}, size,
             style.cornerRadius, style.fill, style.strokeColor, style.strokeWidth, texSlot
         });
         batch.pushVertex(ShapeVertex{
-            model.transformPoint({0.5f, 0.5f}), math::Vec2{1, 1}, size,
+            model.transformPoint({0.5f, 0.5f}), math::vec2{1, 1}, size,
             style.cornerRadius, style.fill, style.strokeColor, style.strokeWidth, texSlot
         });
         batch.pushVertex(ShapeVertex{
-            model.transformPoint({-0.5f, -0.5f}), math::Vec2{0, 0},
+            model.transformPoint({-0.5f, -0.5f}), math::vec2{0, 0},
             size,
             style.cornerRadius, style.fill, style.strokeColor, style.strokeWidth, texSlot
         });
         batch.pushVertex(ShapeVertex{
-            model.transformPoint({0.5f, -0.5f}), math::Vec2{1, 0}, size,
+            model.transformPoint({0.5f, -0.5f}), math::vec2{1, 0}, size,
             style.cornerRadius, style.fill, style.strokeColor, style.strokeWidth, texSlot
         });
     }
@@ -95,7 +95,7 @@ namespace astra::graphics {
         const core::TextureHandle &atlas = font.getAtlas();
         const int lineHeight = font.lineHeight();
 
-        math::Vec2 pen = position;
+        math::vec2 pen = position;
 
         for (const auto &c: data) {
             const auto &[region, glyphSize, advance, bearing] = font.getGlyph(c);
@@ -106,12 +106,12 @@ namespace astra::graphics {
                 continue;
             }
 
-            const math::Vec2 glyphPos = {
+            const math::vec2 glyphPos = {
                 pen.x + bearing.x,
                 pen.y - bearing.y
             };
 
-            if (glyphSize != math::Vec2::zero()) {
+            if (glyphSize != math::uvec2::zero()) {
                 prepareBatch(textShader, textMesh);
 
                 const auto model = math::Mat3::translation(glyphPos.x + glyphSize.x * 0.5f,
@@ -121,16 +121,16 @@ namespace astra::graphics {
                 const auto texSlot = static_cast<float>(batch.pushTexture(atlas));
 
                 batch.pushVertex(TextVertex{
-                    model.transformPoint({-0.5f, 0.5f}), math::Vec2{region.u0, region.v1}, color, texSlot
+                    model.transformPoint({-0.5f, 0.5f}), math::vec2{region.u0, region.v1}, color, texSlot
                 });
                 batch.pushVertex(TextVertex{
-                    model.transformPoint({0.5f, 0.5f}), math::Vec2{region.u1, region.v1}, color, texSlot
+                    model.transformPoint({0.5f, 0.5f}), math::vec2{region.u1, region.v1}, color, texSlot
                 });
                 batch.pushVertex(TextVertex{
-                    model.transformPoint({-0.5f, -0.5f}), math::Vec2{region.u0, region.v0}, color, texSlot
+                    model.transformPoint({-0.5f, -0.5f}), math::vec2{region.u0, region.v0}, color, texSlot
                 });
                 batch.pushVertex(TextVertex{
-                    model.transformPoint({0.5f, -0.5f}), math::Vec2{region.u1, region.v0}, color, texSlot
+                    model.transformPoint({0.5f, -0.5f}), math::vec2{region.u1, region.v0}, color, texSlot
                 });
             }
 
@@ -155,9 +155,6 @@ namespace astra::graphics {
             batch.shader = shapeShader;
             batch.mesh = shapeMesh;
         }
-    }
-
-    void Renderer::onWindowResize(const math::Vec2 &newSize) {
     }
 
     uint32_t Renderer::getDrawCallCount() const {

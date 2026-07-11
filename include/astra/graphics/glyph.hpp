@@ -6,8 +6,8 @@
 namespace astra::graphics {
     struct Glyph {
         core::AtlasRegion region;
-        math::Vec2 size;
-        math::Vec2 advance;
-        math::Vec2 bearing;
+        math::uvec2 size;
+        math::uvec2 advance;
+        math::uvec2 bearing;
     };
 }

@@ -8,8 +8,8 @@
 
 namespace astra::ecs::components {
     struct RectGeometry {
-        math::Vec2 size;
-        math::Vec4 cornerRadius;
+        math::vec2 size;
+        math::vec4 cornerRadius;
     };
 
     struct CircleGeometry {
@@ -17,8 +17,8 @@ namespace astra::ecs::components {
     };
 
     struct LineGeometry {
-        math::Vec2 start;
-        math::Vec2 end;
+        math::vec2 start;
+        math::vec2 end;
     };
 
     using ShapeGeometry = std::variant<RectGeometry, CircleGeometry, LineGeometry>;

@@ -40,8 +40,8 @@ namespace astra::math {
             };
         }
 
-        [[nodiscard]] constexpr Vec2 transformPoint(const Vec2 &p) const {
-            Vec3 result = (*this) * Vec3{p.x, p.y, 1.0f};
+        [[nodiscard]] constexpr vec2 transformPoint(const vec2 &p) const {
+            vec3 result = (*this) * vec3{p.x, p.y, 1.0f};
             return {result.x, result.y};
         }
 
@@ -61,7 +61,7 @@ namespace astra::math {
             };
         }
 
-        constexpr Vec3 operator*(const Vec3 &other) const {
+        constexpr vec3 operator*(const vec3 &other) const {
             return {
                 m[0] * other.x + m[1] * other.y + m[2] * other.z,
                 m[3] * other.x + m[4] * other.y + m[5] * other.z,

@@ -2,16 +2,15 @@
 
 #include <astra/math/mat3.hpp>
 #include <astra/math/vector.hpp>
-
 #include "astra/core/types.hpp"
 
 namespace astra::graphics {
     struct GraphicCamera {
-        math::Vec2 position;
+        math::vec2 position;
         float rotation = 0.0f;
         float zoom = 1.0f;
         math::Mat3 projection;
-
+                                                        
         [[nodiscard]] math::Mat3 getView() const {
             return math::Mat3::scale(zoom, zoom) *
                    math::Mat3::rotation(-rotation * core::RADIAN_CONVERSION_FACTOR) *

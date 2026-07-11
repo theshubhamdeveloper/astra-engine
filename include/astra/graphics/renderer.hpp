@@ -12,21 +12,21 @@ namespace astra::graphics {
 
     struct RectStyle {
         math::Color fill = math::Color::white();
-        math::Vec4 cornerRadius = {};
+        math::vec4 cornerRadius = {};
         float strokeWidth = 0.0f;
         math::Color strokeColor = math::Color::white();
         core::TextureHandle texture = {};
     };
 
     struct Rect {
-        math::Vec2 position = {};
-        math::Vec2 size = math::Vec2::one();
+        math::vec2 position = {};
+        math::vec2 size = math::vec2::one();
         float rotation = 0.0f;
         RectStyle style;
     };
 
     struct Text {
-        math::Vec2 position = {};
+        math::vec2 position = {};
         core::FontHandle font = {};
         std::string_view text;
         math::Color color = math::Color::white();
@@ -34,8 +34,8 @@ namespace astra::graphics {
     };
 
     struct Line {
-        math::Vec2 start = {};
-        math::Vec2 end = {};
+        math::vec2 start = {};
+        math::vec2 end = {};
         math::Color color = math::Color::white();
         float thickness = 1.0f;
     };
@@ -72,8 +72,6 @@ namespace astra::graphics {
         void drawText(const Text &text);
 
         void drawLine(const Line &line);
-
-        void onWindowResize(const math::Vec2 &newSize);
 
         [[nodiscard]] uint32_t getDrawCallCount() const;
 

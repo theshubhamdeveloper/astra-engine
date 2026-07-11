@@ -15,10 +15,10 @@ namespace astra::graphics {
     };
 
     struct ShapeVertex {
-        math::Vec2 position;
-        math::Vec2 uv;
-        math::Vec2 size;
-        math::Vec4 cornerRadius;
+        math::vec2 position;
+        math::vec2 uv;
+        math::vec2 size;
+        math::vec4 cornerRadius;
         math::Color color;
         math::Color strokeColor;
         float strokeWidth = 0;
@@ -66,8 +66,8 @@ namespace astra::graphics {
     };
 
     struct TextVertex {
-        math::Vec2 position;
-        math::Vec2 uv;
+        math::vec2 position;
+        math::vec2 uv;
         math::Color color;
         float texId = 0.0f;
 

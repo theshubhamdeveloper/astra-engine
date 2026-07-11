@@ -6,14 +6,14 @@
 
 namespace astra::core {
     struct Rect {
-        math::Vec2 pos;
-        math::Vec2 size;
+        math::uvec2 pos;
+        math::uvec2 size;
 
-        float right() const {
+        [[nodiscard]] uint32_t right() const {
             return pos.x + size.x;
         }
 
-        float bottom() const {
+        [[nodiscard]] uint32_t bottom() const {
             return pos.y + size.y;
         }
 
@@ -41,14 +41,14 @@ namespace astra::core {
     public:
         assets::Image atlas;
 
-        explicit AtlasBuilder(const math::Vec2 &size, int colorChannels);
+        explicit AtlasBuilder(const math::uvec2 &size, int colorChannels);
 
         AtlasRegion add(const assets::Image &image, uint32_t padding);
 
-        int bestFreeIndex(const math::Vec2 &size) const;
+        [[nodiscard]] int bestFreeIndex(const math::uvec2 &size) const;
 
         void spilt(const Rect &placedRect);
 
-        void copyImage(const math::Vec2 &position, const assets::Image &image, uint32_t padding);
+        void copyImage(const math::uvec2 &position, const assets::Image &image, uint32_t padding);
     };
 }

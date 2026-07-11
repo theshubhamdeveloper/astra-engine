@@ -11,15 +11,15 @@ namespace astra::math {
 
 namespace astra::platform {
     class Window {
-        SDL_Window *window;
-        SDL_GLContext glContext;
+        SDL_Window *m_window;
+        SDL_GLContext m_glContext;
 
-        std::string title;
-        math::Vec2 windowSize;
-        math::Vec2 dpiScale;
+        std::string m_title;
+        math::uvec2 m_size;
+        math::uvec2 m_sizeInPixels;
 
     public:
-        Window(std::string title, const math::Vec2 &size);
+        Window(std::string title, const math::uvec2 &size);
 
         void initialize(bool resizable);
 
@@ -31,8 +31,6 @@ namespace astra::platform {
 
         void updateOnResize();
 
-        [[nodiscard]] const math::Vec2 &getWindowSize() const;
-
-        [[nodiscard]] const math::Vec2 &getDpiScale() const;
+        [[nodiscard]] const math::uvec2 &size() const;
     };
 }

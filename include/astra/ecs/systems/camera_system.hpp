@@ -16,11 +16,11 @@ namespace astra::ecs::systems {
 
         void update(double deltaTime) override;
 
-        static math::Vec2 worldToScreen(const components::Camera &camera, const math::Vec2 &worldPosition) {
+        static math::vec2 worldToScreen(const components::Camera &camera, const math::vec2 &worldPosition) {
             return (worldPosition - camera.position) * camera.zoom;
         }
 
-        static math::Vec2 screenToWorld(const components::Camera &camera, const math::Vec2 &screenPosition) {
+        static math::vec2 screenToWorld(const components::Camera &camera, const math::vec2 &screenPosition) {
             return (screenPosition / camera.zoom) + camera.position;
         }
     };

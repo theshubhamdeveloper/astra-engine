@@ -26,22 +26,22 @@ namespace astra::graphics {
         ASSERT(status == FT_Err_Ok);
 
         return glyphs.try_emplace(codepoint, addCurrentGlyphInAtlas(),
-                                  math::Vec2{
-                                      static_cast<float>(face->glyph->bitmap.width),
-                                      static_cast<float>(face->glyph->bitmap.rows)
+                                  math::uvec2{
+                                      face->glyph->bitmap.width,
+                                      face->glyph->bitmap.rows
                                   },
-                                  math::Vec2{
-                                      static_cast<float>(face->glyph->advance.x >> 6),
-                                      static_cast<float>(face->glyph->advance.y >> 6)
+                                  math::uvec2{
+                                      static_cast<uint32_t>(face->glyph->advance.x >> 6),
+                                      static_cast<uint32_t>(face->glyph->advance.y >> 6)
                                   },
-                                  math::Vec2{
-                                      static_cast<float>(face->glyph->bitmap_left),
-                                      static_cast<float>(face->glyph->bitmap_top)
+                                  math::uvec2{
+                                      static_cast<uint32_t>(face->glyph->bitmap_left),
+                                      static_cast<uint32_t>(face->glyph->bitmap_top)
                                   }).first->second;
     }
 
     Font::Font(const Desc &desc) : resourceManager(desc.resourceManager), face(),
-                                   atlasBuilder(math::Vec2{512}, 4), size(desc.size) {
+                                   atlasBuilder(math::uvec2{512}, 4), size(desc.size) {
         auto status = FT_New_Face(desc.library, desc.fontPath.c_str(), 0, &face);
         ASSERT(status == FT_Err_Ok);
 
@@ -76,7 +76,7 @@ namespace astra::graphics {
         return loadGlyph(codepoint);
     }
 
-    math::Vec2 Font::getKerning(const char leftChar, const char rightChar) const {
+    math::vec2 Font::getKerning(const char leftChar, const char rightChar) const {
         FT_Vector kerning;
 
         FT_Get_Kerning(

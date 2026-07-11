@@ -31,12 +31,12 @@ namespace astra::ecs::systems {
 
         static bool hitTest(const components::Transform &transform,
                             const components::RectGeometry &rectangleGeometry,
-                            const components::Interaction &interaction, const math::Vec2 &position);
+                            const components::Interaction &interaction, const math::vec2 &position);
 
         static bool hitTest(const components::Transform &transform, const components::CircleGeometry &circleGeometry,
-                            const components::Interaction &interaction, const math::Vec2 &position);
+                            const components::Interaction &interaction, const math::vec2 &position);
 
         static bool hitTest(const components::Transform &transform, const components::LineGeometry &lineGeometry,
-                            const components::Interaction &interaction, const math::Vec2 &position);
+                            const components::Interaction &interaction, const math::vec2 &position);
     };
 }

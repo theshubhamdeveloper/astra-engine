@@ -36,10 +36,10 @@ int main() {
     auto input = input::Input();
 
     auto graphicCamera = graphics::GraphicCamera{
-        {0, 0},
+        {},
         0,
         1,
-        graphics::GraphicCamera::orthographic(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0)
+        graphics::GraphicCamera::orthographic(0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, 0)
     };
     auto renderer = graphics::Renderer(resourceManager, graphicCamera);
 

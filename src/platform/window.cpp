@@ -10,8 +10,8 @@
 #include <astra/platform/window.hpp>
 
 namespace astra::platform {
-    Window::Window(std::string title, const math::Vec2 &size)
-        : window(nullptr), glContext(), title(std::move(title)), windowSize(size) {
+    Window::Window(std::string title, const math::uvec2 &size)
+        : m_window(nullptr), m_glContext(), m_title(std::move(title)), m_size(size) {
     }
 
     void Window::initialize(const bool resizable) {
@@ -25,21 +25,21 @@ namespace astra::platform {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-        window = SDL_CreateWindow(title.c_str(), windowSize.x, windowSize.y,
-                                  flags);
+        m_window = SDL_CreateWindow(m_title.c_str(), m_size.x, m_size.y,
+                                    flags);
 
-        int windowSizeInPixelsX = 0;
-        int windowSizeInPixelsY = 0;
-        SDL_GetWindowSizeInPixels(window, &windowSizeInPixelsX, &windowSizeInPixelsY);
+        math::ivec2 sizeInPixels;
+        SDL_GetWindowSizeInPixels(m_window, &sizeInPixels.x, &sizeInPixels.y);
+        m_sizeInPixels = math::uvec2{sizeInPixels};
 
-        glContext = SDL_GL_CreateContext(window);
+        m_glContext = SDL_GL_CreateContext(m_window);
 
         if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(SDL_GL_GetProcAddress))) {
             std::cerr << "Failed to initialize GLAD" << std::endl;
             std::abort();
         }
 
-        glViewport(0, 0, windowSizeInPixelsX, windowSizeInPixelsY);
+        glViewport(0, 0, m_sizeInPixels.x, m_sizeInPixels.y);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -47,8 +47,8 @@ namespace astra::platform {
 
 
     void Window::destroy() const {
-        SDL_GL_DestroyContext(glContext);
-        SDL_DestroyWindow(window);
+        SDL_GL_DestroyContext(m_glContext);
+        SDL_DestroyWindow(m_window);
         SDL_Quit();
     }
 
@@ -58,17 +58,13 @@ namespace astra::platform {
     }
 
     void Window::render() const {
-        SDL_GL_SwapWindow(window);
+        SDL_GL_SwapWindow(m_window);
     }
 
     void Window::updateOnResize() {
     }
 
-    const math::Vec2 &Window::getWindowSize() const {
-        return windowSize;
+    const math::uvec2 &Window::size() const {
+        return m_size;
     }
-
-    const math::Vec2 &Window::getDpiScale() const {
-        return dpiScale;
-    };
 }

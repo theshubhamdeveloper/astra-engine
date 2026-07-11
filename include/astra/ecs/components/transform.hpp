@@ -6,8 +6,8 @@
 
 namespace astra::ecs::components {
     struct Transform {
-        math::Vec2 position;
-        math::Vec2 scale = math::Vec2::one();
+        math::vec2 position;
+        math::vec2 scale = math::vec2::one();
         float rotation = 0.0f;
         int32_t zindex = 0;
     };
