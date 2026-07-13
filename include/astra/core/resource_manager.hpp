@@ -34,13 +34,12 @@ namespace astra::core {
         }
 
         T &get(const Handle &handle) {
-            ASSERT(exits(handle));
+            if (!exits(handle)) return *data[0];
             return *data[handle.id];
         }
 
         void destroy(const Handle &handle) {
-            ASSERT(exits(handle));
-            ASSERT(handle.id != 0);
+            if (!exits(handle) || handle.id == 0) return;
             data[handle.id].reset();
             generations[handle.id] += 1;
         }

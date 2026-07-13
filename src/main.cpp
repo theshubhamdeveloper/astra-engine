@@ -57,8 +57,9 @@ int main() {
     const ecs::components::Camera &worldCamera = world.getCamera();
 
     const auto jetbrainsFont = resourceManager.fonts.load({
-        &resourceManager, library, "../Resources/fonts/jetbrains-mono/static/JetBrainsMono-Regular.ttf", 0
+        &resourceManager, library, "../Resources/fonts/jetbrains-mono/static/JetBrainsMono-BoldItalic.ttf"
     });
+
 
     bool running = true;
 
@@ -75,31 +76,37 @@ int main() {
 
         world.update(time.deltaTime());
 
+        // if (input.keyboard.isKeyDown(SDL_SCANCODE_LEFT)) {
+        //     textPos.x -= 100 * time.deltaTime();
+        // }
+        //
+        // if (input.keyboard.isKeyDown(SDL_SCANCODE_RIGHT)) {
+        //     textPos.x += 100 * time.deltaTime();
+        // }
+
         //sync graphicCamera and worldCamera
         graphicCamera.position.x = floor(worldCamera.position.x);
         graphicCamera.position.y = floor(worldCamera.position.y);
         graphicCamera.zoom = worldCamera.zoom;
 
-
         renderer.drawRect({
             .position = {0, 0},
-            .size = {200, 200},
+            .size = {424, 124},
             .rotation = 0,
-            .style = {
-                .fill = {128, 255, 124},
-                .strokeWidth = 1,
+            .style = graphics::RectStyle{
+                .fill = {255, 255, 255, 255},
+                .cornerRadius = math::vec4{24},
             }
         });
 
         renderer.drawText({
-            .position = {0, 0},
+            .position = {24, 24},
             .font = jetbrainsFont,
             .text = std::format("Frame: {} ms\nFPS: {}\nDraw Calls: {}", time.deltaTime() * 1000, time.fps(),
                                 renderer.drawCallCount()),
-            .color = {255, 210, 129},
-            .size = 18
+            .size = 24,
+            .style = {.color = math::Color::black(), .weight = 600},
         });
-
 
         renderer.end();
 

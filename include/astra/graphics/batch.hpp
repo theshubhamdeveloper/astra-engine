@@ -19,7 +19,7 @@ namespace astra::graphics {
 
         uint32_t pushTexture(const core::TextureHandle &texture) {
             for (int i = 0; i < textures.size(); ++i)
-                if (textures[i].id == texture.id)
+                if (textures[i] == texture)
                     return i;
 
             textures.push_back(texture);
@@ -27,7 +27,7 @@ namespace astra::graphics {
         }
 
         void activateTextures(core::ResourceManager &rm, std::vector<int> &slots) const {
-            slots.resize(textures.size());
+            slots.reserve(textures.size());
             for (int i = 0; i < textures.size(); ++i) {
                 slots.push_back(i);
                 rm.textures.get(textures[i]).use(i);

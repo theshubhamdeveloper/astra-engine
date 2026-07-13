@@ -25,12 +25,21 @@ namespace astra::graphics {
         RectStyle style;
     };
 
+    struct TextStyle {
+        math::Color color = math::Color::white();
+        std::optional<uint32_t> weight = std::nullopt;
+        std::optional<int> width = std::nullopt;
+        std::optional<int> slant = std::nullopt;
+        std::optional<int> italic = std::nullopt;
+        std::optional<int> opticalSize = std::nullopt;
+    };
+
     struct Text {
         math::vec2 position = {};
         core::FontHandle font = {};
         std::string_view text;
-        math::Color color = math::Color::white();
         uint32_t size = 16.0f;
+        TextStyle style;
     };
 
     struct Line {

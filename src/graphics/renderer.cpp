@@ -92,22 +92,29 @@ namespace astra::graphics {
     }
 
     void Renderer::drawText(const Text &text) {
-        const auto &[position, fontHandle, data, color, size] = text;
+        const auto &[position, fontHandle, data, size, style] = text;
 
         Font &font = resourceManager.fonts.get(fontHandle);
-        font.setSize(size * m_contentScale.y);
+        auto fontStyle = FontStyle{static_cast<unsigned>(size * m_contentScale.y)};
+        if (style.weight) fontStyle.setVariation(font_tags::weight, style.weight.value());
+        if (style.width) fontStyle.setVariation(font_tags::width, style.width.value());
+        if (style.slant) fontStyle.setVariation(font_tags::slant, style.slant.value());
+        if (style.opticalSize) fontStyle.setVariation(font_tags::opticalSize, style.italic.value());
+        if (style.opticalSize) fontStyle.setVariation(font_tags::opticalSize, style.opticalSize.value());
 
-        const core::TextureHandle &atlas = font.atlas();
-        const int lineHeight = font.height();
 
-        math::vec2 pen = {position.x, position.y + font.ascender()};
+        font.setStyle(fontStyle);
 
-        for (const auto &c: data) {
-            const auto &[region, glyphSize, advance, bearing] = font.getGlyph(c);
+        const FontMetrics &matrix = font.getMatrix();
 
-            if (c == '\n') {
+        math::vec2 pen = {position.x, position.y + matrix.ascender};
+
+        for (const char32_t &c: data) {
+            const auto &[atlas,region, glyphSize, advance, bearing] = font.getGlyph(c);
+
+            if (c == U'\n') {
                 pen.x = position.x;
-                pen.y += lineHeight;
+                pen.y += matrix.height;
                 continue;
             }
 
@@ -126,16 +133,16 @@ namespace astra::graphics {
                 const auto texSlot = static_cast<float>(m_batch.pushTexture(atlas));
 
                 m_batch.pushVertex(TextVertex{
-                    model.transformPoint({-0.5f, 0.5f}), math::vec2{region.u0, region.v1}, color, texSlot
+                    model.transformPoint({-0.5f, 0.5f}), math::vec2{region.u0, region.v1}, style.color, texSlot
                 });
                 m_batch.pushVertex(TextVertex{
-                    model.transformPoint({0.5f, 0.5f}), math::vec2{region.u1, region.v1}, color, texSlot
+                    model.transformPoint({0.5f, 0.5f}), math::vec2{region.u1, region.v1}, style.color, texSlot
                 });
                 m_batch.pushVertex(TextVertex{
-                    model.transformPoint({-0.5f, -0.5f}), math::vec2{region.u0, region.v0}, color, texSlot
+                    model.transformPoint({-0.5f, -0.5f}), math::vec2{region.u0, region.v0}, style.color, texSlot
                 });
                 m_batch.pushVertex(TextVertex{
-                    model.transformPoint({0.5f, -0.5f}), math::vec2{region.u1, region.v0}, color, texSlot
+                    model.transformPoint({0.5f, -0.5f}), math::vec2{region.u1, region.v0}, style.color, texSlot
                 });
             }
 
