@@ -51,7 +51,7 @@ add_executable(astra_engine MACOSX_BUNDLE
         src/ecs/systems/interaction_system.cpp
         src/ecs/systems/camera_system.cpp
 
-        src/graphics/font.cpp
+        src/graphics/font_face.cpp
         src/graphics/renderer.cpp
         src/graphics/render_dispatch.cpp
         src/graphics/shader.cpp

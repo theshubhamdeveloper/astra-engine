@@ -6,7 +6,7 @@ namespace astra::core {
     struct TextureTag {
     };
 
-    struct FontTag {
+    struct FontFamilyTag {
     };
 
     struct ShaderTag {
@@ -39,6 +39,6 @@ namespace astra::core {
 
     using ShaderHandle = Handle<ShaderTag>;
     using TextureHandle = Handle<TextureTag>;
-    using FontHandle = Handle<FontTag>;
+    using FontFamilyHandle = Handle<FontFamilyTag>;
     using MeshHandle = Handle<MeshTag>;
 }

@@ -22,7 +22,7 @@ namespace astra::graphics {
         });
 
         shapeMesh = createQuadMesh<ShapeVertex>(20000);
-        textMesh = createQuadMesh<TextVertex>(40000);
+        textMesh = createQuadMesh<TextVertex>(400000);
 
         whiteTexture = resourceManager.textures.load({assets::Image{1, 1, 4, {255, 255, 255, 255}}});
     }
@@ -92,25 +92,25 @@ namespace astra::graphics {
     }
 
     void Renderer::drawText(const Text &text) {
-        const auto &[position, fontHandle, data, size, style] = text;
+        const auto &[position, fontFamilyHandle, data, size, style] = text;
 
-        Font &font = resourceManager.fonts.get(fontHandle);
-        auto fontStyle = FontStyle{static_cast<unsigned>(size * m_contentScale.y)};
-        if (style.weight) fontStyle.setVariation(font_tags::weight, style.weight.value());
-        if (style.width) fontStyle.setVariation(font_tags::width, style.width.value());
-        if (style.slant) fontStyle.setVariation(font_tags::slant, style.slant.value());
-        if (style.opticalSize) fontStyle.setVariation(font_tags::opticalSize, style.italic.value());
-        if (style.opticalSize) fontStyle.setVariation(font_tags::opticalSize, style.opticalSize.value());
+        FontFamily &family = resourceManager.fontsFamilies.get(fontFamilyHandle);
 
+        FontStyle fontStyle;
+        fontStyle.size = size * m_contentScale.y;
+        fontStyle.weight = style.weight ? style.weight.value() : 400;
+        fontStyle.width = style.width ? style.width.value() : 5;
+        fontStyle.italic = style.italic ? style.italic.value() : false;
 
-        font.setStyle(fontStyle);
+        FontFace face = family.resolve(fontStyle);
+        face.setStyle(fontStyle);
 
-        const FontMetrics &matrix = font.getMatrix();
+        const FontMetrics &matrix = face.getMatrix();
 
         math::vec2 pen = {position.x, position.y + matrix.ascender};
 
         for (const char32_t &c: data) {
-            const auto &[atlas,region, glyphSize, advance, bearing] = font.getGlyph(c);
+            const auto &[atlas,region, glyphSize, advance, bearing] = face.getGlyph(c);
 
             if (c == U'\n') {
                 pen.x = position.x;
@@ -148,6 +148,37 @@ namespace astra::graphics {
 
             pen.x += advance.x;
         }
+    }
+
+    math::vec2 Renderer::measureText(const Text &text) const {
+        const auto &[position, fontFamilyHandle, data, size, style] = text;
+
+        FontFamily &family = resourceManager.fontsFamilies.get(fontFamilyHandle);
+
+        FontStyle fontStyle;
+        fontStyle.size = size * m_contentScale.y;
+        fontStyle.weight = style.weight ? style.weight.value() : 400;
+        fontStyle.width = style.width ? style.width.value() : 5;
+        fontStyle.italic = style.italic ? style.italic.value() : false;
+
+        FontFace face = family.resolve(fontStyle);
+        face.setStyle(fontStyle);
+
+        const FontMetrics &matrix = face.getMatrix();
+
+        math::vec2 coverSize = {0, 0};
+
+        for (const char32_t &c: data) {
+            const auto &[atlas,region, glyphSize, advance, bearing] = face.getGlyph(c);
+            if (c == U'\n') {
+                coverSize.y += matrix.height;
+                continue;
+            }
+
+            coverSize.x += advance.x;
+        }
+
+        return coverSize;
     }
 
     void Renderer::drawLine(const Line &line) {

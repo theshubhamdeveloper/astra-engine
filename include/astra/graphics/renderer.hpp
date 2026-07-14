@@ -36,7 +36,7 @@ namespace astra::graphics {
 
     struct Text {
         math::vec2 position = {};
-        core::FontHandle font = {};
+        core::FontFamilyHandle fontFamily = {};
         std::string_view text;
         uint32_t size = 16.0f;
         TextStyle style;
@@ -79,6 +79,7 @@ namespace astra::graphics {
         void drawRect(const Rect &rect);
 
         void drawText(const Text &text);
+        math::vec2 measureText(const Text &text) const;
 
         void drawLine(const Line &line);
 
