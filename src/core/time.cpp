@@ -1,11 +1,12 @@
 #include <SDL3/SDL_timer.h>
+
 #include <astra/core/time.hpp>
 
 namespace astra::core {
     Time::Time()
-        : deltaTime_(0), previousCounter(SDL_GetPerformanceCounter()),
-          performanceFrequency(SDL_GetPerformanceFrequency()),
-          frameCount(0), elapsedTime(0), fps_(0) {
+        : m_deltaTime(0), m_previousCounter(SDL_GetPerformanceCounter()),
+          m_performanceFrequency(SDL_GetPerformanceFrequency()),
+          m_frameCount(0), m_elapsedTime(0), m_fps(0) {
     }
 
     void Time::update() {
@@ -16,32 +17,32 @@ namespace astra::core {
     void Time::evaluateDeltaTime() {
         const uint64_t currentCounter = SDL_GetPerformanceCounter();
 
-        deltaTime_ = static_cast<double>(currentCounter - previousCounter) / static_cast<double>(performanceFrequency);
+        m_deltaTime = static_cast<double>(currentCounter - m_previousCounter) / static_cast<double>(m_performanceFrequency);
 
-        previousCounter = currentCounter;
+        m_previousCounter = currentCounter;
     }
 
     void Time::updateFrameCount() {
-        elapsedTime += deltaTime_;
-        frameCount++;
+        m_elapsedTime += m_deltaTime;
+        m_frameCount++;
 
-        if (elapsedTime >= FPS_INTERVAL) {
+        if (m_elapsedTime >= FPS_INTERVAL) {
             evaluateFPS();
         }
     }
 
     void Time::evaluateFPS() {
-        fps_ = frameCount;
+        m_fps = m_frameCount;
 
-        frameCount = 0;
-        elapsedTime -= FPS_INTERVAL;
+        m_frameCount = 0;
+        m_elapsedTime -= FPS_INTERVAL;
     }
 
     double Time::deltaTime() const {
-        return deltaTime_;
+        return m_deltaTime;
     }
 
     uint16_t Time::fps() const {
-        return fps_;
+        return m_fps;
     }
 }

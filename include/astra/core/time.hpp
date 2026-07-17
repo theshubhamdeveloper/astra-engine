@@ -6,12 +6,15 @@ namespace astra::core {
     constexpr double FPS_INTERVAL = 1.0;
 
     class Time {
-        double deltaTime_;
-        uint64_t previousCounter;
-        const uint64_t performanceFrequency;
-        uint32_t frameCount;
-        double elapsedTime;
-        uint32_t fps_;
+        double m_deltaTime;
+
+        uint64_t m_previousCounter;
+        const uint64_t m_performanceFrequency;
+
+        double m_elapsedTime;
+
+        uint32_t m_frameCount;
+        uint32_t m_fps;
 
         void evaluateFPS();
 
@@ -24,8 +27,8 @@ namespace astra::core {
 
         void update();
 
-        double deltaTime() const;
+        [[nodiscard]] double deltaTime() const;
 
-        uint16_t fps() const;
+        [[nodiscard]] uint16_t fps() const;
     };
 }
