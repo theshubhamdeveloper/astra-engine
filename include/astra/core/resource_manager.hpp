@@ -3,6 +3,7 @@
 #include <vector>
 
 #include <astra/core/assert.hpp>
+#include <astra/core/resource_handles.hpp>
 #include <astra/core/types.hpp>
 #include <astra/graphics/font_family.hpp>
 #include <astra/graphics/mesh.hpp>
@@ -42,6 +43,8 @@ namespace astra::core {
             if (!exits(handle) || handle.id == 0) return;
             data[handle.id].reset();
             generations[handle.id] += 1;
+
+            freeSlots.push(handle.id);
         }
 
         [[nodiscard]] bool exits(const Handle &handle) const {
@@ -58,7 +61,7 @@ namespace astra::core {
     public:
         AssetStorage<graphics::Texture, TextureHandle> textures;
         AssetStorage<graphics::Shader, ShaderHandle> shaders;
-        AssetStorage<graphics::FontFamily, FontFamilyHandle> fontsFamilies;
+        AssetStorage<graphics::FontFamily, FontFamilyHandle> fontFamilies;
         AssetStorage<graphics::Mesh, MeshHandle> meshes;
     };
 }
