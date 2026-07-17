@@ -5,7 +5,7 @@
 #include <astra/core/assert.hpp>
 #include <astra/core/resource_handles.hpp>
 #include <astra/core/types.hpp>
-#include <astra/graphics/font_family.hpp>
+#include <astra/graphics/font/font_family.hpp>
 #include <astra/graphics/mesh.hpp>
 #include <astra/graphics/shader.hpp>
 #include <astra/graphics/texture.hpp>
