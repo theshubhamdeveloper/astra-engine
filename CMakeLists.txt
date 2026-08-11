@@ -13,19 +13,17 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(ASSETS_DIR ${CMAKE_SOURCE_DIR}/assets)
 
 add_subdirectory(third_party/SDL EXCLUDE_FROM_ALL)
-
 add_subdirectory(third_party/freetype EXCLUDE_FROM_ALL)
+add_subdirectory(third_party/harfbuzz EXCLUDE_FROM_ALL)
 
 add_library(glad
         third_party/glad/src/glad.c
 )
-
 target_include_directories(glad PUBLIC
         third_party/glad/include
 )
 
 add_library(stb INTERFACE)
-
 target_include_directories(stb INTERFACE
         third_party/stb
 )
@@ -77,6 +75,7 @@ target_link_libraries(astra_engine PRIVATE
         glad
         stb
         freetype
+        harfbuzz
 )
 
 target_compile_options(astra_engine PRIVATE
