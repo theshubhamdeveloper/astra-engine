@@ -1,10 +1,11 @@
 #pragma once
 
+#include <hb.h>
 #include <freetype/freetype.h>
 
 #include <astra/graphics/font/font_axis.hpp>
 #include <astra/graphics/font/font_instance.hpp>
-#include <astra/graphics/font/font_style.hpp>
+#include <astra/graphics/font/text_style.hpp>
 
 namespace astra::graphics {
     constexpr uint32_t WEIGHT_PENALITY_MULTIPLIER = 1;
@@ -29,6 +30,7 @@ namespace astra::graphics {
         core::ResourceManager *resourceManager;
 
         FT_Face m_face;
+        hb_font_t *m_font;
 
         uint32_t m_weight;
         uint32_t m_width;

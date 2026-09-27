@@ -14,11 +14,13 @@ namespace astra::graphics {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, desc.image.width, desc.image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glTexImage2D(GL_TEXTURE_2D, 0, static_cast<uint32_t>(desc.colorFormat), desc.image.width, desc.image.height, 0,
+                     static_cast<uint32_t>(desc.colorFormat), GL_UNSIGNED_BYTE,
                      desc.image.pixels.data());
 
         // glGenerateMipmap(GL_TEXTURE_2D);
- 
+
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 

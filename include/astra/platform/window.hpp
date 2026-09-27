@@ -3,6 +3,7 @@
 #include <string>
 
 #include <SDL3/SDL.h>
+
 #include <astra/math/vector.hpp>
 
 namespace astra::math {
@@ -30,6 +31,8 @@ namespace astra::platform {
         void render() const;
 
         void updateOnResize();
+
+        [[nodiscard]] SDL_Window *window() const;
 
         [[nodiscard]] const math::uvec2 &size() const;
 

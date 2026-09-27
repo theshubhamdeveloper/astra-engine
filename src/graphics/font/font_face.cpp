@@ -5,16 +5,21 @@
 #include <astra/graphics/font/font_face.hpp>
 #include <astra/graphics/font/font_instance.hpp>
 
+#include "hb-ft.h"
+
+
 namespace astra::graphics {
     FontFace::FontFace(core::ResourceManager *resourceManager,
                        const FT_Library library,
                        const std::string_view &fontPath) : resourceManager(resourceManager), m_face(), m_italic(false) {
-        const auto status = FT_New_Face(library, fontPath.data(), 0, &m_face);
+        const auto status = FT_New_Face(library, fontPath.data(), 0, &m_face);;
         ASSERT(status == FT_Err_Ok);
+
+        m_font = hb_ft_font_create(m_face, nullptr);
+        ASSERT(m_font != nullptr);
 
         const auto os2 =
                 static_cast<TT_OS2 *>(FT_Get_Sfnt_Table(m_face, FT_SFNT_OS2));
-
         ASSERT(os2 != nullptr);
 
         m_weight = os2->usWeightClass;
@@ -106,33 +111,33 @@ namespace astra::graphics {
     }
 
     FontInstance &FontFace::getInstance(const FontStyle &style) {
-        auto axisCoords = m_axes.defaultCoords;
-
-        if (m_axes.weight != -1)
-            axisCoords.values[m_axes.weight] = style.weight << 16;
-
-        if (m_axes.width != -1)
-            axisCoords.values[m_axes.width] = style.width << 16;
-
-        if (m_axes.italic != -1)
-            axisCoords.values[m_axes.italic] = style.italic << 16;
-
-        for (const auto [tag, value]: style.axes()) {
-            for (const auto axisIndex: m_axes.customAxisIndices) {
-                if (m_axes.axes[axisIndex].tag == tag) {
-                    axisCoords.values[axisIndex] = value << 16;
-                }
-            }
-        }
-
-        for (auto &instance: m_instances) {
-            if (instance.size() == style.size && instance.coordValues() == axisCoords) {
-                return instance;
-            }
-        }
-
-        m_instances.emplace_back(resourceManager, m_face, style.size, axisCoords);
-        return m_instances.back();
+        // auto axisCoords = m_axes.defaultCoords;
+        //
+        // if (m_axes.weight != -1)
+        //     axisCoords.values[m_axes.weight] = style.weight << 16;
+        //
+        // if (m_axes.width != -1)
+        //     axisCoords.values[m_axes.width] = style.width << 16;
+        //
+        // if (m_axes.italic != -1)
+        //     axisCoords.values[m_axes.italic] = style.italic << 16;
+        //
+        // for (const auto [tag, value]: style.axes()) {
+        //     for (const auto axisIndex: m_axes.customAxisIndices) {
+        //         if (m_axes.axes[axisIndex].tag == tag) {
+        //             axisCoords.values[axisIndex] = value << 16;
+        //         }
+        //     }
+        // }
+        //
+        // for (auto &instance: m_instances) {
+        //     if (instance.size() == style.size && instance.coordValues() == axisCoords) {
+        //         return instance;
+        //     }
+        // }
+        //
+        // m_instances.emplace_back(resourceManager, m_face, m_font, style.size, axisCoords);
+        // return m_instances.back();
     }
 
     bool FontFace::hasAxis(const uint32_t tag) const {

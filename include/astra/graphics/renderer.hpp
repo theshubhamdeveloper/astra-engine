@@ -25,14 +25,14 @@ namespace astra::graphics {
         RectStyle style;
     };
 
-    struct TextStyle {
-        math::Color color = math::Color::white();
-        std::optional<uint32_t> weight = std::nullopt;
-        std::optional<int> width = std::nullopt;
-        std::optional<int> slant = std::nullopt;
-        std::optional<int> italic = std::nullopt;
-        std::optional<int> opticalSize = std::nullopt;
-    };
+    // struct TextStyle {
+    //     math::Color color = math::Color::white();
+    //     std::optional<uint32_t> weight = std::nullopt;
+    //     std::optional<int> width = std::nullopt;
+    //     std::optional<int> slant = std::nullopt;
+    //     std::optional<int> italic = std::nullopt;
+    //     std::optional<int> opticalSize = std::nullopt;
+    // };
 
     struct Text {
         math::vec2 position = {};
@@ -78,8 +78,11 @@ namespace astra::graphics {
 
         void drawRect(const Rect &rect);
 
+        void createTextVertices(const TextStyle &style, const core::TextureHandle &atlas, const core::AtlasRegion &region,
+                                const math::uvec2 &glyphSize,
+                                const math::vec2 &glyphPos);
+
         void drawText(const Text &text);
-        math::vec2 measureText(const Text &text) const;
 
         void drawLine(const Line &line);
 

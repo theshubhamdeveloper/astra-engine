@@ -3,7 +3,7 @@
 #include <vector>
 
 #include <astra/core/types.hpp>
-#include <astra/graphics/font/font_style.hpp>
+#include <astra/graphics/font/text_style.hpp>
 #include <astra/graphics/font/font_face.hpp>
 
 namespace astra::core {

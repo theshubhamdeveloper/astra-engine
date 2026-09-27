@@ -3,28 +3,34 @@
 #include <SDL3/SDL_events.h>
 #include <astra/input/input.hpp>
 
+#include "astra/platform/window.hpp"
+
 namespace astra::input {
-    Input::Input() : quitRequested_(false), windowResizeRequested_(false) {
+    Input::Input(SDL_Window *window) : m_window(window),
+                                       m_textInput(false) {
     }
 
     void Input::updateState() {
-        windowResizeRequested_ = false;
-
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             int buttonIndex;
             switch (event.type) {
                 case SDL_EVENT_QUIT:
-                    quitRequested_ = true;
+                    m_onQuit.emit();
                     break;
 
                 case SDL_EVENT_WINDOW_RESIZED:
                 case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
-                    windowResizeRequested_ = true;
+                    m_onResize.emit();
+                    break;
+
+                case SDL_EVENT_TEXT_INPUT:
+                    m_onText.emit(event.text.text);
                     break;
 
                 case SDL_EVENT_KEY_DOWN:
                     keyboard.current[event.key.scancode] = true;
+                    keyboard.m_onKeyDown.emit(event.key.scancode, event.key.repeat);
                     break;
 
                 case SDL_EVENT_KEY_UP:
@@ -53,7 +59,7 @@ namespace astra::input {
                     break;
 
                 case SDL_EVENT_MOUSE_WHEEL:
-                    mouse.wheelDelta = event.wheel.y;
+                    mouse.wheelDelta += event.wheel.y;
                     break;
 
                 default:
@@ -69,11 +75,29 @@ namespace astra::input {
         mouse.previousPosition = mouse.position;
     }
 
-    bool Input::quitRequested() const {
-        return quitRequested_;
+    void Input::startTextInput() {
+        SDL_StartTextInput(m_window);
+        m_textInput = true;
     }
 
-    bool Input::windowResizeRequested() const {
-        return windowResizeRequested_;
+    void Input::stopTextInput() {
+        SDL_StopTextInput(m_window);
+        m_textInput = false;
+    }
+
+    bool Input::isTextInput() const {
+        return m_textInput;
+    }
+
+    core::SignalView<std::string> &Input::onText() {
+        return m_onText;
+    }
+
+    core::SignalView<> &Input::onQuit() {
+        return m_onQuit;
+    }
+
+    core::SignalView<> &Input::onResize() {
+        return m_onResize;
     }
 }

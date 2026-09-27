@@ -1,14 +1,16 @@
 #include <freetype/ftmm.h>
 
 #include <astra/core/resource_manager.hpp>
-#include <../../include/astra/graphics/font/font_instance.hpp>
+#include <astra/graphics/font/font_instance.hpp>
 
 namespace astra::graphics {
-    FontInstance::FontInstance(core::ResourceManager *resourceManager, FT_Face face, const uint32_t size,
+    FontInstance::FontInstance(core::ResourceManager *resourceManager, FT_Face face, hb_font_t *font,
+                               const uint32_t size,
                                const AxisCoordinates &coordValues) : resourceManager(resourceManager), face(face),
-                                                               m_size(size),
-                                                               m_coordValues(coordValues),
-                                                               m_matrics() {
+                                                                     font(font),
+                                                                     m_size(size),
+                                                                     m_coordValues(coordValues),
+                                                                     m_matrics() {
         FT_Set_Pixel_Sizes(face, 0, size);
 
         FT_Set_Var_Design_Coordinates(
@@ -38,6 +40,16 @@ namespace astra::graphics {
             face,
             m_coordValues.count,
             m_coordValues.values.data());
+
+
+        hb_buffer_t *hb_buffer = hb_buffer_create();
+        // hb_buffer_add_utf8(hb_buffer, codepoint, -1, 0, -1);
+        hb_buffer_guess_segment_properties(hb_buffer);
+
+        hb_shape(font, hb_buffer, nullptr, 0);
+
+        unsigned int glyph_count;
+        hb_glyph_info_t *glyph_info = hb_buffer_get_glyph_infos(hb_buffer, &glyph_count);
 
         status = FT_Load_Char(face, codepoint, FT_LOAD_RENDER);
         ASSERT(status == FT_Err_Ok);

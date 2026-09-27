@@ -2,6 +2,9 @@
 
 #include <vector>
 
+#include <astra/core/resource_handles.hpp>
+#include <astra/math/color.hpp>
+
 namespace astra::graphics {
     struct FontCustomAxis {
         uint32_t tag;
@@ -9,7 +12,8 @@ namespace astra::graphics {
     };
 
     struct FontStyle {
-        uint32_t size;
+        core::FontFamilyHandle fontFamily;
+
         uint32_t width;
         uint32_t weight;
         bool italic;
@@ -24,5 +28,23 @@ namespace astra::graphics {
 
     private:
         std::vector<FontCustomAxis> m_axes;
+    };
+
+    struct FontFeatures {
+        bool liga = true;
+        bool kern = true;
+        bool smcp = true;
+    };
+
+    struct TextStyle {
+        FontStyle fontStyle;
+
+        FontFeatures features;
+
+        math::Color color;
+
+        float size;
+        float letterSpacing;
+        float wordSpacing;
     };
 }

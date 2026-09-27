@@ -1,12 +1,13 @@
 #pragma once
 
 #include <freetype/freetype.h>
+#include <hb.h>
 
 #include <astra/core/assert.hpp>
 #include <astra/core/atlas_builder.hpp>
 #include <astra/core/resource_handles.hpp>
 #include <astra/graphics/font/font_axis.hpp>
-#include <astra/graphics/glyph.hpp>
+#include <astra/graphics/font/glyph.hpp>
 
 namespace astra::core {
     class ResourceManager;
@@ -20,7 +21,7 @@ namespace astra::graphics {
     };
 
     struct FontInstance {
-        FontInstance(core::ResourceManager *resourceManager, FT_Face face, uint32_t size,
+        FontInstance(core::ResourceManager *resourceManager, FT_Face face, hb_font_t *font, uint32_t size,
                      const AxisCoordinates &coordValues);
 
         [[nodiscard]] uint32_t size() const {
@@ -36,9 +37,9 @@ namespace astra::graphics {
     private:
         const Glyph &pushGlyph(char32_t codepoint);
 
-
         core::ResourceManager *resourceManager;
         FT_Face face;
+        hb_font_t *font;
 
         uint32_t m_size;
         AxisCoordinates m_coordValues;

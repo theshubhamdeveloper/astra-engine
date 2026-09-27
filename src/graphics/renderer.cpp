@@ -92,91 +92,66 @@ namespace astra::graphics {
         });
     }
 
-    void Renderer::drawText(const Text &text) {
-        const auto &[position, fontFamilyHandle, data, size, style] = text;
+    void Renderer::createTextVertices(const TextStyle &style, const core::TextureHandle &atlas,
+                                      const core::AtlasRegion &region, const math::uvec2 &glyphSize, const
+                                      math::vec2 &glyphPos) {
+        const auto model = math::Mat3::translation(glyphPos.x + glyphSize.x * 0.5f,
+                                                   glyphPos.y + glyphSize.y * 0.5f) *
+                           math::Mat3::scale(glyphSize.x, glyphSize.y);
 
-        const FontFamily &family = resourceManager.fontFamilies.get(fontFamilyHandle);
+        const auto texSlot = static_cast<float>(m_batch.pushTexture(atlas));
 
-        FontStyle fontStyle;
-        fontStyle.size = size * m_contentScale.y;
-        fontStyle.weight = style.weight ? style.weight.value() : 400;
-        fontStyle.width = style.width ? style.width.value() : 5;
-        fontStyle.italic = style.italic ? style.italic.value() : false;
-
-        FontInstance &instance = family.resolve(fontStyle).getInstance(fontStyle);
-
-        const FontMetrics &matrix = instance.getMatrix();
-
-        math::vec2 pen = {position.x, position.y + matrix.ascender};
-
-        for (const char32_t &c: data) {
-            const auto &[atlas,region, glyphSize, advance, bearing] = instance.getGlyph(c);
-            if (c == U'\n') {
-                pen.x = position.x;
-                pen.y += matrix.height;
-                continue;
-            }
-
-            const math::vec2 glyphPos = {
-                pen.x + bearing.x,
-                pen.y - bearing.y
-            };
-
-            if (glyphSize != math::uvec2::zero()) {
-                prepareBatch(textShader, textMesh);
-
-                const auto model = math::Mat3::translation(glyphPos.x + glyphSize.x * 0.5f,
-                                                           glyphPos.y + glyphSize.y * 0.5f) *
-                                   math::Mat3::scale(glyphSize.x, glyphSize.y);
-
-                const auto texSlot = static_cast<float>(m_batch.pushTexture(atlas));
-
-                m_batch.pushVertex(TextVertex{
-                    model.transformPoint({-0.5f, 0.5f}), math::vec2{region.u0, region.v1}, style.color, texSlot
-                });
-                m_batch.pushVertex(TextVertex{
-                    model.transformPoint({0.5f, 0.5f}), math::vec2{region.u1, region.v1}, style.color, texSlot
-                });
-                m_batch.pushVertex(TextVertex{
-                    model.transformPoint({-0.5f, -0.5f}), math::vec2{region.u0, region.v0}, style.color, texSlot
-                });
-                m_batch.pushVertex(TextVertex{
-                    model.transformPoint({0.5f, -0.5f}), math::vec2{region.u1, region.v0}, style.color, texSlot
-                });
-            }
-
-            pen.x += advance.x;
-        }
+        m_batch.pushVertex(TextVertex{
+            model.transformPoint({-0.5f, 0.5f}), math::vec2{region.u0, region.v1}, style.color, texSlot
+        });
+        m_batch.pushVertex(TextVertex{
+            model.transformPoint({0.5f, 0.5f}), math::vec2{region.u1, region.v1}, style.color, texSlot
+        });
+        m_batch.pushVertex(TextVertex{
+            model.transformPoint({-0.5f, -0.5f}), math::vec2{region.u0, region.v0}, style.color, texSlot
+        });
+        m_batch.pushVertex(TextVertex{
+            model.transformPoint({0.5f, -0.5f}), math::vec2{region.u1, region.v0}, style.color, texSlot
+        });
     }
 
-    math::vec2 Renderer::measureText(const Text &text) const {
-        const auto &[position, fontFamilyHandle, data, size, style] = text;
-
-        const FontFamily &family = resourceManager.fontFamilies.get(fontFamilyHandle);
-
-        FontStyle fontStyle;
-        fontStyle.size = size * m_contentScale.y;
-        fontStyle.weight = style.weight ? style.weight.value() : 400;
-        fontStyle.width = style.width ? style.width.value() : 5;
-        fontStyle.italic = style.italic ? style.italic.value() : false;
-
-        FontInstance &instance = family.resolve(fontStyle).getInstance(fontStyle);
-
-        const FontMetrics &matrix = instance.getMatrix();
-
-        math::vec2 coverSize = {0, 0};
-
-        for (const char32_t &c: data) {
-            const auto &[atlas,region, glyphSize, advance, bearing] = instance.getGlyph(c);
-            if (c == U'\n') {
-                coverSize.y += matrix.height;
-                continue;
-            }
-
-            coverSize.x = std::max(coverSize.x + advance.x, coverSize.x);
-        }
-
-        return coverSize;
+    void Renderer::drawText(const Text &text) {
+        // const auto &[position, fontFamilyHandle, data, size, style] = text;
+        //
+        // FontStyle fontStyle;
+        // fontStyle.size = size * m_contentScale.y;
+        // fontStyle.weight = style.weight ? style.weight.value() : 400;
+        // fontStyle.width = style.width ? style.width.value() : 5;
+        // fontStyle.italic = style.italic ? style.italic.value() : false;
+        //
+        // FontInstance &instance = resourceManager.fontFamilies.get(fontFamilyHandle)
+        //         .resolve(fontStyle)
+        //         .getInstance(fontStyle);
+        //
+        // const FontMetrics &matrix = instance.getMatrix();
+        //
+        // math::vec2 pen = {position.x, position.y + matrix.ascender};
+        //
+        // for (const char32_t &c: data) {
+        //     const auto &[atlas,region, glyphSize, advance, bearing] = instance.getGlyph(c);
+        //     if (c == U'\n') {
+        //         pen.x = position.x;
+        //         pen.y += matrix.height;
+        //         continue;
+        //     }
+        //
+        //     const math::vec2 glyphPos = {
+        //         pen.x + bearing.x,
+        //         pen.y - bearing.y
+        //     };
+        //
+        //     if (glyphSize != math::uvec2::zero()) {
+        //         prepareBatch(textShader, textMesh);
+        //         createTextVertices(style, atlas, region, glyphSize, glyphPos);
+        //     }
+        //
+        //     pen.x += advance.x;
+        // }
     }
 
     void Renderer::drawLine(const Line &line) {

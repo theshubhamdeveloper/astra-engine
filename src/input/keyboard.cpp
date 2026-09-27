@@ -4,6 +4,10 @@ namespace astra::input {
     Keyboard::Keyboard() : current{false}, previous{false} {
     }
 
+    core::SignalView<SDL_Scancode, bool> &Keyboard::onKeyDown() {
+        return m_onKeyDown;
+    }
+
     bool Keyboard::isKeyDown(const SDL_Scancode key) const {
         return current[key];
     }

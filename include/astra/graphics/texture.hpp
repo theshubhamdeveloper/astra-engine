@@ -3,9 +3,15 @@
 #include <astra/assets/image.hpp>
 
 namespace astra::graphics {
+    enum class TextureColorFormat {
+        RGBA = GL_RGBA,
+        Red = GL_RED
+    };
+
     struct Texture {
         struct Desc {
             assets::Image image;
+            TextureColorFormat colorFormat = TextureColorFormat::RGBA;
         };
 
         Texture() = default;

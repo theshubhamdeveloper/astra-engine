@@ -21,7 +21,7 @@ namespace astra::ecs::systems {
         }
 
         static math::vec2 screenToWorld(const components::Camera &camera, const math::vec2 &screenPosition) {
-            return (screenPosition / camera.zoom) + camera.position;
+            return (screenPosition / camera.zoom) + (camera.position/ 2);
         }
     };
 }

@@ -1,14 +1,19 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+
 #include <astra/core/atlas_builder.hpp>
-#include "astra/core/assert.hpp"
+#include <astra/core/assert.hpp>
 
 namespace astra::core {
     AtlasBuilder::AtlasBuilder(const math::uvec2 &size, const int colorChannels) {
-        atlas = assets::Image{static_cast<int>(size.x), static_cast<int>(size.y), colorChannels};
+        atlas = assets::Image{
+            .width = static_cast<int>(size.x),
+            .height = static_cast<int>(size.y),
+            .channels = colorChannels
+        };
         atlas.pixels.resize(size.x * size.y * 4, 0);
-        freeRects.push_back({{0, 0}, size});
+        freeRects.push_back({.pos = {0, 0}, .size = size});
     }
 
     AtlasRegion AtlasBuilder::add(const assets::Image &image, const uint32_t padding) {
@@ -21,17 +26,17 @@ namespace astra::core {
             return {};
         }
 
-        auto [pos, size] = freeRects[freeIndex];
+        auto freeRect = freeRects[freeIndex];
 
-        copyImage(pos, image, padding);
-        spilt(Rect{pos, imageSize});
+        copyImage(freeRect.pos, image, padding);
+        spilt(Rect{.pos = freeRect.pos, .size = imageSize});
 
         const math::vec2 atlasSize = {static_cast<float>(atlas.width), static_cast<float>(atlas.height)};
         return {
-            pos.x / atlasSize.x,
-            pos.y / atlasSize.y,
-            (pos.x + imageSize.x) / atlasSize.x,
-            (pos.y + imageSize.y) / atlasSize.y,
+            freeRect.pos.x / atlasSize.x,
+            freeRect.pos.y / atlasSize.y,
+            (freeRect.pos.x + imageSize.x) / atlasSize.x,
+            (freeRect.pos.y + imageSize.y) / atlasSize.y,
         };
     }
 
@@ -67,28 +72,34 @@ namespace astra::core {
             }
 
             // Top
-            if (placedRect.pos.y > freeRect.pos.y) {
-                nextFreeRects.push_back({freeRect.pos, {freeRect.size.x, placedRect.pos.y - freeRect.pos.y}});
+            if (placedRect.top() > freeRect.top()) {
+                nextFreeRects.push_back({
+                    .pos = freeRect.pos,
+                    .size = {freeRect.size.x, placedRect.top() - freeRect.top()}
+                });
             }
 
             // Bottom
             if (placedRect.bottom() < freeRect.bottom()) {
                 nextFreeRects.push_back({
-                    {freeRect.pos.x, placedRect.bottom()},
-                    {freeRect.size.x, freeRect.bottom() - placedRect.bottom()}
+                    .pos = {freeRect.left(), placedRect.bottom()},
+                    .size = {freeRect.size.x, freeRect.bottom() - placedRect.bottom()}
                 });
             }
 
             // Left
-            if (placedRect.pos.x > freeRect.pos.x) {
-                nextFreeRects.push_back({freeRect.pos, {placedRect.pos.x - freeRect.pos.x, freeRect.size.y}});
+            if (placedRect.left() > freeRect.left()) {
+                nextFreeRects.push_back({
+                    .pos = freeRect.pos,
+                    .size = {placedRect.left() - freeRect.left(), freeRect.size.y}
+                });
             }
 
             // Right
-            if (placedRect.pos.x + placedRect.size.y < freeRect.pos.x + freeRect.size.x) {
+            if (placedRect.right() < freeRect.right()) {
                 nextFreeRects.push_back({
-                    {placedRect.right(), freeRect.pos.y},
-                    {freeRect.right() - placedRect.right(), freeRect.size.y}
+                    .pos = {placedRect.right(), freeRect.top()},
+                    .size = {freeRect.right() - placedRect.right(), freeRect.size.y}
                 });
             }
         }

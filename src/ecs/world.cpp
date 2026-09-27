@@ -1,19 +1,28 @@
-#include <astra/ecs/world.hpp>
 #include <astra/ecs/systems/camera_system.hpp>
 #include <astra/ecs/systems/interaction_system.hpp>
 #include <astra/ecs/systems/render_system.hpp>
+#include <astra/ecs/world.hpp>
+#include "astra/ecs/components/shape.hpp"
 
 namespace astra::ecs {
     World::World(const input::Input &input) : input(input) {
     }
 
-    void World::initialize(graphics::Renderer &renderer,
-                           core::ResourceManager &resourceManager) {
+    void World::initialize(graphics::Renderer &renderer, core::ResourceManager &resourceManager) {
         camera.zoomSpeed = 0.2f;
         camera.moveSpeed = 1.5f;
         systemManager.addSystem(new systems::RenderSystem(componentManager, renderer));
         systemManager.addSystem(new systems::InteractionSystem(componentManager, camera, input));
         systemManager.addSystem(new systems::CameraSystem(componentManager, camera, input));
+
+        // componentManager.addComponent(0, components::Transform{.position = {-100, -100}});
+        // componentManager.addComponent(0, components::Shape{
+        //                                   components::RectGeometry{{100, 100}, math::Vec4{30}},
+        //                                   {
+        //                                       .backgroundColor = math::Color::white(), .stroke = math::Color::red(),
+        //                                       .strokeWidth = 1
+        //                                   }
+        //                               });
     }
 
     void World::update(const double deltaTime) {

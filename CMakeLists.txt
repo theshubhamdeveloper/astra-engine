@@ -59,6 +59,8 @@ add_executable(astra_engine MACOSX_BUNDLE
         src/graphics/texture.cpp
 
         src/assets/image.cpp
+        include/astra/core/shape.hpp
+        include/astra/graphics/font/line_metrics.hpp
 )
 
 target_compile_definitions(astra_engine PRIVATE
