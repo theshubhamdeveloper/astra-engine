@@ -37,17 +37,8 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bb3f9a5c-a890-44e0-9a9f-4dac30c6bf13" name="Changes" comment="project contains error but migrating to rust">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/astra-engine.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+    <list default="true" id="bb3f9a5c-a890-44e0-9a9f-4dac30c6bf13" name="Changes" comment="feat: add rust project structure">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,6 +56,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Python Script" />
+        <option value="Rust File" />
       </list>
     </option>
   </component>
@@ -92,61 +84,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.4600938253124431" />
-      <entry key="MS500" value="1.85848687676936" />
-      <entry key="S2" value="2.7131945709060594" />
-      <entry key="S5" value="4.69229589232884" />
-      <entry key="S10" value="7.335523921803122" />
-      <entry key="S30" value="15.349029725752514" />
-      <entry key="S60" value="21.741917128589936" />
-      <entry key="M2" value="28.149649817897252" />
-      <entry key="M5" value="36.87953247611442" />
-      <entry key="M10" value="47.90894627178271" />
-      <entry key="M15" value="60.601090172231125" />
-      <entry key="M30" value="98.54159688415828" />
-      <entry key="H1" value="147.6199589645716" />
-      <entry key="H2" value="192.4260009602415" />
-      <entry key="H4" value="249.49364315877764" />
-      <entry key="D1" value="1280.9302666005929" />
-      <entry key="W1" value="5791.769991892566" />
+      <entry key="MS100" value="1.0000001417645352" />
+      <entry key="MS500" value="1.0427345328832958" />
+      <entry key="S2" value="1.622026060556811" />
+      <entry key="S5" value="2.8950768565863996" />
+      <entry key="S10" value="4.254191249226185" />
+      <entry key="S30" value="8.198642218016845" />
+      <entry key="S60" value="14.667618213926128" />
+      <entry key="M2" value="25.518114025680735" />
+      <entry key="M5" value="50.98734761468265" />
+      <entry key="M10" value="77.04141893373168" />
+      <entry key="M15" value="96.20783411436248" />
+      <entry key="M30" value="141.93492704949952" />
+      <entry key="H1" value="198.19824479006132" />
+      <entry key="H2" value="249.6462070586656" />
+      <entry key="H4" value="311.0213333182935" />
+      <entry key="D1" value="1344.0819905779017" />
+      <entry key="W1" value="5857.06015881486" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.0430545995365729E-239" />
-      <entry key="MS500" value="1.6207877446933674E-48" />
-      <entry key="S2" value="1.5115829369665028E-12" />
-      <entry key="S5" value="2.7514321007329145E-5" />
-      <entry key="S10" value="0.007661118606781623" />
-      <entry key="S30" value="0.407923219085703" />
-      <entry key="S60" value="1.2276697620428614" />
-      <entry key="M2" value="2.1978213095213097" />
-      <entry key="M5" value="3.525010566367349" />
-      <entry key="M10" value="6.3170994999280525" />
-      <entry key="M15" value="10.062604413476599" />
-      <entry key="M30" value="20.490118668209362" />
-      <entry key="H1" value="32.430846608565155" />
-      <entry key="H2" value="42.03528827156889" />
-      <entry key="H4" value="50.496806006944865" />
-      <entry key="D1" value="309.36985272779714" />
-      <entry key="W1" value="1487.376201278799" />
+      <entry key="MS100" value="2.4769451090607384E-20" />
+      <entry key="MS500" value="1.198900873124257E-4" />
+      <entry key="S2" value="0.10463954013042705" />
+      <entry key="S5" value="0.4056221042680969" />
+      <entry key="S10" value="0.6517781711724769" />
+      <entry key="S30" value="1.1073084099886423" />
+      <entry key="S60" value="1.4265214227016256" />
+      <entry key="M2" value="1.7566898794619312" />
+      <entry key="M5" value="2.830428449140018" />
+      <entry key="M10" value="5.248746959582385" />
+      <entry key="M15" value="8.507674726998827" />
+      <entry key="M30" value="18.51623902120894" />
+      <entry key="H1" value="31.12633095645945" />
+      <entry key="H2" value="41.83853062941438" />
+      <entry key="H4" value="51.160372234847735" />
+      <entry key="D1" value="309.9927680798873" />
+      <entry key="W1" value="1488.4288725082104" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.3915327349792022" />
-      <entry key="MS500" value="1.839553542428304" />
-      <entry key="S2" value="2.7053597697241973" />
-      <entry key="S5" value="4.6851518800293555" />
-      <entry key="S10" value="7.326946793666603" />
-      <entry key="S30" value="15.684929388712224" />
-      <entry key="S60" value="22.861238955310185" />
-      <entry key="M2" value="30.24238788518914" />
-      <entry key="M5" value="40.331658746892224" />
-      <entry key="M10" value="54.16587721510208" />
-      <entry key="M15" value="70.60582317906102" />
-      <entry key="M30" value="118.9792752616402" />
-      <entry key="H1" value="180.01107027002294" />
-      <entry key="H2" value="234.4358328633708" />
-      <entry key="H4" value="299.9749687403584" />
-      <entry key="D1" value="1590.2884708876643" />
-      <entry key="W1" value="7279.1389050993685" />
+      <entry key="MS100" value="0.1339716828170366" />
+      <entry key="MS500" value="0.6691946441383015" />
+      <entry key="S2" value="1.2318470241645618" />
+      <entry key="S5" value="2.8062245988095844" />
+      <entry key="S10" value="4.53252592637596" />
+      <entry key="S30" value="9.103953510810046" />
+      <entry key="S60" value="15.95815773567595" />
+      <entry key="M2" value="27.183066815917087" />
+      <entry key="M5" value="53.75287424392069" />
+      <entry key="M10" value="82.23352564503023" />
+      <entry key="M15" value="104.6604348251464" />
+      <entry key="M30" value="160.39976459882064" />
+      <entry key="H1" value="229.28423582731713" />
+      <entry key="H2" value="291.458261740258" />
+      <entry key="H4" value="362.1654538959839" />
+      <entry key="D1" value="1654.0629644154099" />
+      <entry key="W1" value="7345.481719635466" />
     </decayedShown>
   </component>
   <component name="ProjectApplicationVersion">
@@ -172,6 +164,7 @@
   "keyToString": {
     "C/C++ File.main.cpp.executor": "Debug",
     "CMake Application.astra_engine.executor": "Debug",
+    "Cargo.Run.executor": "Run",
     "CidrDebugProfileConversion": "true",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.MCP Project settings loaded": "true",
@@ -199,6 +192,9 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "org.rust.disableDetachedFileInspection/Users/thedeveloper/dev/astra-engine/rust/src/math/rust.rs": "true",
+    "org.rust.disableDetachedFileInspection/Users/thedeveloper/dev/astra-engine/rust/src/math/vector.rs": "true",
+    "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
     "vue.rearranger.settings.migration": "true"
   }
@@ -701,7 +697,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat(atlas builder): return image position in atlas" />
     <MESSAGE value="feat(core): add alias of unique_ptr and shader_ptr" />
     <MESSAGE value="feat(core): add AssetsStorage struct and add dynamic resource register" />
     <MESSAGE value="feat(graphics): add setPixels method for dynamic pixels change in texture" />
@@ -726,7 +721,8 @@
     <MESSAGE value="feat(core): add Signal And SignalView struct" />
     <MESSAGE value="feat(harfbuzz): add Harfbuzz library" />
     <MESSAGE value="project contains error but migrating to rust" />
-    <option name="LAST_COMMIT_MESSAGE" value="project contains error but migrating to rust" />
+    <MESSAGE value="feat: add rust project structure" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add rust project structure" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
