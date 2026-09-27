@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BackendCodeEditorMiscSettings">
+    <option name="/Default/Environment/Hierarchy/GeneratedFilesCacheKey/Timestamp/@EntryValue" value="17" type="long" />
+    <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue" value="true" type="bool" />
+    <option name="/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue" value="true" type="bool" />
+    <option name="/Default/Housekeeping/LiveTemplatesHousekeeping/HotspotSessionHintIsShown/@EntryValue" value="true" type="bool" />
+    <option name="/Default/Housekeeping/RefactoringsMru/RenameRefactoring/DoRenameFile/@EntryValue" value="false" type="bool" />
+    <option name="/Default/RiderDebugger/RiderRestoreDecompile/RestoreDecompileSetting/@EntryValue" value="false" type="bool" />
+  </component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
+  <component name="CMakeProjectFlavorService">
+    <option name="flavorId" value="CMakePlainProjectFlavor" />
+  </component>
+  <component name="CMakeReloadState">
+    <option name="reloaded" value="true" />
+  </component>
+  <component name="CMakeRunConfigurationManager">
+    <generated />
+  </component>
+  <component name="CMakeSettings" AUTO_RELOAD="true">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+      <configuration PROFILE_NAME="Release" ENABLED="true" CONFIG_NAME="Release" />
+    </configurations>
+  </component>
+  <component name="CargoProjects">
+    <cargoProject FILE="$PROJECT_DIR$/rust/Cargo.toml">
+      <package file="$PROJECT_DIR$/rust">
+        <feature name="default" enabled="true" />
+      </package>
+    </cargoProject>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="bb3f9a5c-a890-44e0-9a9f-4dac30c6bf13" name="Changes" comment="project contains error but migrating to rust">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/astra-engine.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/project.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="7402" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:dev" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/cpp/include/astra/core/atlas_builder.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/cpp/include/astra/graphics/font/font_instance.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/cpp/include/astra/graphics/renderer.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/cpp/src/main.cpp" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="1a3FtKtM" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.4600938253124431" />
+      <entry key="MS500" value="1.85848687676936" />
+      <entry key="S2" value="2.7131945709060594" />
+      <entry key="S5" value="4.69229589232884" />
+      <entry key="S10" value="7.335523921803122" />
+      <entry key="S30" value="15.349029725752514" />
+      <entry key="S60" value="21.741917128589936" />
+      <entry key="M2" value="28.149649817897252" />
+      <entry key="M5" value="36.87953247611442" />
+      <entry key="M10" value="47.90894627178271" />
+      <entry key="M15" value="60.601090172231125" />
+      <entry key="M30" value="98.54159688415828" />
+      <entry key="H1" value="147.6199589645716" />
+      <entry key="H2" value="192.4260009602415" />
+      <entry key="H4" value="249.49364315877764" />
+      <entry key="D1" value="1280.9302666005929" />
+      <entry key="W1" value="5791.769991892566" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="1.0430545995365729E-239" />
+      <entry key="MS500" value="1.6207877446933674E-48" />
+      <entry key="S2" value="1.5115829369665028E-12" />
+      <entry key="S5" value="2.7514321007329145E-5" />
+      <entry key="S10" value="0.007661118606781623" />
+      <entry key="S30" value="0.407923219085703" />
+      <entry key="S60" value="1.2276697620428614" />
+      <entry key="M2" value="2.1978213095213097" />
+      <entry key="M5" value="3.525010566367349" />
+      <entry key="M10" value="6.3170994999280525" />
+      <entry key="M15" value="10.062604413476599" />
+      <entry key="M30" value="20.490118668209362" />
+      <entry key="H1" value="32.430846608565155" />
+      <entry key="H2" value="42.03528827156889" />
+      <entry key="H4" value="50.496806006944865" />
+      <entry key="D1" value="309.36985272779714" />
+      <entry key="W1" value="1487.376201278799" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.3915327349792022" />
+      <entry key="MS500" value="1.839553542428304" />
+      <entry key="S2" value="2.7053597697241973" />
+      <entry key="S5" value="4.6851518800293555" />
+      <entry key="S10" value="7.326946793666603" />
+      <entry key="S30" value="15.684929388712224" />
+      <entry key="S60" value="22.861238955310185" />
+      <entry key="M2" value="30.24238788518914" />
+      <entry key="M5" value="40.331658746892224" />
+      <entry key="M10" value="54.16587721510208" />
+      <entry key="M15" value="70.60582317906102" />
+      <entry key="M30" value="118.9792752616402" />
+      <entry key="H1" value="180.01107027002294" />
+      <entry key="H2" value="234.4358328633708" />
+      <entry key="H4" value="299.9749687403584" />
+      <entry key="D1" value="1590.2884708876643" />
+      <entry key="W1" value="7279.1389050993685" />
+    </decayedShown>
+  </component>
+  <component name="ProjectApplicationVersion">
+    <option name="ide" value="CLion" />
+    <option name="majorVersion" value="2026" />
+    <option name="minorVersion" value="1.3" />
+    <option name="productBranch" value="Classic" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3,
+  &quot;fromUser&quot;: true
+}</component>
+  <component name="ProjectId" id="3G5TpfuXktK7DhRn0EpJXdp7yfB" />
+  <component name="ProjectStatusUIService">{
+  &quot;uiKindId&quot;: &quot;Widget&quot;
+}</component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showScratchesAndConsoles" value="false" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "C/C++ File.main.cpp.executor": "Debug",
+    "CMake Application.astra_engine.executor": "Debug",
+    "CidrDebugProfileConversion": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.RadMigrateCodeStyle": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.rust.reset.selective.auto.import": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "RunOnceActivity.west.config.association.type.startup.service": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "cf.advertisement.text.overridden": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/thedeveloper/dev/astra-engine",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/assets" />
+      <recent name="$PROJECT_DIR$/assets/shaders" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/cpp" />
+      <recent name="$PROJECT_DIR$/include/astra/core" />
+      <recent name="$PROJECT_DIR$/include/astra/graphics/font" />
+      <recent name="$PROJECT_DIR$/src/graphics/font" />
+      <recent name="$PROJECT_DIR$/assets/fonts" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run" type="CargoCommandRunConfiguration" factoryName="Cargo Command" nameIsGenerated="true">
+      <option name="buildProfileId" value="dev" />
+      <option name="command" value="run" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/rust" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="RustProjectSettings">
+    <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
+  </component>
+  <component name="SelectedDebugProfileService">{
+  &quot;profileIdByStamp&quot;: [
+    {
+      &quot;first&quot;: {
+        &quot;##RUN_CONFIGURATION##&quot;: &quot;CMake Application.astra_engine&quot;,
+        &quot;cmake&quot;: &quot;CMakeBuildProfile:Debug&quot;
+      },
+      &quot;second&quot;: &quot;71a8d155-89eb-4050-975b-67183249a7c9&quot;
+    },
+    {
+      &quot;first&quot;: {
+        &quot;##RUN_CONFIGURATION##&quot;: &quot;CMake Application.astra_engine&quot;,
+        &quot;cmake&quot;: &quot;CMakeBuildProfile:Release&quot;
+      },
+      &quot;second&quot;: &quot;71a8d155-89eb-4050-975b-67183249a7c9&quot;
+    }
+  ],
+  &quot;modificationCount&quot;: 9
+}</component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bb3f9a5c-a890-44e0-9a9f-4dac30c6bf13" name="Changes" comment="" />
+      <created>1783259943034</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1783259943034</updated>
+      <workItem from="1783259943508" duration="238000" />
+      <workItem from="1783260621706" duration="2444000" />
+      <workItem from="1783330153272" duration="2679000" />
+      <workItem from="1783336626178" duration="13816000" />
+      <workItem from="1783368447040" duration="1559000" />
+      <workItem from="1783406751928" duration="10107000" />
+      <workItem from="1783433007903" duration="1992000" />
+      <workItem from="1783505007023" duration="11325000" />
+      <workItem from="1783527366900" duration="2026000" />
+      <workItem from="1783535148549" duration="130000" />
+      <workItem from="1783539699719" duration="4735000" />
+      <workItem from="1783581001749" duration="18026000" />
+      <workItem from="1783614010928" duration="191000" />
+      <workItem from="1783614413932" duration="2488000" />
+      <workItem from="1783670601955" duration="8483000" />
+      <workItem from="1783682855298" duration="9775000" />
+      <workItem from="1783706778172" duration="8706000" />
+      <workItem from="1783716450284" duration="409000" />
+      <workItem from="1783756191748" duration="6621000" />
+      <workItem from="1783786995360" duration="10566000" />
+      <workItem from="1783840916664" duration="7968000" />
+      <workItem from="1783880646320" duration="6448000" />
+      <workItem from="1783927502305" duration="14762000" />
+      <workItem from="1783960271925" duration="1254000" />
+      <workItem from="1783966126010" duration="922000" />
+      <workItem from="1783967650246" duration="2651000" />
+      <workItem from="1784014821202" duration="581000" />
+      <workItem from="1784017959350" duration="942000" />
+      <workItem from="1784021846301" duration="13347000" />
+      <workItem from="1784055375990" duration="12011000" />
+      <workItem from="1784127160265" duration="7253000" />
+      <workItem from="1784143879319" duration="5392000" />
+      <workItem from="1784180432136" duration="2586000" />
+      <workItem from="1784187290514" duration="2900000" />
+      <workItem from="1784312553075" duration="13894000" />
+      <workItem from="1784356821881" duration="1641000" />
+      <workItem from="1784361931035" duration="2039000" />
+      <workItem from="1784373711795" duration="2835000" />
+      <workItem from="1784547506525" duration="324000" />
+      <workItem from="1784552958738" duration="12951000" />
+      <workItem from="1784576388984" duration="13357000" />
+      <workItem from="1785055185557" duration="986000" />
+      <workItem from="1786256893702" duration="8349000" />
+      <workItem from="1786289920266" duration="483000" />
+    </task>
+    <task id="LOCAL-00001" summary="refactor(graphics): rename flush method and restruct renderer">
+      <option name="closed" value="true" />
+      <created>1783338383630</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1783338383630</updated>
+    </task>
+    <task id="LOCAL-00002" summary="refactor(graphics): rename flush method and restruct renderer">
+      <option name="closed" value="true" />
+      <created>1783338777285</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1783338777285</updated>
+    </task>
+    <task id="LOCAL-00003" summary="feat(core): add Atlas Builder with simple score, split system">
+      <option name="closed" value="true" />
+      <created>1783407402483</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1783407402483</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat(core): add Atlas Builder with simple score, split system">
+      <option name="closed" value="true" />
+      <created>1783407426867</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1783407426867</updated>
+    </task>
+    <task id="LOCAL-00005" summary="feat(core): add Atlas Builder with simple score, split system">
+      <option name="closed" value="true" />
+      <created>1783407472295</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1783407472295</updated>
+    </task>
+    <task id="LOCAL-00006" summary="refactor(atlas builder): better split and optimize">
+      <option name="closed" value="true" />
+      <created>1783419052609</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1783419052609</updated>
+    </task>
+    <task id="LOCAL-00007" summary="feat(atlas builder): return image position in atlas">
+      <option name="closed" value="true" />
+      <created>1783524642604</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1783524642604</updated>
+    </task>
+    <task id="LOCAL-00008" summary="feat(core): add alias of unique_ptr and shader_ptr">
+      <option name="closed" value="true" />
+      <created>1783588229736</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1783588229736</updated>
+    </task>
+    <task id="LOCAL-00009" summary="feat(core): add alias of unique_ptr and shader_ptr">
+      <option name="closed" value="true" />
+      <created>1783589516597</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1783589516597</updated>
+    </task>
+    <task id="LOCAL-00010" summary="feat(core): add AssetsStorage struct and add dynamic resource register">
+      <option name="closed" value="true" />
+      <created>1783590700066</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1783590700066</updated>
+    </task>
+    <task id="LOCAL-00011" summary="feat(graphics): add setPixels method for dynamic pixels change in texture">
+      <option name="closed" value="true" />
+      <created>1783607766723</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1783607766724</updated>
+    </task>
+    <task id="LOCAL-00012" summary="feat(graphics): add text atlas for faster render">
+      <option name="closed" value="true" />
+      <created>1783607862717</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1783607862717</updated>
+    </task>
+    <task id="LOCAL-00013" summary="feat(graphics): add basic kerning">
+      <option name="closed" value="true" />
+      <created>1783617266420</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1783617266421</updated>
+    </task>
+    <task id="LOCAL-00014" summary="feat(shaders): add text shader">
+      <option name="closed" value="true" />
+      <created>1783694613641</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1783694613641</updated>
+    </task>
+    <task id="LOCAL-00015" summary="feat(core): add basic operators in Handle">
+      <option name="closed" value="true" />
+      <created>1783694666038</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1783694666038</updated>
+    </task>
+    <task id="LOCAL-00016" summary="feat(core): add index 0 as Dummy and Invalid">
+      <option name="closed" value="true" />
+      <created>1783694765555</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1783694765555</updated>
+    </task>
+    <task id="LOCAL-00017" summary="feat(core): add index 0 as Dummy and Invalid">
+      <option name="closed" value="true" />
+      <created>1783694834318</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1783694834318</updated>
+    </task>
+    <task id="LOCAL-00018" summary="refactor(graphics): renderer to support dynamic mesh batching&#10;&#10;Add support for dynamic meshes,shader, and a more flexible batching system.&#10;&#10;Changes:&#10;- Add mesh to the resource manager&#10;- Introduce generic batch structures supporting any vertex types&#10;- Add VertexLayout struct&#10;- Add vertex layouts in meshes&#10;- Restructure vertex layout&#10;- Add text vertex support">
+      <option name="closed" value="true" />
+      <created>1783700281391</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1783700281391</updated>
+    </task>
+    <task id="LOCAL-00019" summary="refactor(graphics): renderer to support dynamic mesh batching&#10;&#10;Add support for dynamic meshes,shader, and a more flexible batching system.&#10;&#10;Changes:&#10;- Add mesh to the resource manager&#10;- Introduce generic batch structures supporting any vertex types&#10;- Add VertexLayout struct&#10;- Add vertex layouts in meshes&#10;- Restructure vertex layout&#10;- Add text vertex support">
+      <option name="closed" value="true" />
+      <created>1783700311204</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1783700311204</updated>
+    </task>
+    <task id="LOCAL-00020" summary="refactor(graphics): renderer to support dynamic mesh batching&#10;&#10;Add support for dynamic meshes,shader, and a more flexible batching system.&#10;&#10;Changes:&#10;- Add mesh to the resource manager&#10;- Introduce generic batch structures supporting any vertex types&#10;- Add VertexLayout struct&#10;- Add vertex layouts in meshes&#10;- Restructure vertex layout&#10;- Add text vertex support">
+      <option name="closed" value="true" />
+      <created>1783700917124</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1783700917124</updated>
+    </task>
+    <task id="LOCAL-00021" summary="refactor(graphics): renderer to support dynamic mesh batching&#10;&#10;Add support for dynamic meshes,shader, and a more flexible batching system.&#10;&#10;Changes:&#10;- Add mesh to the resource manager&#10;- Introduce generic batch structures supporting any vertex types&#10;- Add VertexLayout struct&#10;- Add vertex layouts in meshes&#10;- Restructure vertex layout&#10;- Add text vertex support">
+      <option name="closed" value="true" />
+      <created>1783700959997</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1783700959997</updated>
+    </task>
+    <task id="LOCAL-00022" summary="feat(assets): add JetbrainsMono font for default font">
+      <option name="closed" value="true" />
+      <created>1783714390549</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1783714390549</updated>
+    </task>
+    <task id="LOCAL-00023" summary="feat(assets): add JetbrainsMono font as default">
+      <option name="closed" value="true" />
+      <created>1783714520272</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1783714520272</updated>
+    </task>
+    <task id="LOCAL-00024" summary="refactor(graphics ): restructure draw methods">
+      <option name="closed" value="true" />
+      <created>1783714659412</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1783714659412</updated>
+    </task>
+    <task id="LOCAL-00025" summary="feat(assets): add JetbrainsMono font as default">
+      <option name="closed" value="true" />
+      <created>1783715390993</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1783715390993</updated>
+    </task>
+    <task id="LOCAL-00026" summary="refactor(graphics ): restructure draw methods">
+      <option name="closed" value="true" />
+      <created>1783715423906</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1783715423906</updated>
+    </task>
+    <task id="LOCAL-00027" summary="refactor(graphics): restructure draw methods of renderer">
+      <option name="closed" value="true" />
+      <created>1783716721137</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1783716721137</updated>
+    </task>
+    <task id="LOCAL-00028" summary="feat(math): add dynamic datatype vector2,vector3 and vector4 and add alias for these">
+      <option name="closed" value="true" />
+      <created>1783761326938</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1783761326938</updated>
+    </task>
+    <task id="LOCAL-00029" summary="feat(graphics): add support of content scale">
+      <option name="closed" value="true" />
+      <created>1783793012933</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1783793012933</updated>
+    </task>
+    <task id="LOCAL-00030" summary="feat(graphics): add support of content scale">
+      <option name="closed" value="true" />
+      <created>1783793029512</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1783793029512</updated>
+    </task>
+    <task id="LOCAL-00031" summary="fix(font): resolve incorrect text baseline">
+      <option name="closed" value="true" />
+      <created>1783796766928</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1783796766928</updated>
+    </task>
+    <task id="LOCAL-00032" summary="feat(font): add basic axis support">
+      <option name="closed" value="true" />
+      <created>1783968409993</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1783968409994</updated>
+    </task>
+    <task id="LOCAL-00033" summary="feat(font): add basic Font Family support">
+      <option name="closed" value="true" />
+      <created>1784061554935</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1784061554935</updated>
+    </task>
+    <task id="LOCAL-00034" summary="feat(core): add StopWatch">
+      <option name="closed" value="true" />
+      <created>1784325558379</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1784325558379</updated>
+    </task>
+    <task id="LOCAL-00035" summary="feat(core): add StopWatch">
+      <option name="closed" value="true" />
+      <created>1784325573281</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1784325573281</updated>
+    </task>
+    <task id="LOCAL-00036" summary="fix(core): on destroy push free slot">
+      <option name="closed" value="true" />
+      <created>1784325613436</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1784325613436</updated>
+    </task>
+    <task id="LOCAL-00037" summary="refactor(fonts): create abstract of fontFace into instance, split files and improve performance">
+      <option name="closed" value="true" />
+      <created>1784326574468</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1784326574468</updated>
+    </task>
+    <task id="LOCAL-00038" summary="feat(core): add Signal And SignalView struct">
+      <option name="closed" value="true" />
+      <created>1784653055176</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1784653055176</updated>
+    </task>
+    <task id="LOCAL-00039" summary="feat(core): add Signal And SignalView struct">
+      <option name="closed" value="true" />
+      <created>1786259091168</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1786259091168</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VCPKGProject">
+    <isAutomaticCheckingOnLaunch value="false" />
+    <isAutomaticFoundErrors value="true" />
+    <isAutomaticReloadCMake value="true" />
+    <isAutomaticBootstrapAfterUpdate value="false" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="main" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/main" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+        <entry key="User">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="*" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="user">
+                    <value>
+                      <list>
+                        <option value="*" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat(atlas builder): return image position in atlas" />
+    <MESSAGE value="feat(core): add alias of unique_ptr and shader_ptr" />
+    <MESSAGE value="feat(core): add AssetsStorage struct and add dynamic resource register" />
+    <MESSAGE value="feat(graphics): add setPixels method for dynamic pixels change in texture" />
+    <MESSAGE value="feat(graphics): add text atlas for faster render" />
+    <MESSAGE value="feat(graphics): add basic kerning" />
+    <MESSAGE value="feat(shaders): add text shader" />
+    <MESSAGE value="feat(core): add basic operators in Handle" />
+    <MESSAGE value="feat(core): add index 0 as Dummy and Invalid" />
+    <MESSAGE value="refactor(graphics): renderer to support dynamic mesh batching&#10;&#10;Add support for dynamic meshes,shader, and a more flexible batching system.&#10;&#10;Changes:&#10;- Add mesh to the resource manager&#10;- Introduce generic batch structures supporting any vertex types&#10;- Add VertexLayout struct&#10;- Add vertex layouts in meshes&#10;- Restructure vertex layout&#10;- Add text vertex support" />
+    <MESSAGE value="feat(assets): add JetbrainsMono font for default font" />
+    <MESSAGE value="feat(assets): add JetbrainsMono font as default" />
+    <MESSAGE value="refactor(graphics ): restructure draw methods" />
+    <MESSAGE value="refactor(graphics): restructure draw methods of renderer" />
+    <MESSAGE value="feat(math): add dynamic datatype vector2,vector3 and vector4 and add alias for these" />
+    <MESSAGE value="feat(graphics): add support of content scale" />
+    <MESSAGE value="fix(font): resolve incorrect text baseline" />
+    <MESSAGE value="feat(font): add basic axis support" />
+    <MESSAGE value="feat(font): add basic Font Family support" />
+    <MESSAGE value="feat(core): add StopWatch" />
+    <MESSAGE value="fix(core): on destroy push free slot" />
+    <MESSAGE value="refactor(fonts): create abstract of fontFace into instance, split files and improve performance" />
+    <MESSAGE value="feat(core): add Signal And SignalView struct" />
+    <MESSAGE value="feat(harfbuzz): add Harfbuzz library" />
+    <MESSAGE value="project contains error but migrating to rust" />
+    <option name="LAST_COMMIT_MESSAGE" value="project contains error but migrating to rust" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/cpp/src/main.cpp</url>
+          <line>236</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="CMakeRunConfiguration">
+        <watch expression="this-&gt;m_face-&gt;size-&gt;face-&gt;units_per_EM" />
+        <watch expression="buf-&gt;header.user_data" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
