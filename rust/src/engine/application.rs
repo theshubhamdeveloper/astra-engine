@@ -1,20 +1,28 @@
+use crate::engine::renderer::Renderer;
+use std::sync::Arc;
 use winit::application::ApplicationHandler;
 use winit::event::WindowEvent;
 use winit::event_loop::ActiveEventLoop;
-use winit::window::{Window, WindowId};
+use winit::window::{Window, WindowAttributes, WindowId};
 
-#[derive(Default)]
 pub struct Application {
-    window: Option<Window>,
+    window: Option<Arc<Window>>,
+    window_attributes: WindowAttributes,
+    renderer: Option<Renderer>,
 }
 
 impl ApplicationHandler for Application {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        self.window = Some(
+        let window = Arc::new(
             event_loop
-                .create_window(Window::default_attributes())
+                .create_window(self.window_attributes.clone())
                 .unwrap(),
         );
+
+        let renderer = pollster::block_on(Renderer::new(window.clone()));
+
+        self.window = Some(window);
+        self.renderer = Some(renderer);
     }
 
     fn window_event(&mut self, event_loop: &ActiveEventLoop, _id: WindowId, event: WindowEvent) {
@@ -22,10 +30,30 @@ impl ApplicationHandler for Application {
             WindowEvent::CloseRequested => {
                 event_loop.exit();
             }
+
             WindowEvent::RedrawRequested => {
-                self.window.as_ref().unwrap().request_redraw();
+                if let Some(renderer) = &mut self.renderer {
+                    renderer.render().unwrap()
+                }
             }
+
             _ => (),
+        }
+    }
+
+    fn about_to_wait(&mut self, _event_loop: &ActiveEventLoop) {
+        if let Some(ref window) = self.window {
+            window.request_redraw();
+        }
+    }
+}
+
+impl Application {
+    pub fn new(window_attributes: WindowAttributes) -> Self {
+        Self {
+            window: None,
+            window_attributes,
+            renderer: None,
         }
     }
 }
