@@ -19,23 +19,26 @@ impl ApplicationHandler for Application {
                 .unwrap(),
         );
 
-        let renderer = pollster::block_on(Renderer::new(window.clone()));
+        let renderer = pollster::block_on(Renderer::new(window.clone())).unwrap();
 
         self.window = Some(window);
         self.renderer = Some(renderer);
     }
 
     fn window_event(&mut self, event_loop: &ActiveEventLoop, _id: WindowId, event: WindowEvent) {
+        let renderer = match &mut self.renderer {
+            Some(renderer) => renderer,
+            None => return,
+        };
+
         match event {
             WindowEvent::CloseRequested => {
                 event_loop.exit();
             }
 
-            WindowEvent::RedrawRequested => {
-                if let Some(renderer) = &mut self.renderer {
-                    renderer.render().unwrap()
-                }
-            }
+            WindowEvent::Resized(size) => renderer.resize(size.width, size.height),
+
+            WindowEvent::RedrawRequested => renderer.render().unwrap(),
 
             _ => (),
         }

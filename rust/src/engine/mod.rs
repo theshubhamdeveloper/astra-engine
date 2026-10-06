@@ -1,10 +1,10 @@
 mod application;
 mod renderer;
 
+use crate::engine::application::Application;
 use winit::error::EventLoopError;
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit::window::WindowAttributes;
-use crate::engine::application::Application;
 
 pub fn run() -> Result<(), EventLoopError> {
     let event_loop = EventLoop::new()?;
