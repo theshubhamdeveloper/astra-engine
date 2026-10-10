@@ -1,5 +1,7 @@
 mod application;
 mod renderer;
+mod vertex;
+mod texture;
 
 use crate::engine::application::Application;
 use winit::error::EventLoopError;

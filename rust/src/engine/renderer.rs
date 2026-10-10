@@ -1,4 +1,32 @@
+use crate::engine::vertex::Vertex;
+use wgpu::util::DeviceExt;
 use winit::window::Window;
+
+// TEST VERTICES
+const VERTICES: &[Vertex] = &[
+    Vertex {
+        position: [-0.0868241, 0.49240386, 0.0],
+        color: [0.5, 0.0, 0.5],
+    },
+    Vertex {
+        position: [-0.49513406, 0.06958647, 0.0],
+        color: [0.5, 0.0, 0.23],
+    },
+    Vertex {
+        position: [-0.21918549, -0.44939706, 0.0],
+        color: [0.234, 0.0, 0.5],
+    },
+    Vertex {
+        position: [0.35966998, -0.3473291, 0.0],
+        color: [0.5, 0.0, 0.5],
+    },
+    Vertex {
+        position: [0.44147372, 0.2347359, 0.0],
+        color: [0.5, 0.0, 0.5],
+    },
+];
+
+const INDICES: &[u16] = &[0, 1, 4, 1, 2, 4, 2, 3, 4];
 
 pub struct Renderer {
     surface: wgpu::Surface<'static>,
@@ -11,11 +39,20 @@ pub struct Renderer {
 
     window: std::sync::Arc<Window>,
 
+    num_vertices: u32,
+    vertex_buffer: wgpu::Buffer,
+
+    num_indices: u32,
+    index_buffer: wgpu::Buffer,
+
     render_pipeline: wgpu::RenderPipeline,
 }
 
 impl Renderer {
     pub async fn new(window: std::sync::Arc<Window>) -> anyhow::Result<Self> {
+        let num_vertices = VERTICES.len() as u32;
+        let num_indices = INDICES.len() as u32;
+
         let size = window.inner_size();
 
         let instance = wgpu::Instance::default();
@@ -31,7 +68,7 @@ impl Renderer {
             })
             .await?;
 
-        println!("Using GPU: {}", adapter.get_info().name);
+        println!("Using GPU: {:?}", adapter.get_info().name);
 
         let (device, queue) = adapter
             .request_device(&wgpu::DeviceDescriptor::default())
@@ -58,6 +95,18 @@ impl Renderer {
             color_space: Default::default(),
         };
 
+        let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label: Some("Vertex Buffer"),
+            contents: bytemuck::cast_slice(VERTICES),
+            usage: wgpu::BufferUsages::VERTEX,
+        });
+
+        let index_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label: Some("Index Buffer"),
+            contents: bytemuck::cast_slice(INDICES),
+            usage: wgpu::BufferUsages::INDEX,
+        });
+
         let shader = device.create_shader_module(wgpu::include_wgsl!("../shader.wgsl"));
 
         let render_pipeline_layout =
@@ -73,7 +122,7 @@ impl Renderer {
             vertex: wgpu::VertexState {
                 module: &shader,
                 entry_point: Some("vs_main"),
-                buffers: &[],
+                buffers: &[Some(Vertex::layout())],
                 compilation_options: wgpu::PipelineCompilationOptions::default(),
             },
             fragment: Some(wgpu::FragmentState {
@@ -113,6 +162,10 @@ impl Renderer {
             config,
             is_surface_configured: false,
             window,
+            num_vertices,
+            vertex_buffer,
+            num_indices,
+            index_buffer,
             render_pipeline,
         })
     }
@@ -184,7 +237,10 @@ impl Renderer {
             });
 
             render_pass.set_pipeline(&self.render_pipeline);
-            render_pass.draw(0..3, 0..1);
+            render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
+            render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
+            render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
+            // render_pass.draw(0..self.num_vertices, 0..1);
         }
 
         self.queue.submit(std::iter::once(encoder.finish()));

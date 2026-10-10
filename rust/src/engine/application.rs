@@ -7,7 +7,7 @@ use winit::window::{Window, WindowAttributes, WindowId};
 
 pub struct Application {
     window: Option<Arc<Window>>,
-    window_attributes: WindowAttributes,
+    window_attributes: Option<WindowAttributes>,
     renderer: Option<Renderer>,
 }
 
@@ -15,7 +15,7 @@ impl ApplicationHandler for Application {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         let window = Arc::new(
             event_loop
-                .create_window(self.window_attributes.clone())
+                .create_window(self.window_attributes.take().unwrap())
                 .unwrap(),
         );
 
@@ -55,7 +55,7 @@ impl Application {
     pub fn new(window_attributes: WindowAttributes) -> Self {
         Self {
             window: None,
-            window_attributes,
+            window_attributes: Some(window_attributes),
             renderer: None,
         }
     }
