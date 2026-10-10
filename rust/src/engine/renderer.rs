@@ -1,3 +1,4 @@
+use crate::engine::texture::Texture;
 use crate::engine::vertex::Vertex;
 use wgpu::util::DeviceExt;
 use winit::window::Window;
@@ -5,28 +6,28 @@ use winit::window::Window;
 // TEST VERTICES
 const VERTICES: &[Vertex] = &[
     Vertex {
-        position: [-0.0868241, 0.49240386, 0.0],
-        color: [0.5, 0.0, 0.5],
+        position: [-0.5, 0.5, 0.0],
+        tex_coords: [0.0, 0.0],
+        color: [1.0, 0.0, 0.0],
     },
     Vertex {
-        position: [-0.49513406, 0.06958647, 0.0],
-        color: [0.5, 0.0, 0.23],
+        position: [-0.5, -0.5, 0.0],
+        tex_coords: [0.0, 1.0],
+        color: [1.0, 0.0, 0.0],
     },
     Vertex {
-        position: [-0.21918549, -0.44939706, 0.0],
-        color: [0.234, 0.0, 0.5],
+        position: [0.5, -0.5, 0.0],
+        tex_coords: [1.0, 1.0],
+        color: [1.0, 0.0, 0.0],
     },
     Vertex {
-        position: [0.35966998, -0.3473291, 0.0],
-        color: [0.5, 0.0, 0.5],
-    },
-    Vertex {
-        position: [0.44147372, 0.2347359, 0.0],
-        color: [0.5, 0.0, 0.5],
+        position: [0.5, 0.5, 0.0],
+        tex_coords: [1.0, 0.0],
+        color: [1.0, 0.0, 0.0],
     },
 ];
 
-const INDICES: &[u16] = &[0, 1, 4, 1, 2, 4, 2, 3, 4];
+const INDICES: &[u16] = &[0, 1, 2, 0, 2, 3];
 
 pub struct Renderer {
     surface: wgpu::Surface<'static>,
@@ -46,6 +47,8 @@ pub struct Renderer {
     index_buffer: wgpu::Buffer,
 
     render_pipeline: wgpu::RenderPipeline,
+
+    diffuse_bind_group: wgpu::BindGroup,
 }
 
 impl Renderer {
@@ -95,6 +98,49 @@ impl Renderer {
             color_space: Default::default(),
         };
 
+        let diffuse_bytes = include_bytes!("../img.png");
+        let diffuse_image = image::load_from_memory(diffuse_bytes)?;
+        let diffuse_texture =
+            Texture::from_image(&device, &queue, &diffuse_image, Some("img.png"))?;
+
+        let texture_bind_group_layout =
+            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+                entries: &[
+                    wgpu::BindGroupLayoutEntry {
+                        binding: 0,
+                        visibility: wgpu::ShaderStages::FRAGMENT,
+                        ty: wgpu::BindingType::Texture {
+                            multisampled: false,
+                            view_dimension: wgpu::TextureViewDimension::D2,
+                            sample_type: wgpu::TextureSampleType::Float { filterable: true },
+                        },
+                        count: None,
+                    },
+                    wgpu::BindGroupLayoutEntry {
+                        binding: 1,
+                        visibility: wgpu::ShaderStages::FRAGMENT,
+                        ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
+                        count: None,
+                    },
+                ],
+                label: Some("texture_bind_group_layout"),
+            });
+
+        let diffuse_bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
+            layout: &texture_bind_group_layout,
+            entries: &[
+                wgpu::BindGroupEntry {
+                    binding: 0,
+                    resource: wgpu::BindingResource::TextureView(&diffuse_texture.view),
+                },
+                wgpu::BindGroupEntry {
+                    binding: 1,
+                    resource: wgpu::BindingResource::Sampler(&diffuse_texture.sampler),
+                },
+            ],
+            label: Some("diffuse_bind_group"),
+        });
+
         let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
             label: Some("Vertex Buffer"),
             contents: bytemuck::cast_slice(VERTICES),
@@ -112,7 +158,7 @@ impl Renderer {
         let render_pipeline_layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
                 label: Some("Render Pipeline Layout"),
-                bind_group_layouts: &[],
+                bind_group_layouts: &[Some(&texture_bind_group_layout)],
                 immediate_size: 0,
             });
 
@@ -167,6 +213,7 @@ impl Renderer {
             num_indices,
             index_buffer,
             render_pipeline,
+            diffuse_bind_group,
         })
     }
     pub(crate) fn resize(&mut self, width: u32, height: u32) {
@@ -237,6 +284,7 @@ impl Renderer {
             });
 
             render_pass.set_pipeline(&self.render_pipeline);
+            render_pass.set_bind_group(0, &self.diffuse_bind_group, &[]);
             render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
             render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
             render_pass.draw_indexed(0..self.num_indices, 0, 0..1);
