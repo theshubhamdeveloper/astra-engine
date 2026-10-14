@@ -1,7 +1,9 @@
 mod application;
 mod renderer;
-mod vertex;
 mod texture;
+mod vertex;
+mod render_pipeline;
+pub mod camera;
 
 use crate::engine::application::Application;
 use winit::error::EventLoopError;
