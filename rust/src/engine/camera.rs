@@ -25,11 +25,8 @@ impl Camera {
         let right = half_width + self.position.x;
         let bottom = -half_height + self.position.y;
         let top = half_height + self.position.y;
-        
-        self.projection = glam::camera::rh::proj::directx::orthographic(
-            left, right,
-            bottom, top,
-            -1.0, 1.0,
-        );
+
+        self.projection =
+            glam::camera::rh::proj::directx::orthographic(left, right, bottom, top, -1.0, 1.0);
     }
 }

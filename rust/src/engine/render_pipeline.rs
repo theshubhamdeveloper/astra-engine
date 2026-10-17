@@ -3,7 +3,7 @@ use crate::engine::vertex::Vertex;
 pub struct RenderPipeline {
     pub pipeline: wgpu::RenderPipeline,
     pub camera_bind_group_layout: wgpu::BindGroupLayout,
-    pub diffuse_bind_group_layout: wgpu::BindGroupLayout,
+    pub texture_bind_group_layout: wgpu::BindGroupLayout,
 }
 
 impl RenderPipeline {
@@ -14,7 +14,7 @@ impl RenderPipeline {
     ) -> Self {
         let shader = device.create_shader_module(shader_module_descriptor);
 
-        let diffuse_bind_group_layout =
+        let texture_bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
                 entries: &[
                     wgpu::BindGroupLayoutEntry {
@@ -34,7 +34,7 @@ impl RenderPipeline {
                         count: None,
                     },
                 ],
-                label: Some("diffuse_bind_group_layout"),
+                label: Some("texture_bind_group_layout"),
             });
 
         let camera_bind_group_layout =
@@ -55,7 +55,7 @@ impl RenderPipeline {
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label: Some("Render Pipeline Layout"),
             bind_group_layouts: &[
-                Some(&diffuse_bind_group_layout),
+                Some(&texture_bind_group_layout),
                 Some(&camera_bind_group_layout),
             ],
             immediate_size: 0,
@@ -75,7 +75,7 @@ impl RenderPipeline {
                 entry_point: Some("fs_main"),
                 targets: &[Some(wgpu::ColorTargetState {
                     format: *target_format,
-                    blend: Some(wgpu::BlendState::REPLACE),
+                    blend: Some(wgpu::BlendState::ALPHA_BLENDING),
                     write_mask: wgpu::ColorWrites::ALL,
                 })],
                 compilation_options: wgpu::PipelineCompilationOptions::default(),
@@ -102,7 +102,7 @@ impl RenderPipeline {
         Self {
             pipeline,
             camera_bind_group_layout,
-            diffuse_bind_group_layout,
+            texture_bind_group_layout,
         }
     }
 }

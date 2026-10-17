@@ -1,11 +1,27 @@
 mod application;
-mod renderer;
-mod texture;
-mod vertex;
+mod batch;
+mod camera;
+mod canvas;
+mod color;
+mod draw_command;
+mod paint;
 mod render_pipeline;
-pub mod camera;
+mod renderer;
+mod shapes;
+mod texture;
+mod time;
+mod transform;
+mod vertex;
 
-use crate::engine::application::Application;
+pub use application::Application;
+pub use canvas::Canvas;
+pub use color::Color;
+pub use paint::Paint;
+pub use renderer::Renderer;
+pub use shapes::Rect;
+pub use time::Time;
+pub use transform::Transform;
+
 use winit::error::EventLoopError;
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit::window::WindowAttributes;
