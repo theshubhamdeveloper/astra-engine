@@ -16,6 +16,7 @@ pub mod texture_atlas;
 mod time;
 mod transform;
 mod vertex;
+pub mod input;
 
 pub use application::Application;
 pub use canvas::Canvas;
