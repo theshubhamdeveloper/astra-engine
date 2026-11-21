@@ -4,6 +4,7 @@ use crate::{
     engine::buffer::GpuBuffer,
     engine::camera::Camera,
     engine::draw_command::DrawCommand,
+    engine::input::Input,
     engine::render_pipeline::RenderPipeline,
     engine::resource_manager::{Handle, ResourceManager},
     engine::texture::GpuTexture,
@@ -12,9 +13,8 @@ use crate::{
 use glam::Vec2;
 use std::ops::Range;
 use std::sync::{Arc, Mutex};
-use wgpu::PresentMode::Immediate;
 use wgpu::RenderPass;
-use winit::window::Window;
+use winit::{event::MouseButton, window::Window};
 
 pub struct Renderer {
     surface: wgpu::Surface<'static>,
@@ -102,7 +102,7 @@ impl Renderer {
             format,
             width: size.width,
             height: size.height,
-            present_mode: Immediate,
+            present_mode: capabilities.present_modes[0],
             alpha_mode: capabilities.alpha_modes[0],
             view_formats: vec![],
             desired_maximum_frame_latency: 2,
@@ -229,6 +229,72 @@ impl Renderer {
             0,
             bytemuck::bytes_of(&self.camera.projection),
         )
+    }
+
+    pub fn update_camera_behavior(&mut self, input: &Input) {
+        if input.was_double_tapped() {
+            self.camera.reset();
+        } else {
+            let mut changed = false;
+
+            if input.is_mouse_down(MouseButton::Middle) || input.is_mouse_down(MouseButton::Right) {
+                let delta = *input.mouse_delta();
+                if delta != Vec2::ZERO {
+                    self.camera.pan_screen(delta);
+                    changed = true;
+                }
+            }
+
+            if input.touch_count() > 0 {
+                let delta = *input.touch_pan_delta();
+                if delta != Vec2::ZERO {
+                    self.camera.pan_screen(delta);
+                    changed = true;
+                }
+            }
+
+            let scroll = *input.scroll_delta();
+            if scroll != Vec2::ZERO {
+                self.camera.pan_screen(scroll);
+                changed = true;
+            }
+
+            let pinch_scale = input.pinch_scale_delta();
+            if pinch_scale != 1.0 {
+                let anchor = input
+                    .touches()
+                    .values()
+                    .copied()
+                    .reduce(|center, position| center + position)
+                    .map(|sum| sum / input.touch_count() as f32)
+                    .unwrap_or(*input.mouse_position());
+                self.camera.zoom_at(anchor, pinch_scale);
+                changed = true;
+            }
+
+            let rotation_delta = input.rotation_delta();
+            if rotation_delta != 0.0 {
+                self.camera.rotate(rotation_delta);
+                changed = true;
+            }
+
+            if changed {
+                self.write_camera_matrix();
+            }
+        }
+
+        if input.was_double_tapped() {
+            self.write_camera_matrix();
+        }
+    }
+
+    fn write_camera_matrix(&mut self) {
+        self.camera_buffer.write(
+            &self.device,
+            &self.queue,
+            0,
+            bytemuck::bytes_of(&self.camera.projection),
+        );
     }
 
     fn serialize_commands(&mut self) {

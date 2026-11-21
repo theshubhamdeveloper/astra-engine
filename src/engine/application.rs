@@ -2,7 +2,7 @@ use crate::engine::input::{Input, InputEvent};
 use crate::engine::resource_manager::ResourceManager;
 use crate::engine::text::{font::Font, textbuffer::TextBuffer};
 use crate::engine::texture::GpuTexture;
-use crate::engine::{Canvas, Color, Paint, Renderer, Time, Transform};
+use crate::engine::{Canvas, Color, Paint, Rect, Renderer, Time, Transform};
 use glam::{Vec2, vec2};
 use std::sync::{Arc, Mutex};
 use winit::{
@@ -237,22 +237,22 @@ impl Application {
 
             let layout = text_buffer.get_layout().unwrap();
 
-            // canvas.draw_rect(
-            //     &Rect {
-            //         width: layout.width,
-            //         height: layout.height,
-            //         corner_radius: [20.0, 0.0, 0.0, 0.0],
-            //     },
-            //     &Transform {
-            //         position: vec2(0.0, 0.0),
-            //         rotation: 0.0,
-            //         scale: Vec2::new(1.0, 1.0),
-            //     },
-            //     &Paint {
-            //         color: Color::GREEN,
-            //         ..Paint::default()
-            //     },
-            // );
+            canvas.draw_rect(
+                &Rect {
+                    width: layout.width,
+                    height: layout.height,
+                    corner_radius: [20.0, 0.0, 0.0, 0.0],
+                },
+                &Transform {
+                    position: vec2(0.0, 0.0),
+                    rotation: 0.0,
+                    scale: Vec2::new(1.0, 1.0),
+                },
+                &Paint {
+                    color: Color::GREEN,
+                    ..Paint::default()
+                },
+            );
 
             canvas.draw_text(
                 layout,
@@ -266,8 +266,8 @@ impl Application {
         }
 
         if let Some(ref renderer) = self.renderer {
-            renderer.lock().unwrap().render().unwrap();
             let mut renderer = renderer.lock().unwrap();
+            renderer.update_camera_behavior(&self.input.lock().unwrap());
             renderer.render().unwrap();
         }
     }
