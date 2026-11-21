@@ -2,8 +2,6 @@ use crate::engine::vertex::Vertex;
 
 pub struct RenderPipeline {
     pub pipeline: wgpu::RenderPipeline,
-    pub camera_bind_group_layout: wgpu::BindGroupLayout,
-    pub texture_bind_group_layout: wgpu::BindGroupLayout,
 }
 
 impl RenderPipeline {
@@ -11,46 +9,10 @@ impl RenderPipeline {
         device: &wgpu::Device,
         target_format: &wgpu::TextureFormat,
         shader_module_descriptor: wgpu::ShaderModuleDescriptor,
+        texture_bind_group_layout: &wgpu::BindGroupLayout,
+        camera_bind_group_layout: &wgpu::BindGroupLayout,
     ) -> Self {
         let shader = device.create_shader_module(shader_module_descriptor);
-
-        let texture_bind_group_layout =
-            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-                entries: &[
-                    wgpu::BindGroupLayoutEntry {
-                        binding: 0,
-                        visibility: wgpu::ShaderStages::FRAGMENT,
-                        ty: wgpu::BindingType::Texture {
-                            multisampled: false,
-                            view_dimension: wgpu::TextureViewDimension::D2,
-                            sample_type: wgpu::TextureSampleType::Float { filterable: true },
-                        },
-                        count: None,
-                    },
-                    wgpu::BindGroupLayoutEntry {
-                        binding: 1,
-                        visibility: wgpu::ShaderStages::FRAGMENT,
-                        ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
-                        count: None,
-                    },
-                ],
-                label: Some("texture_bind_group_layout"),
-            });
-
-        let camera_bind_group_layout =
-            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-                entries: &[wgpu::BindGroupLayoutEntry {
-                    binding: 0,
-                    visibility: wgpu::ShaderStages::VERTEX,
-                    ty: wgpu::BindingType::Buffer {
-                        ty: wgpu::BufferBindingType::Uniform,
-                        has_dynamic_offset: false,
-                        min_binding_size: None,
-                    },
-                    count: None,
-                }],
-                label: Some("camera_bind_group_layout"),
-            });
 
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label: Some("Render Pipeline Layout"),
@@ -84,7 +46,7 @@ impl RenderPipeline {
                 topology: wgpu::PrimitiveTopology::TriangleList,
                 strip_index_format: None,
                 front_face: wgpu::FrontFace::Ccw,
-                cull_mode: Some(wgpu::Face::Back),
+                cull_mode: None,
                 polygon_mode: wgpu::PolygonMode::Fill,
                 unclipped_depth: false,
                 conservative: false,
@@ -99,10 +61,6 @@ impl RenderPipeline {
             cache: None,
         });
 
-        Self {
-            pipeline,
-            camera_bind_group_layout,
-            texture_bind_group_layout,
-        }
+        Self { pipeline }
     }
 }

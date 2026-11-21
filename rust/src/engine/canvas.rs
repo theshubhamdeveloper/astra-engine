@@ -1,3 +1,4 @@
+use crate::engine::text::textbuffer::TextLayout;
 use crate::engine::{
     draw_command::DrawCommand, paint::Paint, renderer::Renderer, shapes::Rect, transform::Transform,
 };
@@ -16,6 +17,15 @@ impl Canvas {
         let mut renderer_guard = self.renderer.lock().unwrap();
         renderer_guard.draw_commands.push(DrawCommand::FillRect {
             rect: *rect,
+            transform: transform.to_mat3(),
+            paint: *paint,
+        });
+    }
+
+    pub fn draw_text(&mut self, layout: &TextLayout, transform: &Transform, paint: &Paint) {
+        let mut renderer_guard = self.renderer.lock().unwrap();
+        renderer_guard.draw_commands.push(DrawCommand::Text {
+            layout: layout.clone(),
             transform: transform.to_mat3(),
             paint: *paint,
         });

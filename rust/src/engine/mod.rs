@@ -1,5 +1,6 @@
 mod application;
 mod batch;
+pub mod buffer;
 mod camera;
 mod canvas;
 mod color;
@@ -7,8 +8,11 @@ mod draw_command;
 mod paint;
 mod render_pipeline;
 mod renderer;
+pub mod resource_manager;
 mod shapes;
+pub mod text;
 mod texture;
+pub mod texture_atlas;
 mod time;
 mod transform;
 mod vertex;
@@ -19,6 +23,7 @@ pub use color::Color;
 pub use paint::Paint;
 pub use renderer::Renderer;
 pub use shapes::Rect;
+pub use texture::GpuTexture;
 pub use time::Time;
 pub use transform::Transform;
 

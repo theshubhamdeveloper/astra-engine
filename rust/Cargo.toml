@@ -15,3 +15,4 @@ image = {
     default-features = false,
     features = ["png", "jpeg"]
 }
+swash = "0.2.10"

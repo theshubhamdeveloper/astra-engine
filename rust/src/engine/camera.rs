@@ -18,13 +18,10 @@ impl Camera {
     }
 
     pub fn update_matrix(&mut self) {
-        let half_width = (self.screen_size.x / 2.0) / self.zoom;
-        let half_height = (self.screen_size.y / 2.0) / self.zoom;
-
-        let left = -half_width + self.position.x;
-        let right = half_width + self.position.x;
-        let bottom = -half_height + self.position.y;
-        let top = half_height + self.position.y;
+        let left = self.position.x;
+        let right = left + self.screen_size.x / self.zoom;
+        let top = self.position.y;
+        let bottom = top + self.screen_size.y / self.zoom;
 
         self.projection =
             glam::camera::rh::proj::directx::orthographic(left, right, bottom, top, -1.0, 1.0);

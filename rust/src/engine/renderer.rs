@@ -1,9 +1,18 @@
-use crate::engine::{
-    batch::Batch, camera::Camera, draw_command::DrawCommand, render_pipeline::RenderPipeline,
-    texture::Texture, vertex::Vertex,
+use crate::engine::texture_atlas::TextureAtlas;
+use crate::{
+    engine::batch::Batch,
+    engine::buffer::GpuBuffer,
+    engine::camera::Camera,
+    engine::draw_command::DrawCommand,
+    engine::render_pipeline::RenderPipeline,
+    engine::resource_manager::{Handle, ResourceManager},
+    engine::texture::GpuTexture,
+    engine::vertex::Vertex,
 };
 use glam::Vec2;
-use std::sync::Arc;
+use std::ops::Range;
+use std::sync::{Arc, Mutex};
+use wgpu::RenderPass;
 use winit::window::Window;
 
 pub struct Renderer {
@@ -18,20 +27,35 @@ pub struct Renderer {
     window: Arc<Window>,
 
     batch: Batch,
+    draw_ranges: Vec<DrawRange>,
 
     render_pipeline: RenderPipeline,
 
-    texture_bind_group: wgpu::BindGroup,
+    camera_bind_group_layout: wgpu::BindGroupLayout,
+    texture_bind_group_layout: wgpu::BindGroupLayout,
+
+    dummy_texture: Handle<GpuTexture>,
+
     camera_bind_group: wgpu::BindGroup,
 
     pub draw_commands: Vec<DrawCommand>,
 
     camera: Camera,
-    camera_buffer: wgpu::Buffer,
+    camera_buffer: GpuBuffer,
+
+    texture_manager: Arc<Mutex<ResourceManager<GpuTexture>>>,
+}
+
+struct DrawRange {
+    texture: Handle<GpuTexture>,
+    indices: Range<u32>,
 }
 
 impl Renderer {
-    pub async fn new(window: Arc<Window>) -> anyhow::Result<Self> {
+    pub async fn new(
+        window: Arc<Window>,
+        texture_manager: Arc<Mutex<ResourceManager<GpuTexture>>>,
+    ) -> anyhow::Result<Self> {
         let size = window.inner_size();
 
         let camera = Camera::new(
@@ -53,7 +77,11 @@ impl Renderer {
             })
             .await?;
 
-        println!("Using GPU: {:?}", adapter.get_info().name);
+        println!(
+            "Using GPU: {:?},\ntexture limits: {:?} ",
+            adapter.get_info().name,
+            adapter.limits().max_texture_dimension_2d
+        );
 
         let (device, queue) = adapter
             .request_device(&wgpu::DeviceDescriptor::default())
@@ -80,41 +108,82 @@ impl Renderer {
             color_space: Default::default(),
         };
 
-        let buffer = Batch::new(&device);
+        let texture_bind_group_layout =
+            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+                entries: &[
+                    wgpu::BindGroupLayoutEntry {
+                        binding: 0,
+                        visibility: wgpu::ShaderStages::FRAGMENT,
+                        ty: wgpu::BindingType::Texture {
+                            multisampled: false,
+                            view_dimension: wgpu::TextureViewDimension::D2,
+                            sample_type: wgpu::TextureSampleType::Float { filterable: true },
+                        },
+                        count: None,
+                    },
+                    wgpu::BindGroupLayoutEntry {
+                        binding: 1,
+                        visibility: wgpu::ShaderStages::FRAGMENT,
+                        ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
+                        count: None,
+                    },
+                ],
+                label: Some("texture_bind_group_layout"),
+            });
 
-        let texture =
-            Texture::from_bytes(&device, &queue, include_bytes!("../img.png"), "img.png")?;
+        let dummy_texture = texture_manager
+            .lock()
+            .unwrap()
+            .insert(GpuTexture::from_bytes(
+                &device,
+                &queue,
+                include_bytes!("../../assets/images/dummy.png"),
+                "dummy.png",
+                &texture_bind_group_layout,
+            )?);
 
-        let render_pipeline =
-            RenderPipeline::new(&device, &format, wgpu::include_wgsl!("../shader.wgsl"));
+        let batch = Batch::new(
+            &device,
+            1000 * size_of::<Vertex>() as u64,
+            6000 * size_of::<u32>() as u64,
+        );
 
-        let texture_bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
-            layout: &render_pipeline.texture_bind_group_layout,
-            entries: &[
-                wgpu::BindGroupEntry {
+        let camera_bind_group_layout =
+            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+                entries: &[wgpu::BindGroupLayoutEntry {
                     binding: 0,
-                    resource: wgpu::BindingResource::TextureView(&texture.view),
-                },
-                wgpu::BindGroupEntry {
-                    binding: 1,
-                    resource: wgpu::BindingResource::Sampler(&texture.sampler),
-                },
-            ],
-            label: Some("diffuse_bind_group"),
-        });
+                    visibility: wgpu::ShaderStages::VERTEX,
+                    ty: wgpu::BindingType::Buffer {
+                        ty: wgpu::BufferBindingType::Uniform,
+                        has_dynamic_offset: false,
+                        min_binding_size: None,
+                    },
+                    count: None,
+                }],
+                label: Some("camera_bind_group_layout"),
+            });
 
-        let camera_buffer = device.create_buffer(&wgpu::BufferDescriptor {
-            label: Some("Camera Uniform Buffer"),
-            usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
-            size: size_of::<glam::Mat4>() as wgpu::BufferAddress,
-            mapped_at_creation: false,
-        });
+        let render_pipeline = RenderPipeline::new(
+            &device,
+            &format,
+            wgpu::include_wgsl!("../../assets/shaders/shader.wgsl"),
+            &texture_bind_group_layout,
+            &camera_bind_group_layout,
+        );
+
+        let camera_buffer = GpuBuffer::new(
+            &device,
+            size_of::<glam::Mat4>() as wgpu::BufferAddress,
+            wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
+            "Camera Uniform Buffer",
+            true,
+        );
 
         let camera_bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
-            layout: &render_pipeline.camera_bind_group_layout,
+            layout: &camera_bind_group_layout,
             entries: &[wgpu::BindGroupEntry {
                 binding: 0,
-                resource: camera_buffer.as_entire_binding(),
+                resource: camera_buffer.buffer.as_entire_binding(),
             }],
             label: Some("camera_bind_group"),
         });
@@ -126,15 +195,20 @@ impl Renderer {
             config,
             is_surface_configured: false,
             window,
-            batch: buffer,
+            batch,
+            draw_ranges: vec![],
             render_pipeline,
-            texture_bind_group,
+            camera_bind_group_layout,
+            texture_bind_group_layout,
+            dummy_texture,
             camera_bind_group,
             draw_commands: vec![],
             camera,
             camera_buffer,
+            texture_manager,
         })
     }
+
     pub fn resize(&mut self, width: u32, height: u32) {
         if width == 0 || height == 0 {
             return;
@@ -148,8 +222,9 @@ impl Renderer {
         self.camera.screen_size = Vec2::new(width as f32, height as f32);
         self.camera.update_matrix();
 
-        self.queue.write_buffer(
-            &self.camera_buffer,
+        self.camera_buffer.write(
+            &self.device,
+            &self.queue,
             0,
             bytemuck::bytes_of(&self.camera.projection),
         )
@@ -157,71 +232,157 @@ impl Renderer {
 
     fn serialize_commands(&mut self) {
         self.batch.clear();
+        self.draw_ranges.clear();
+        let commands = std::mem::take(&mut self.draw_commands);
 
-        for cmd in &self.draw_commands {
+        for cmd in commands {
             match cmd {
                 DrawCommand::FillRect {
                     rect,
                     transform,
                     paint,
                 } => {
-                    let base_vertex = self.batch.vertices.len() as u16;
+                    let points = [
+                        Vec2::new(0.0, 0.0),
+                        Vec2::new(rect.width, 0.0),
+                        Vec2::new(rect.width, rect.height),
+                        Vec2::new(0.0, rect.height),
+                    ]
+                    .map(|point| transform.transform_point2(point));
+                    self.push_quad(
+                        points,
+                        [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0], [0.0, 1.0]],
+                        paint.color.as_array(),
+                        paint.texture_id.unwrap_or(self.dummy_texture),
+                        paint.texture_id.is_some(),
+                    );
+                }
+                DrawCommand::Text {
+                    layout,
+                    transform,
+                    paint,
+                } => {
+                    let Some(texture) = layout.texture else {
+                        continue;
+                    };
 
-                    // Counterclockwise: bottom-left, bottom-right, top-right, top-left.
-                    self.batch.vertices.extend([
-                        Vertex {
-                            position: transform.transform_point2(Vec2::new(0.0, 0.0)).to_array(),
-                            color: paint.color.to_array(),
-                            tex_coords: [0.0, 0.0],
-                        },
-                        Vertex {
-                            position: transform
-                                .transform_point2(Vec2::new(rect.width, 0.0))
-                                .to_array(),
-                            color: paint.color.to_array(),
-                            tex_coords: [1.0, 0.0],
-                        },
-                        Vertex {
-                            position: transform
-                                .transform_point2(Vec2::new(rect.width, rect.height))
-                                .to_array(),
-                            color: paint.color.to_array(),
-                            tex_coords: [1.0, 1.0],
-                        },
-                        Vertex {
-                            position: transform
-                                .transform_point2(Vec2::new(0.0, rect.height))
-                                .to_array(),
-                            color: paint.color.to_array(),
-                            tex_coords: [0.0, 1.0],
-                        },
-                    ]);
+                    for glyph in &layout.glyphs {
+                        let x = glyph.x;
+                        let y = -glyph.y;
+                        let width = glyph.atlas_region.width as f32;
+                        let height = glyph.atlas_region.height as f32;
+                        let italic_offset = height * glyph.italic_shear;
 
-                    self.batch.indices.extend([
-                        base_vertex,
-                        base_vertex + 1,
-                        base_vertex + 2,
-                        base_vertex,
-                        base_vertex + 2,
-                        base_vertex + 3,
-                    ]);
+                        if width == 0.0 && height == 0.0 {
+                            continue;
+                        }
+
+                        let points = [
+                            Vec2::new(x + italic_offset, y),
+                            Vec2::new(x + width + italic_offset, y),
+                            Vec2::new(x + width, y + height),
+                            Vec2::new(x, y + height),
+                        ]
+                        .map(|point| transform.transform_point2(point));
+
+                        let uv_min = glyph.atlas_region.uv_min(1024, 1024);
+                        let uv_max = glyph.atlas_region.uv_max(1024, 1024);
+
+                        self.push_quad(
+                            points,
+                            [
+                                uv_min,
+                                [uv_max[0], uv_min[1]],
+                                uv_max,
+                                [uv_min[0], uv_max[1]],
+                            ],
+                            layout.color.unwrap_or(paint.color).as_array(),
+                            texture,
+                            true,
+                        );
+                    }
                 }
             }
         }
+    }
 
-        self.draw_commands.clear();
+    fn push_quad(
+        &mut self,
+        positions: [Vec2; 4],
+        tex_coords: [[f32; 2]; 4],
+        color: [u8; 4],
+        texture: Handle<GpuTexture>,
+        use_tex: bool,
+    ) {
+        let base_vertex = self.batch.vertices.len() as u32;
+        self.batch.vertices.extend((0..4).map(|index| Vertex {
+            position: positions[index].to_array(),
+            tex_coords: tex_coords[index],
+            use_tex: u32::from(use_tex),
+            color,
+        }));
+
+        let start = self.batch.indices.len() as u32;
+        self.batch.indices.extend([
+            base_vertex,
+            base_vertex + 2,
+            base_vertex + 1,
+            base_vertex,
+            base_vertex + 3,
+            base_vertex + 2,
+        ]);
+        let end = self.batch.indices.len() as u32;
+
+        if let Some(range) = self.draw_ranges.last_mut()
+            && range.texture == texture
+        {
+            range.indices.end = end;
+        } else {
+            self.draw_ranges.push(DrawRange {
+                texture,
+                indices: start..end,
+            });
+        }
+    }
+
+    fn flush_batch(&mut self, render_pass: &mut RenderPass) {
+        let texture_manager_safe = &self.texture_manager.lock().unwrap();
+
+        render_pass.set_pipeline(&self.render_pipeline.pipeline);
+        render_pass.set_bind_group(1, &self.camera_bind_group, &[]);
+        render_pass.set_vertex_buffer(0, self.batch.vertex_buffer.buffer.slice(..));
+        render_pass.set_index_buffer(
+            self.batch.index_buffer.buffer.slice(..),
+            wgpu::IndexFormat::Uint32,
+        );
+        for range in &self.draw_ranges {
+            let Some(texture) = texture_manager_safe.get(range.texture) else {
+                continue;
+            };
+            render_pass.set_bind_group(0, texture.bind_group(), &[]);
+            render_pass.draw_indexed(range.indices.clone(), 0, 0..1);
+        }
+    }
+
+    pub fn upload_atlas(&mut self, atlas: &TextureAtlas) -> anyhow::Result<Handle<GpuTexture>> {
+        Ok(self
+            .texture_manager
+            .lock()
+            .unwrap()
+            .insert(atlas.to_gpu_texture(
+                &self.device,
+                &self.queue,
+                "atlas",
+                &self.texture_bind_group_layout,
+            )?))
     }
 
     pub fn render(&mut self) -> anyhow::Result<()> {
-        self.window.request_redraw();
-
         if !self.is_surface_configured {
             return Ok(());
         }
 
         self.serialize_commands();
-
-        self.batch.update(&self.queue);
 
         let output = match self.surface.get_current_texture() {
             wgpu::CurrentSurfaceTexture::Success(surface_texture) => surface_texture,
@@ -250,37 +411,33 @@ impl Renderer {
                 label: Some("Render Encoder"),
             });
 
-        {
-            let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                label: Some("Render Pass"),
-                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                    view: &view,
-                    resolve_target: None,
-                    depth_slice: None,
-                    ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(wgpu::Color {
-                            r: 1.0,
-                            g: 1.0,
-                            b: 1.0,
-                            a: 1.0,
-                        }),
-                        store: wgpu::StoreOp::Store,
-                    },
-                })],
-                depth_stencil_attachment: None,
-                occlusion_query_set: None,
-                timestamp_writes: None,
-                multiview_mask: None,
-            });
+        let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+            label: Some("Render Pass"),
+            color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                view: &view,
+                resolve_target: None,
+                depth_slice: None,
+                ops: wgpu::Operations {
+                    load: wgpu::LoadOp::Clear(wgpu::Color {
+                        r: 1.0,
+                        g: 1.0,
+                        b: 1.0,
+                        a: 1.0,
+                    }),
+                    store: wgpu::StoreOp::Store,
+                },
+            })],
+            depth_stencil_attachment: None,
+            occlusion_query_set: None,
+            timestamp_writes: None,
+            multiview_mask: None,
+        });
 
-            render_pass.set_pipeline(&self.render_pipeline.pipeline);
-            render_pass.set_bind_group(0, &self.texture_bind_group, &[]);
-            render_pass.set_bind_group(1, &self.camera_bind_group, &[]);
-            render_pass.set_vertex_buffer(0, self.batch.vertex_buffer.slice(..));
-            render_pass
-                .set_index_buffer(self.batch.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
-            render_pass.draw_indexed(0..self.batch.num_indices, 0, 0..1);
-        }
+        self.batch.update(&self.device, &self.queue);
+
+        self.flush_batch(&mut render_pass);
+
+        drop(render_pass);
 
         self.queue.submit(std::iter::once(encoder.finish()));
         self.queue.present(output);
