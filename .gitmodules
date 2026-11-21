@@ -1,9 +1,0 @@
-[submodule "cpp/hird_party/SDL"]
-	path = cpp/third_party/SDL
-	url = https://github.com/libsdl-org/SDL
-[submodule "cpp/third_party/freetype"]
-	path = cpp/third_party/freetype
-	url = https://gitlab.freedesktop.org/freetype/freetype.git
-[submodule "third_party/harfbuzz"]
-	path = cpp/third_party/harfbuzz
-	url = https://github.com/harfbuzz/harfbuzz.git
