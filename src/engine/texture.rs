@@ -6,6 +6,8 @@ pub struct GpuTexture {
     view: wgpu::TextureView,
     sampler: wgpu::Sampler,
     bind_group: wgpu::BindGroup,
+    width: u32,
+    height: u32,
 }
 
 impl GpuTexture {
@@ -100,7 +102,7 @@ impl GpuTexture {
             address_mode_u: wgpu::AddressMode::ClampToEdge,
             address_mode_v: wgpu::AddressMode::ClampToEdge,
             address_mode_w: wgpu::AddressMode::ClampToEdge,
-            mag_filter: wgpu::FilterMode::Linear,
+            mag_filter: wgpu::FilterMode::Nearest,
             min_filter: wgpu::FilterMode::Nearest,
             mipmap_filter: wgpu::MipmapFilterMode::Nearest,
             ..Default::default()
@@ -126,7 +128,59 @@ impl GpuTexture {
             view,
             sampler,
             bind_group,
+            width,
+            height,
         })
+    }
+
+    pub fn update_rgba8(
+        &self,
+        queue: &wgpu::Queue,
+        width: u32,
+        height: u32,
+        rgba: &[u8],
+    ) -> Result<()> {
+        if width != self.width || height != self.height {
+            bail!(
+                "texture size mismatch: expected {}x{}, got {width}x{height}",
+                self.width,
+                self.height
+            );
+        }
+        if width == 0 || height == 0 {
+            bail!("texture dimensions must be non-zero");
+        }
+        let expected_len = (width as usize)
+            .checked_mul(height as usize)
+            .and_then(|pixels| pixels.checked_mul(4))
+            .ok_or_else(|| anyhow::anyhow!("texture dimensions are too large"))?;
+        if rgba.len() != expected_len {
+            bail!(
+                "RGBA data length mismatch: expected {expected_len} bytes, got {}",
+                rgba.len()
+            );
+        }
+
+        queue.write_texture(
+            wgpu::TexelCopyTextureInfo {
+                texture: &self.texture,
+                mip_level: 0,
+                origin: wgpu::Origin3d::ZERO,
+                aspect: wgpu::TextureAspect::All,
+            },
+            rgba,
+            wgpu::TexelCopyBufferLayout {
+                offset: 0,
+                bytes_per_row: Some(4 * width),
+                rows_per_image: Some(height),
+            },
+            wgpu::Extent3d {
+                width,
+                height,
+                depth_or_array_layers: 1,
+            },
+        );
+        Ok(())
     }
 
     pub fn view(&self) -> &wgpu::TextureView {

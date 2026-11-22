@@ -37,11 +37,11 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bb3f9a5c-a890-44e0-9a9f-4dac30c6bf13" name="Changes" comment="feat: add basic input system">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="bb3f9a5c-a890-44e0-9a9f-4dac30c6bf13" name="Changes" comment="feat: add basic camera behavior">
       <change beforePath="$PROJECT_DIR$/src/engine/application.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/application.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/engine/camera.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/camera.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/engine/renderer.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/renderer.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/text/font.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/text/font.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/text/textbuffer.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/text/textbuffer.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/engine/texture.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/texture.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,7 +55,7 @@
   <component name="EmbeddingIndexingInfo">
     <option name="cachedIndexableFilesCount" value="7402" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:dev" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:release" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -100,61 +100,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="3.3521644002454834E-13" />
-      <entry key="MS500" value="0.003563809948499561" />
-      <entry key="S2" value="0.37599800691755114" />
-      <entry key="S5" value="1.0160705505759398" />
-      <entry key="S10" value="1.426636953830291" />
-      <entry key="S30" value="2.3538519832857316" />
-      <entry key="S60" value="7.710483455651651" />
-      <entry key="M2" value="27.53041218220227" />
-      <entry key="M5" value="91.03296700686698" />
-      <entry key="M10" value="168.62743056657075" />
-      <entry key="M15" value="221.69926797809785" />
-      <entry key="M30" value="321.7297142075779" />
-      <entry key="H1" value="437.6333467155415" />
-      <entry key="H2" value="556.0481338361354" />
-      <entry key="H4" value="669.9490844641517" />
-      <entry key="D1" value="1737.744839358114" />
-      <entry key="W1" value="6274.931264434432" />
-    </decayedCancelled>
-    <decayedSelected>
       <entry key="MS100" value="1.0" />
       <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0000700381256311" />
-      <entry key="S5" value="1.0217880158751902" />
-      <entry key="S10" value="1.1504912594232732" />
-      <entry key="S30" value="1.754734809257171" />
-      <entry key="S60" value="2.400694160873002" />
-      <entry key="M2" value="3.099145760489134" />
-      <entry key="M5" value="5.2341442219457" />
-      <entry key="M10" value="10.083097664160391" />
-      <entry key="M15" value="14.55312976649719" />
-      <entry key="M30" value="24.842297328736862" />
-      <entry key="H1" value="40.11592184735433" />
-      <entry key="H2" value="58.16741198471488" />
-      <entry key="H4" value="75.0538635219806" />
-      <entry key="D1" value="334.6299340485376" />
-      <entry key="W1" value="1517.341802801243" />
+      <entry key="S2" value="1.0000000002573288" />
+      <entry key="S5" value="1.000199601050858" />
+      <entry key="S10" value="1.0197993625077706" />
+      <entry key="S30" value="1.611574733694114" />
+      <entry key="S60" value="3.1822167289444057" />
+      <entry key="M2" value="7.845147586377011" />
+      <entry key="M5" value="32.339666375367926" />
+      <entry key="M10" value="68.09090725323756" />
+      <entry key="M15" value="92.08685950441355" />
+      <entry key="M30" value="132.87633617504503" />
+      <entry key="H1" value="168.07905116721653" />
+      <entry key="H2" value="214.93708202101024" />
+      <entry key="H4" value="344.6334367588244" />
+      <entry key="D1" value="1559.6967637010698" />
+      <entry key="W1" value="6271.898657611099" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="1.2108417949302838E-278" />
+      <entry key="MS500" value="2.6404255370972195E-56" />
+      <entry key="S2" value="1.6891470785163932E-14" />
+      <entry key="S5" value="4.53778294926096E-6" />
+      <entry key="S10" value="0.003048728320077222" />
+      <entry key="S30" value="0.3923586466052772" />
+      <entry key="S60" value="2.118139743213011" />
+      <entry key="M2" value="5.599622141704272" />
+      <entry key="M5" value="10.478705574933585" />
+      <entry key="M10" value="13.516438911267675" />
+      <entry key="M15" value="15.332642810258783" />
+      <entry key="M30" value="18.692229198999303" />
+      <entry key="H1" value="21.865218078851637" />
+      <entry key="H2" value="26.487188521637215" />
+      <entry key="H4" value="40.805878078530945" />
+      <entry key="D1" value="283.6845601263757" />
+      <entry key="W1" value="1488.1234129747797" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="3.736192163256612E-6" />
-      <entry key="MS500" value="0.08540957873119476" />
-      <entry key="S2" value="0.9015609950444314" />
-      <entry key="S5" value="1.8028933347993605" />
-      <entry key="S10" value="2.442919458983287" />
-      <entry key="S30" value="4.049057153811331" />
-      <entry key="S60" value="10.073771323816908" />
-      <entry key="M2" value="30.603353378493498" />
-      <entry key="M5" value="96.22972832954486" />
-      <entry key="M10" value="178.6577218173217" />
-      <entry key="M15" value="236.19670854030775" />
-      <entry key="M30" value="346.52020174048533" />
-      <entry key="H1" value="477.7050420702717" />
-      <entry key="H2" value="614.1824958989961" />
-      <entry key="H4" value="744.9811136082761" />
-      <entry key="D1" value="2072.3618290349696" />
-      <entry key="W1" value="7792.265562771329" />
+      <entry key="MS100" value="0.7631296044802796" />
+      <entry key="MS500" value="0.9473700705992677" />
+      <entry key="S2" value="0.9865745660879903" />
+      <entry key="S5" value="0.9947751821445434" />
+      <entry key="S10" value="1.0179590564976573" />
+      <entry key="S30" value="1.9614230927031457" />
+      <entry key="S60" value="5.200041165709786" />
+      <entry key="M2" value="13.320491963376604" />
+      <entry key="M5" value="42.72819537667999" />
+      <entry key="M10" value="81.54979214885024" />
+      <entry key="M15" value="107.37654256641173" />
+      <entry key="M30" value="151.54320732788102" />
+      <entry key="H1" value="189.92982644108193" />
+      <entry key="H2" value="241.4150576463236" />
+      <entry key="H4" value="385.4306534837579" />
+      <entry key="D1" value="1843.3706056901624" />
+      <entry key="W1" value="7760.014729500117" />
     </decayedShown>
   </component>
   <component name="ProjectApplicationVersion">
@@ -168,6 +168,9 @@
   &quot;fromUser&quot;: true
 }</component>
   <component name="ProjectId" id="3G5TpfuXktK7DhRn0EpJXdp7yfB" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectStatusUIService">{
   &quot;uiKindId&quot;: &quot;Widget&quot;
 }</component>
@@ -235,7 +238,7 @@
       </method>
     </configuration>
     <configuration name="Run" type="CargoCommandRunConfiguration" factoryName="Cargo Command" nameIsGenerated="true">
-      <option name="buildProfileId" value="dev" />
+      <option name="buildProfileId" value="release" />
       <option name="command" value="run" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
       <envs />
@@ -713,7 +716,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat(graphics): add setPixels method for dynamic pixels change in texture" />
     <MESSAGE value="feat(graphics): add text atlas for faster render" />
     <MESSAGE value="feat(graphics): add basic kerning" />
     <MESSAGE value="feat(shaders): add text shader" />
@@ -738,7 +740,8 @@
     <MESSAGE value="feat: add rust project structure" />
     <MESSAGE value="refactor: move rust to root folder" />
     <MESSAGE value="feat: add basic input system" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: add basic input system" />
+    <MESSAGE value="feat: add basic camera behavior" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add basic camera behavior" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

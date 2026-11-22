@@ -22,6 +22,7 @@ pub struct Application {
     canvas: Option<Canvas>,
     text_buffer: Option<TextBuffer>,
     texture_manager: Arc<Mutex<ResourceManager<GpuTexture>>>,
+    written_text: String,
 }
 
 impl ApplicationHandler for Application {
@@ -35,6 +36,7 @@ impl ApplicationHandler for Application {
                 .create_window(self.window_attributes.take().unwrap())
                 .unwrap(),
         );
+        window.set_ime_allowed(true);
 
         let renderer = Arc::new(Mutex::new(
             pollster::block_on(Renderer::new(window.clone(), self.texture_manager.clone()))
@@ -50,22 +52,14 @@ impl ApplicationHandler for Application {
         ));
 
         let mut text_buffer = TextBuffer::new(font.clone(), 36.0);
-        // text_buffer.set_wrap_width(Some(1000.0)).unwrap();
-        text_buffer.set_text(include_str!("application.rs"));
+        text_buffer.set_wrap_width(Some(500.0)).unwrap();
+        // text_buffer.set_text(include_str!("application.rs"));
         text_buffer.set_weight(500);
         text_buffer
             .set_line_height(Some(text_buffer.default_line_height() * 1.3))
             .unwrap();
         // text_buffer.set_italic(true);
         text_buffer.shape().unwrap();
-
-        let mut font_guard = font.lock().unwrap();
-        let texture = renderer
-            .lock()
-            .unwrap()
-            .upload_atlas(font_guard.atlas())
-            .unwrap();
-        font_guard.atlas_gpu_texture = Some(texture);
 
         self.window = Some(window);
         self.canvas = Some(Canvas::new(renderer.clone()));
@@ -216,20 +210,29 @@ impl Application {
             canvas: None,
             text_buffer: None,
             texture_manager: Arc::new(Mutex::new(ResourceManager::new())),
+            written_text: "".to_string(),
         }
-    }
-
-    pub fn input(&self) -> Arc<Mutex<Input>> {
-        self.input.clone()
     }
 
     pub fn update(&mut self) {
         self.time.update();
 
-        println!("{:?}", self.time.delta_time() * 1000.0);
+        println!("{:?}", self.input.lock().unwrap().text_input());
+
+        self.written_text.push_str(
+            self.input
+                .lock()
+                .unwrap()
+                .text_input()
+                .iter()
+                .collect::<String>()
+                .as_str(),
+        );
 
         if let (Some(canvas), Some(text_buffer)) = (self.canvas.as_mut(), self.text_buffer.as_mut())
         {
+            text_buffer.set_text(&self.written_text);
+
             let paint = Paint {
                 color: Color::BLACK,
                 ..Paint::default()

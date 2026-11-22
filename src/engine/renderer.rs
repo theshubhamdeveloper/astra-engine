@@ -7,6 +7,7 @@ use crate::{
     engine::input::Input,
     engine::render_pipeline::RenderPipeline,
     engine::resource_manager::{Handle, ResourceManager},
+    engine::text::textbuffer::TextLayout,
     engine::texture::GpuTexture,
     engine::vertex::Vertex,
 };
@@ -297,7 +298,7 @@ impl Renderer {
         );
     }
 
-    fn serialize_commands(&mut self) {
+    fn serialize_commands(&mut self) -> anyhow::Result<()> {
         self.batch.clear();
         self.draw_ranges.clear();
         let commands = std::mem::take(&mut self.draw_commands);
@@ -325,10 +326,11 @@ impl Renderer {
                     );
                 }
                 DrawCommand::Text {
-                    layout,
+                    mut layout,
                     transform,
                     paint,
                 } => {
+                    self.sync_font_atlas(&mut layout)?;
                     let Some(texture) = layout.texture else {
                         continue;
                     };
@@ -371,6 +373,32 @@ impl Renderer {
                 }
             }
         }
+        Ok(())
+    }
+
+    fn sync_font_atlas(&mut self, layout: &mut TextLayout) -> anyhow::Result<()> {
+        let Some(font) = layout.font.as_ref().cloned() else {
+            return Ok(());
+        };
+
+        let mut font = font.lock().unwrap();
+        let texture = match font.atlas_gpu_texture {
+            Some(texture) => {
+                if font.is_atlas_dirty() {
+                    self.update_atlas(texture, font.atlas())?;
+                    font.mark_atlas_uploaded();
+                }
+                texture
+            }
+            None => {
+                let texture = self.upload_atlas(font.atlas())?;
+                font.atlas_gpu_texture = Some(texture);
+                font.mark_atlas_uploaded();
+                texture
+            }
+        };
+        layout.texture = Some(texture);
+        Ok(())
     }
 
     fn push_quad(
@@ -444,12 +472,25 @@ impl Renderer {
             )?))
     }
 
+    pub fn update_atlas(
+        &mut self,
+        handle: Handle<GpuTexture>,
+        atlas: &TextureAtlas,
+    ) -> anyhow::Result<()> {
+        let mut texture_manager = self.texture_manager.lock().unwrap();
+        let texture = texture_manager
+            .get_mut(handle)
+            .ok_or_else(|| anyhow::anyhow!("GPU texture handle for atlas is no longer valid"))?;
+
+        texture.update_rgba8(&self.queue, atlas.width(), atlas.height(), atlas.pixels())
+    }
+
     pub fn render(&mut self) -> anyhow::Result<()> {
         if !self.is_surface_configured {
             return Ok(());
         }
 
-        self.serialize_commands();
+        self.serialize_commands()?;
 
         let output = match self.surface.get_current_texture() {
             wgpu::CurrentSurfaceTexture::Success(surface_texture) => surface_texture,

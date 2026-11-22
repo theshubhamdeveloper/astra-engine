@@ -24,6 +24,7 @@ pub struct Font {
 
     pub atlas_gpu_texture: Option<Handle<GpuTexture>>,
     atlas: TextureAtlas,
+    atlas_dirty: bool,
 
     glyphs: HashMap<GlyphKey, GlyphAtlasEntry>,
     scale_context: ScaleContext,
@@ -50,6 +51,7 @@ impl Font {
             key,
             atlas_gpu_texture: None,
             atlas,
+            atlas_dirty: false,
             glyphs: HashMap::new(),
             scale_context: ScaleContext::new(),
         })
@@ -59,6 +61,7 @@ impl Font {
         if !self.glyphs.contains_key(glyph_key) {
             let glyph = self.rasterize_glyph(glyph_key)?;
             self.glyphs.insert(*glyph_key, glyph);
+            self.atlas_dirty = true;
         }
         Ok(self.glyphs.get(glyph_key).unwrap())
     }
@@ -154,6 +157,14 @@ impl Font {
 
     pub fn atlas(&self) -> &TextureAtlas {
         &self.atlas
+    }
+
+    pub fn is_atlas_dirty(&self) -> bool {
+        self.atlas_dirty
+    }
+
+    pub fn mark_atlas_uploaded(&mut self) {
+        self.atlas_dirty = false;
     }
 
     pub fn attributes(&self) -> Attributes {

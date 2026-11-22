@@ -18,6 +18,7 @@ pub struct PositionedGlyph {
 #[derive(Clone, Default)]
 pub struct TextLayout {
     pub texture: Option<Handle<GpuTexture>>,
+    pub font: Option<Arc<Mutex<Font>>>,
     pub color: Option<Color>,
     pub glyphs: Vec<PositionedGlyph>,
     pub width: f32,
@@ -379,8 +380,10 @@ impl TextBuffer {
     pub fn get_layout(&mut self) -> anyhow::Result<&TextLayout> {
         self.shape()?;
 
-        self.text_layout.texture = self.font.lock().unwrap().atlas_gpu_texture;
+        let font = self.font.lock().unwrap();
+        self.text_layout.texture = font.atlas_gpu_texture;
         self.text_layout.color = self.color;
+        self.text_layout.font = Some(self.font.clone());
         Ok(&self.text_layout)
     }
 
@@ -572,5 +575,27 @@ mod tests {
         );
         buffer.clear_color();
         assert!(buffer.get_layout().unwrap().color.is_none());
+    }
+
+    #[test]
+    fn marks_atlas_dirty_when_shaping_adds_new_glyphs() {
+        let font = Arc::new(Mutex::new(
+            Font::from_bytes(
+                include_bytes!("../../../assets/fonts/JetBrainsMono/JetBrainsMono[wght].ttf")
+                    .to_vec(),
+                0,
+            )
+            .unwrap(),
+        ));
+        let mut buffer = TextBuffer::new(font.clone(), 16.0);
+
+        buffer.set_text("A");
+        buffer.shape().unwrap();
+        assert!(font.lock().unwrap().is_atlas_dirty());
+
+        font.lock().unwrap().mark_atlas_uploaded();
+        buffer.set_text("B");
+        buffer.shape().unwrap();
+        assert!(font.lock().unwrap().is_atlas_dirty());
     }
 }
